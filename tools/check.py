@@ -240,6 +240,15 @@ def cmd_run(a):
         feed["morning_sent"] = today
         report.append(f"MORNING {text}")
 
+    # sent notifications older than a week are no longer needed in the outbox
+    for f in os.listdir(OUTBOX) if os.path.isdir(OUTBOX) else []:
+        if f.endswith(".json") and now.timestamp() - os.path.getmtime(os.path.join(OUTBOX, f)) > 7 * 86400:
+            try:
+                d = json.load(open(os.path.join(OUTBOX, f)))
+                if now.timestamp() - parse_iso(d["at"]).timestamp() > 7 * 86400:
+                    os.remove(os.path.join(OUTBOX, f))
+            except Exception:
+                pass
     save(feed, now)
     print(f"checked {iso(now)}  entry window {'OPEN' if window else 'CLOSED'}")
     for line in report:
