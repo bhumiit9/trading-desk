@@ -6,13 +6,16 @@ All state lives in data/feed.json (what the app shows). Each notification is
 also written to data/outbox/ as one small JSON file; pushing a new outbox file
 to GitHub makes the "Send notifications" workflow deliver it to the phones.
 
-  python3 tools/check.py run --bars DIR      zone arrivals + prices from 1h bars
+  python3 tools/check.py need                which price bars to fetch now (symbol, interval, count)
+  python3 tools/check.py run                 zone arrivals + prices from the 1h bars in data/bars
   python3 tools/check.py setup PAIR ...      change a watched setup (status/step/note) and notify
   python3 tools/check.py alert PAIR TEXT     log + notify a free-text note
   python3 tools/check.py status              print where price is against every zone
 
-Bars: DIR/OANDA_<PAIR>_1h.json as written by tools/cache_ohlcv.py
-      ({"t":[unix sec, bar open],"o":[],"h":[],"l":[],"c":[]}; last bar may be forming).
+Bars: data/bars/OANDA_<PAIR>_<1h|4h|D>.json as written by
+      python3 tools/cache_ohlcv.py --out data/bars --hours 1
+      ({"fetched_at":unix,"t":[unix sec, bar open],"o":[],"h":[],"l":[],"c":[]}; the last bar may be forming).
+      The app draws its charts from these files.
 
 This script never places trades. It only reads prices and writes notes.
 """
@@ -23,6 +26,10 @@ from zoneinfo import ZoneInfo
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FEED = os.path.join(ROOT, "data", "feed.json")
 OUTBOX = os.path.join(ROOT, "data", "outbox")
+BARS = os.path.join(ROOT, "data", "bars")
+PERIOD = {"1h": 3600, "4h": 14400, "D": 86400}
+KEEP_BARS = {"1h": 240, "4h": 300, "D": 400}
+SEED = {"1h": 150, "4h": 120, "D": 150}
 IST = ZoneInfo("Asia/Kolkata")
 NY = ZoneInfo("America/New_York")
 KEEP_ALERTS = 80
@@ -105,9 +112,67 @@ def nearest(doc, price):
     return best
 
 
+def bars_file(symbol, tf, folder=None):
+    return os.path.join(folder or BARS, f"{symbol.replace(':', '_')}_{tf}.json")
+
+
+def cmd_need(a):
+    """Print the TradingView fetches this run needs: one line per call."""
+    now = time.time()
+    feed = load()
+    lines = []
+    for doc in feed.get("zones", []):
+        sym = doc["symbol"]
+        for tf, per in PERIOD.items():
+            fn = bars_file(sym, tf)
+            n, last, fetched = 0, 0, 0
+            if os.path.exists(fn):
+                try:
+                    b = json.load(open(fn)); n, last, fetched = len(b["t"]), b["t"][-1], b.get("fetched_at", 0)
+                except Exception:
+                    n = 0
+            if n < SEED[tf] * 0.6:
+                count = SEED[tf]
+            elif tf == "1h":
+                count = max(4, min(150, int((now - last) / per) + 3))
+            else:
+                final = last + per <= fetched            # the newest stored bar was already closed when fetched
+                if (not final and now >= last + per) or (final and now >= last + 2 * per):
+                    count = max(3, min(SEED[tf], int((now - last) / per) + 3))
+                else:
+                    continue
+            lines.append(f"{sym}  interval={'1D' if tf == 'D' else tf}  count={count}")
+    print(f"{len(lines)} fetches needed (mcp-tv-get-ohlcv, format=columns):")
+    for l in lines:
+        print(" ", l)
+
+
+def tidy_bars():
+    """Keep the bar files small: newest bars only, compact JSON."""
+    if not os.path.isdir(BARS):
+        return
+    for f in os.listdir(BARS):
+        if not f.endswith(".json"):
+            continue
+        tf = f[:-5].rsplit("_", 1)[-1]
+        if tf not in KEEP_BARS:
+            os.remove(os.path.join(BARS, f)); continue
+        fn = os.path.join(BARS, f)
+        try:
+            b = json.load(open(fn))
+        except Exception:
+            continue
+        k = KEEP_BARS[tf]
+        out = {"symbol": b.get("symbol"), "tf": tf, "fetched_at": int(b.get("fetched_at", 0)), **{x: b[x][-k:] for x in "tohlc"}}
+        txt = json.dumps(out, separators=(",", ":"))
+        if txt != open(fn).read():
+            open(fn, "w").write(txt)
+
+
 def cmd_run(a):
     now = parse_iso(a.now) if a.now else datetime.now(timezone.utc)
     feed = load()
+    tidy_bars()
     setups = {s["pair"]: s for s in feed.get("setups", [])}
     today = now.astimezone(IST).strftime("%Y-%m-%d")
     window = entry_window_open(now)
@@ -115,7 +180,7 @@ def cmd_run(a):
 
     for doc in feed.get("zones", []):
         pair = doc["pair"]
-        fn = os.path.join(a.bars, f"{doc['symbol'].replace(':', '_')}_1h.json")
+        fn = bars_file(doc["symbol"], "1h", a.bars)
         if not os.path.exists(fn):
             problems.append(f"{pair}: no 1h bars file ({os.path.basename(fn)})")
             continue
@@ -316,7 +381,8 @@ def cmd_alert(a):
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    r = sub.add_parser("run"); r.add_argument("--bars", required=True); r.add_argument("--now"); r.add_argument("--morning", action="store_true")
+    n = sub.add_parser("need"); n.set_defaults(fn=cmd_need)
+    r = sub.add_parser("run"); r.add_argument("--bars", default=BARS); r.add_argument("--now"); r.add_argument("--morning", action="store_true")
     r.set_defaults(fn=cmd_run)
     s = sub.add_parser("setup"); s.add_argument("pair")
     s.add_argument("--status", choices=["waiting", "at_zone", "triggered", "invalid", "no_trade"])
