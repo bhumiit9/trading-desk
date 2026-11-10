@@ -1,0 +1,44 @@
+name: Send notifications
+
+on:
+  push:
+    branches: [main]
+    paths: ['data/outbox/**']
+  workflow_dispatch:
+    inputs:
+      body:
+        description: Test notification text
+        required: true
+        default: Test notification from the Set & Forget Desk
+      title:
+        description: Title
+        required: false
+        default: Set & Forget Desk
+
+permissions:
+  contents: read
+
+concurrency:
+  group: notify
+  cancel-in-progress: false
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm ci --omit=dev
+        working-directory: tools/push
+      - run: node tools/push/send.mjs
+        env:
+          PUSH_KEYS: ${{ secrets.PUSH_KEYS }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+          TEST_BODY: ${{ github.event.inputs.body }}
+          TEST_TITLE: ${{ github.event.inputs.title }}

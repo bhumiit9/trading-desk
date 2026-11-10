@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Set & Forget Desk</title>
+<meta name="description" content="This week's Set & Forget setups, your AOIs and trade notifications.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="S&F Desk">
+<meta name="theme-color" content="#f3f5f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0e1320" media="(prefers-color-scheme: dark)">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a trading desk blotter. Header strip with the week and the entry-window clock,
+   the watched setups as chart-led cards, then the user's AOIs, the notification log and the passed pairs as quiet lists. */
+:root{
+  --bg:#f3f5f9; --panel:#ffffff; --ink:#131a2b; --mute:#5c6780; --line:#dfe4ee;
+  --sell:#d93a3a; --buy:#2457e6; --ok:#12824a; --warn:#b26a00; --warn-bg:#fff3d9; --chip:#eaeef6;
+  --display:"Space Grotesk",system-ui,sans-serif; --body:"Inter",system-ui,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){ :root{
+  --bg:#0e1320; --panel:#161d2e; --ink:#e9edf7; --mute:#98a3bd; --line:#27314a;
+  --sell:#ff6b6b; --buy:#6f9bff; --ok:#4fd08c; --warn:#ffc266; --warn-bg:#3a2c10; --chip:#222c44; color-scheme:dark } }
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-text-size-adjust:100%;
+  padding-top:max(20px,env(safe-area-inset-top,0px));padding-bottom:max(48px,env(safe-area-inset-bottom,0px));
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+header{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:14px}
+h1{font-family:var(--display);font-size:clamp(26px,4vw,36px);line-height:1.1;margin:0;letter-spacing:-.02em}
+.sub{color:var(--mute);margin-top:4px}
+.clock{display:flex;flex-direction:column;gap:2px;align-items:flex-end;text-align:right}
+.pill{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:13px;padding:5px 11px;border-radius:999px;background:var(--chip);color:var(--ink)}
+.pill::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--mute)}
+.pill.open::before{background:var(--ok)} .pill.open{color:var(--ok)}
+@media (max-width:560px){.clock{align-items:flex-start;text-align:left}}
+.small{font-size:13px;color:var(--mute)}
+h2{font-family:var(--display);font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:0 0 12px;font-weight:600}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.card-top{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between;padding:14px 16px 10px}
+.pair{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:-.01em}
+.side{font-family:var(--display);font-weight:700;font-size:13px;letter-spacing:.06em;padding:3px 9px;border-radius:5px;color:var(--panel)}
+.side.sell{background:var(--sell)} .side.buy{background:var(--buy)}
+.status{font-size:12.5px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--chip);color:var(--mute)}
+.status.at_zone{background:var(--warn-bg);color:var(--warn)} .status.triggered{background:var(--ok);color:var(--panel)} .status.invalid{color:var(--sell)}
+.chart{display:block;width:100%;background:#fff;border-block:1px solid var(--line);cursor:zoom-in}
+.body{padding:12px 16px 16px;display:flex;flex-direction:column;gap:12px}
+.trends{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:12.5px;padding:3px 9px;border-radius:5px;background:var(--chip);color:var(--ink)}
+.chip b{font-weight:600} .chip.bearish b{color:var(--sell)} .chip.bullish b{color:var(--buy)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px 18px}
+.kv .k{font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--mute)}
+.kv .v{font-family:var(--mono);font-size:15px;font-variant-numeric:tabular-nums;font-weight:600}
+.kv .n{font-size:12.5px;color:var(--mute)}
+.steps{display:flex;flex-wrap:wrap;gap:6px;list-style:none;margin:0;padding:0}
+.steps li{font-size:12.5px;padding:4px 9px;border-radius:5px;border:1px dashed var(--line);color:var(--mute)}
+.steps li.done{border-style:solid;border-color:var(--ok);color:var(--ok);font-weight:600}
+.note{font-size:13.5px;color:var(--mute);margin:0;max-width:70ch}
+.list{background:var(--panel);border:1px solid var(--line);border-radius:10px}
+.row{display:flex;flex-wrap:wrap;gap:4px 14px;padding:10px 16px;border-top:1px solid var(--line);align-items:baseline}
+.row:first-child{border-top:0}
+.row .p{font-family:var(--display);font-weight:600;min-width:74px}
+.row .r{color:var(--mute);min-width:0;flex:1 1 240px}
+.row .num{font-family:var(--mono);font-size:13.5px;font-variant-numeric:tabular-nums;min-width:76px}
+.row .in{color:var(--warn);font-weight:600}
+.row time{font-family:var(--mono);font-size:12.5px;color:var(--mute)}
+.empty{padding:22px 16px;color:var(--mute);background:var(--panel);border:1px dashed var(--line);border-radius:10px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:28px}
+.zoom{position:fixed;inset:0;background:rgba(10,14,24,.86);display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top,0px)) 12px 12px;z-index:20;cursor:zoom-out}
+.zoom img{max-width:100%;max-height:100%;background:#fff;border-radius:6px}
+.zoom[hidden]{display:none}
+footer{font-size:12.5px;color:var(--mute);border-top:1px solid var(--line);padding-top:14px;max-width:80ch}
+.setup{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.setup.on{flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding:10px 16px}
+.setup p{margin:0} .setup ol{margin:0;padding-left:20px}
+.setup b{font-weight:600}
+button.btn{font:inherit;font-weight:600;color:var(--panel);background:var(--ink);border:0;border-radius:8px;padding:10px 16px;cursor:pointer;align-self:flex-start}
+button.btn.quiet{color:var(--ink);background:var(--chip)}
+textarea.code{width:100%;height:72px;font-family:var(--mono);font-size:12px;color:var(--mute);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;resize:none}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:7px}
+:focus-visible{outline:2px solid var(--buy);outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Set &amp; Forget Desk</h1>
+      <div class="sub" id="week">Loading this week's pairs</div>
+    </div>
+    <div class="clock">
+      <span class="pill" id="win">Entry window</span>
+      <span class="small" id="winNote"></span>
+      <span class="small" id="updated"></span>
+    </div>
+  </header>
+
+  <section id="pushBox" hidden></section>
+
+  <section>
+    <h2>Watching for an entry</h2>
+    <div class="cards" id="cards"><div class="empty">The pairs we are watching this week will appear here, each with its chart, zone, trigger and targets.</div></div>
+  </section>
+
+  <div class="cols">
+    <section>
+      <h2>Your AOIs</h2>
+      <div id="zones"><div class="empty">Where price is against the zones you drew, checked every hour.</div></div>
+    </section>
+    <section>
+      <h2>Notifications</h2>
+      <div id="alerts"><div class="empty">Each time price reaches one of your zones or a watched pair gives its trigger, the note is logged here.</div></div>
+    </section>
+  </div>
+
+  <section>
+    <h2>Not this week</h2>
+    <div id="passed"><div class="empty">Pairs we checked and passed on, with the reason.</div></div>
+  </section>
+
+  <footer>Analysis of Alex G's Set &amp; Forget rules on live data. It is not financial advice. Whether to take a trade and how much to risk is your decision.</footer>
+</div>
+<div class="zoom" id="zoom" hidden><img id="zoomImg" alt="Enlarged chart"></div>
+
+<script>
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
+const state = { feed: null };
+const STATUS = { waiting:'Waiting for pullback', at_zone:'Price at the zone', triggered:'Trigger seen', invalid:'Idea failed', no_trade:'No trade' };
+const STEPS = ['Price in zone','1H/30m shift','Closed engulfing','1:2 or better'];
+const pipOf = p => /JPY/.test(p) ? 0.01 : 0.0001;
+const dp = p => /JPY/.test(p) ? 3 : 4;
+const dpz = p => /JPY/.test(p) ? 3 : 5;
+const fmt = (p, v) => (typeof v === 'number') ? v.toFixed(dp(p)) : esc(v ?? '–');
+const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday:'short', day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'}); };
+const safeChart = c => (typeof c === 'string' && /^charts\/[a-z0-9_-]+\.(png|jpg)$/.test(c)) ? c : null;
+
+function card(s){
+  const pips = (typeof s.zone_lo==='number' && typeof s.zone_hi==='number') ? Math.round((s.zone_hi - s.zone_lo)/pipOf(s.pair)) : null;
+  const side = s.side === 'buy' ? 'buy' : 'sell';
+  const st = STATUS[s.status] ? s.status : 'waiting';
+  const step = Number(s.step) || 0;
+  const chart = safeChart(s.chart);
+  const tr = [['Weekly',s.weekly],['Daily',s.daily],['4H',s.h4]].filter(x => x[1]).map(([k,v]) =>
+    `<span class="chip ${/bull/i.test(v)?'bullish':/bear/i.test(v)?'bearish':''}">${k} <b>${esc(v)}</b></span>`).join('');
+  const targets = Array.isArray(s.targets) ? s.targets.filter(t => typeof t === 'number').map(t => t.toFixed(dp(s.pair))).join('  ·  ') : '';
+  return `<article class="card">
+    <div class="card-top">
+      <div style="display:flex;gap:10px;align-items:center"><span class="pair">${esc(s.pair)}</span><span class="side ${side}">${side.toUpperCase()}</span></div>
+      <span class="status ${st}">${STATUS[st]}</span>
+    </div>
+    ${chart ? `<img class="chart" src="${chart}" alt="${esc(s.pair)} 4H chart with the zone and the plan" loading="lazy" tabindex="0">` : ''}
+    <div class="body">
+      <div class="trends">${tr}</div>
+      <div class="grid">
+        <div class="kv"><div class="k">${side==='buy'?'Buy':'Sell'} zone</div><div class="v">${fmt(s.pair,s.zone_lo)} – ${fmt(s.pair,s.zone_hi)}</div><div class="n">${pips!==null?pips+' pips':''}${s.zone_note?' · '+esc(s.zone_note):''}</div></div>
+        <div class="kv"><div class="k">Targets</div><div class="v">${targets||'–'}</div><div class="n">first place price could react</div></div>
+        <div class="kv"><div class="k">Idea fails</div><div class="v">${fmt(s.pair,s.invalid_level)}</div><div class="n">${esc(s.invalid_note||'')}</div></div>
+        <div class="kv"><div class="k">Last price</div><div class="v">${fmt(s.pair,s.price)}</div><div class="n">${s.price_at?esc(when(s.price_at)):''}</div></div>
+      </div>
+      <ul class="steps">${STEPS.map((t,i)=>`<li class="${i<step?'done':''}">${i<step?'✓ ':''}${t}</li>`).join('')}</ul>
+      ${s.note?`<p class="note">${esc(s.note)}</p>`:''}
+    </div></article>`;
+}
+function zoneRow(d){
+  const p = d.price, pip = d.pip || pipOf(d.pair), f = v => Number(v).toFixed(dpz(d.pair));
+  if (typeof p !== 'number' || !Array.isArray(d.zones)) return null;
+  const ins = d.zones.filter(z => (d.inside||[]).includes(z.id));
+  let dist = 0, text;
+  if (ins.length){ text = `<span class="in">Inside ${ins.map(z => f(z.lo)+' – '+f(z.hi)).join(', ')}</span>`; }
+  else {
+    let best = null;
+    for (const z of d.zones){ if (p >= z.lo && p <= z.hi) continue; const dd = Math.min(Math.abs(p-z.lo), Math.abs(p-z.hi))/pip; if (!best || dd < best.d) best = {d:dd, z}; }
+    if (!best) return null;
+    dist = best.d; text = `${Math.round(best.d)} pips ${p < best.z.lo ? 'below' : 'above'} ${f(best.z.lo)} – ${f(best.z.hi)}`;
+  }
+  return { dist, html:`<div class="row"><span class="p">${esc(d.pair)}</span><span class="num">${f(p)}</span><span class="r">${text}</span></div>` };
+}
+function render(){
+  const f = state.feed; if (!f) return;
+  const setups = Array.isArray(f.setups) ? f.setups : [];
+  const watch = setups.filter(s => s.status !== 'no_trade').sort((a,b)=>(a.order??99)-(b.order??99));
+  const passed = setups.filter(s => s.status === 'no_trade').sort((a,b)=>(a.order??99)-(b.order??99));
+  $('#cards').innerHTML = watch.length ? watch.map(card).join('') : `<div class="empty">No pairs are being watched yet. After the weekly analysis, each pair shows here with its chart, zone, trigger and targets.</div>`;
+  $('#passed').innerHTML = passed.length ? `<div class="list">${passed.map(s=>`<div class="row"><span class="p">${esc(s.pair)}</span><span class="r">${esc(s.note||'')}</span></div>`).join('')}</div>` : `<div class="empty">Pairs we checked and passed on, with the reason.</div>`;
+  const zr = (Array.isArray(f.zones) ? f.zones : []).map(zoneRow).filter(Boolean).sort((a,b)=>a.dist-b.dist);
+  $('#zones').innerHTML = zr.length ? `<div class="list">${zr.map(x=>x.html).join('')}</div>` : `<div class="empty">Where price is against the zones you drew, checked every hour.</div>`;
+  const al = (Array.isArray(f.alerts) ? f.alerts : []).slice(0, 20);
+  $('#alerts').innerHTML = al.length ? `<div class="list">${al.map(a=>`<div class="row"><span class="p">${esc(a.pair||'Desk')}</span><span class="r">${esc(a.text||'')}</span><time>${esc(when(a.at))}</time></div>`).join('')}</div>` : `<div class="empty">Each time price reaches one of your zones or a watched pair gives its trigger, the note is logged here. Nothing yet.</div>`;
+  $('#week').textContent = (f.week && f.week.label) || '';
+  $('#updated').textContent = f.updated ? 'Checked ' + when(f.updated) : '';
+}
+async function getJSON(url){ const r = await fetch(url + (url.includes('?')?'&':'?') + 't=' + Date.now(), {cache:'no-store'}); if (!r.ok) throw new Error(r.status); return r.json(); }
+async function loadFeed(){
+  const got = await Promise.allSettled([getJSON('data/feed.json'), getJSON(RAW + 'data/feed.json')]);
+  const ok = got.filter(g => g.status === 'fulfilled' && g.value && g.value.updated).map(g => g.value)
+               .sort((a,b) => Date.parse(b.updated) - Date.parse(a.updated));
+  if (ok.length){ if (!state.feed || Date.parse(ok[0].updated) >= Date.parse(state.feed.updated)) { state.feed = ok[0]; render(); } }
+  else if (!state.feed) $('#week').textContent = 'The desk could not be loaded right now. It will retry.';
+}
+/* his entry window: about 11pm to 11am New York, Sunday night to Thursday night, plus early Friday until 1am */
+function nyParts(d){ const f = new Intl.DateTimeFormat('en-US',{timeZone:'America/New_York',weekday:'short',hour:'numeric',minute:'numeric',hour12:false}).formatToParts(d); const g=t=>f.find(x=>x.type===t).value; return {wd:g('weekday'), h:(+g('hour'))%24 + (+g('minute'))/60}; }
+function isOpen(d){ const {wd,h}=nyParts(d); if(wd==='Sat') return false; if(wd==='Sun') return h>=23; if(wd==='Fri') return h<1; return h>=23 || h<11; }
+function clock(){
+  const now = new Date(), open = isOpen(now); const pill = $('#win');
+  pill.textContent = open ? 'Entry window open' : 'Entry window closed'; pill.classList.toggle('open', open);
+  let t = new Date(now), note = '';
+  for (let i=0;i<4*24*4;i++){ t = new Date(t.getTime()+15*60000); if (isOpen(t) !== open){ note = (open?'Closes ':'Opens ') + t.toLocaleString([], {weekday:'short',hour:'2-digit',minute:'2-digit'}) + ' your time'; break; } }
+  $('#winNote').textContent = note;
+}
+clock(); setInterval(clock, 60000);
+loadFeed(); setInterval(loadFeed, 60000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) loadFeed(); });
+document.addEventListener('click', e => { const z=$('#zoom'); if (e.target.classList?.contains('chart')){ $('#zoomImg').src = e.target.src; z.hidden=false; } else if (!z.hidden) z.hidden=true; });
+document.addEventListener('keydown', e => { if (e.key==='Escape') $('#zoom').hidden = true; if (e.key==='Enter' && e.target.classList?.contains('chart')) e.target.click(); });
+
+/* ---------- notifications on this device ---------- */
+const b64uToBytes = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while (s.length % 4) s += '='; return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+const bytesToB64u = b => { let s=''; for (const x of b) s += String.fromCharCode(x); return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+async function fingerprint(endpoint){ const h = new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(endpoint))); return [...h.slice(0,4)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
+/* The device code is this device's push address, encrypted so that only the notification sender can read it. */
+async function deviceCode(sub, encPub){
+  const serverPub = await crypto.subtle.importKey('raw', b64uToBytes(encPub), {name:'ECDH', namedCurve:'P-256'}, false, []);
+  const eph = await crypto.subtle.generateKey({name:'ECDH', namedCurve:'P-256'}, true, ['deriveBits']);
+  const shared = await crypto.subtle.deriveBits({name:'ECDH', public:serverPub}, eph.privateKey, 256);
+  const key = await crypto.subtle.importKey('raw', await crypto.subtle.digest('SHA-256', shared), 'AES-GCM', false, ['encrypt']);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM', iv}, key, new TextEncoder().encode(JSON.stringify(sub))));
+  const ephPub = new Uint8Array(await crypto.subtle.exportKey('raw', eph.publicKey));
+  const all = new Uint8Array(ephPub.length + iv.length + ct.length); all.set(ephPub,0); all.set(iv,ephPub.length); all.set(ct,ephPub.length+iv.length);
+  return 'SFD1.' + await fingerprint(sub.endpoint) + '.' + bytesToB64u(all);
+}
+const push = { cfg:null, reg:null };
+const standalone = () => matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const isIOS = () => /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const canPush = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
+function box(html, on){ const b = $('#pushBox'); b.hidden = false; b.innerHTML = `<h2>Notifications on this device</h2><div class="setup${on?' on':''}">${html}</div>`; }
+async function pushUI(msg){
+  if (!canPush()){
+    if (isIOS() && !standalone()) return box(`<p><b>Install the app to get notifications on this iPhone.</b></p><ol><li>Tap the Share button in Safari.</li><li>Choose <b>Add to Home Screen</b>.</li><li>Open <b>S&amp;F Desk</b> from the Home Screen and turn notifications on there.</li></ol>`);
+    return box(`<p>This browser cannot show notifications. On a Mac use Safari or Chrome; on an iPhone use Safari and add the app to the Home Screen (iOS 16.4 or later).</p>`);
+  }
+  if (Notification.permission === 'denied') return box(`<p><b>Notifications are blocked for this app.</b> Allow them in the device's notification settings for S&amp;F Desk, then reopen the app.</p>`);
+  let sub = null; try { sub = push.reg ? await push.reg.pushManager.getSubscription() : null; } catch (e) {}
+  if (!sub) return box(`<p>Get a notification here each time price reaches one of your zones or a watched pair gives its trigger.</p><button class="btn" id="pushOn">Turn on notifications</button>${msg?`<p class="small">${esc(msg)}</p>`:''}${!standalone()&&!isIOS()?`<p class="small">Tip: install the app first (Safari: File → Add to Dock; Chrome: the install icon in the address bar) so it has its own window.</p>`:''}`);
+  let code = ''; try { code = await deviceCode(sub.toJSON(), push.cfg.encPublicKey); } catch (e) { return box(`<p>Notifications are on, but the device code could not be made (${esc(e.message)}).</p>`); }
+  const fp = code.split('.')[1];
+  const known = (push.cfg.devices || []).some(d => d && d.fp === fp);
+  if (known) return box(`<p><span class="dot"></span><b>Notifications are on for this device.</b></p><span class="small">Device ${esc(fp)}</span>`, true);
+  box(`<p><b>One last step:</b> copy this device code and send it to Claude in your chat. It links this device to the hourly check.</p>
+    <textarea class="code" id="devCode" readonly>${esc(code)}</textarea>
+    <button class="btn" id="copyCode">Copy device code</button><p class="small" id="copyNote">The code is encrypted. It only lets the Desk send notifications to this device.</p>`);
+}
+document.addEventListener('click', async e => {
+  if (e.target.id === 'pushOn'){
+    e.target.disabled = true;
+    try {
+      const perm = await Notification.requestPermission();
+      if (perm !== 'granted') return pushUI(perm === 'denied' ? '' : 'Notifications were not allowed. Tap the button to try again.');
+      await push.reg.pushManager.subscribe({ userVisibleOnly:true, applicationServerKey:b64uToBytes(push.cfg.vapidPublicKey) });
+      pushUI();
+    } catch (err) { pushUI('Could not turn notifications on: ' + err.message); }
+  }
+  if (e.target.id === 'copyCode'){
+    const ta = $('#devCode');
+    try { await navigator.clipboard.writeText(ta.value); $('#copyNote').textContent = 'Copied. Paste it into your chat with Claude.'; }
+    catch (err) { ta.focus(); ta.select(); $('#copyNote').textContent = 'Select the code above and copy it, then paste it into your chat with Claude.'; }
+  }
+});
+(async () => {
+  try { push.cfg = await getJSON('push/config.json'); } catch (e) { return; }
+  if ('serviceWorker' in navigator){ try { push.reg = await navigator.serviceWorker.register('sw.js'); await navigator.serviceWorker.ready; } catch (e) {} }
+  pushUI();
+})();
+</script>
+</body>
+</html>

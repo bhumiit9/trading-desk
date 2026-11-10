@@ -1,0 +1,771 @@
+{
+ "updated": "2026-11-10T21:46:44Z",
+ "week": {
+  "label": "Week of 9 Nov 2026 \u00b7 four pairs waiting for a pullback"
+ },
+ "setups": [
+  {
+   "pair": "EURNZD",
+   "side": "sell",
+   "status": "waiting",
+   "order": 1,
+   "weekly": "bearish",
+   "daily": "bearish",
+   "h4": "bearish",
+   "zone_lo": 2.0041,
+   "zone_hi": 2.011,
+   "zone_note": "your zone, 4 daily touches",
+   "targets": [
+    1.985,
+    1.97
+   ],
+   "invalid_level": 2.0155,
+   "invalid_note": "4H close above",
+   "price": 1.9926,
+   "price_at": "2026-11-10T21:46:44Z",
+   "step": 0,
+   "chart": "charts/eurnzd.jpg",
+   "note": "Best of the four. Monday's daily candle was a bearish engulfing from the zone and the 4H turned bearish on 10 Nov. Needs a pullback into the zone first."
+  },
+  {
+   "pair": "CADJPY",
+   "side": "sell",
+   "status": "waiting",
+   "order": 2,
+   "weekly": "bearish",
+   "daily": "bearish",
+   "h4": "bearish",
+   "zone_lo": 112.2,
+   "zone_hi": 112.58,
+   "zone_note": "3 daily touches",
+   "targets": [
+    111.4,
+    110.85
+   ],
+   "invalid_level": 113.34,
+   "invalid_note": "4H close above",
+   "price": 111.917,
+   "price_at": "2026-11-10T21:46:44Z",
+   "step": 0,
+   "chart": "charts/cadjpy.jpg",
+   "note": "Weakest of the four. The daily only turned bearish on 9 Nov by a 6-pip close below 111.92."
+  },
+  {
+   "pair": "GBPJPY",
+   "side": "sell",
+   "status": "waiting",
+   "order": 3,
+   "weekly": "bearish",
+   "daily": "bearish",
+   "h4": "bearish",
+   "zone_lo": 212.7,
+   "zone_hi": 213.2,
+   "zone_note": "4 daily touches",
+   "targets": [
+    211.85,
+    209.9
+   ],
+   "invalid_level": 213.7,
+   "invalid_note": "4H close above",
+   "price": 211.889,
+   "price_at": "2026-11-10T21:46:44Z",
+   "step": 0,
+   "chart": "charts/gbpjpy.jpg",
+   "note": "Support at 211.15-211.80 sits just below, so the first target is the top of that zone."
+  },
+  {
+   "pair": "GBPAUD",
+   "side": "buy",
+   "status": "waiting",
+   "order": 4,
+   "weekly": "bullish",
+   "daily": "bullish",
+   "h4": "bullish",
+   "zone_lo": 1.927,
+   "zone_hi": 1.9325,
+   "zone_note": "broken July highs, 3 touches",
+   "targets": [
+    1.9445,
+    1.965
+   ],
+   "invalid_level": 1.9229,
+   "invalid_note": "4H close below",
+   "price": 1.94352,
+   "price_at": "2026-11-10T21:46:44Z",
+   "step": 0,
+   "chart": "charts/gbpaud.jpg",
+   "note": "Weekly and daily both turned bullish last week. Price is at the high, so the buy only comes on a pullback into the zone."
+  },
+  {
+   "pair": "EURUSD",
+   "status": "no_trade",
+   "order": 10,
+   "note": "Weekly and daily bearish, but price is at the weekly low. He never sells the low."
+  },
+  {
+   "pair": "NZDUSD",
+   "status": "no_trade",
+   "order": 11,
+   "note": "Price is in a daily sell zone, but the weekly made a new low last week."
+  },
+  {
+   "pair": "AUDNZD",
+   "status": "no_trade",
+   "order": 12,
+   "note": "Daily is breaking its higher low at 1.2287, but support at 1.2200-1.2255 is right underneath."
+  },
+  {
+   "pair": "EURCAD",
+   "status": "no_trade",
+   "order": 13,
+   "note": "Weekly held its higher low and bounced. That buy has gone and price is between zones."
+  },
+  {
+   "pair": "GBPUSD",
+   "status": "no_trade",
+   "order": 14,
+   "note": "Weekly is a messy range and the daily is choppy. Structure is unclear."
+  },
+  {
+   "pair": "GBPCHF",
+   "status": "no_trade",
+   "order": 15,
+   "note": "Weekly at its highs and the daily has gone sideways for six weeks."
+  }
+ ],
+ "zones": [
+  {
+   "pair": "EURNZD",
+   "symbol": "OANDA:EURNZD",
+   "pip": 0.0001,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 1.91951,
+     "hi": 1.92441
+    },
+    {
+     "id": "z2",
+     "lo": 1.93531,
+     "hi": 1.93778
+    },
+    {
+     "id": "z3",
+     "lo": 1.94263,
+     "hi": 1.95172
+    },
+    {
+     "id": "z4",
+     "lo": 1.95858,
+     "hi": 1.9698
+    },
+    {
+     "id": "z5",
+     "lo": 2.00412,
+     "hi": 2.01501
+    },
+    {
+     "id": "z6",
+     "lo": 2.03322,
+     "hi": 2.03569
+    },
+    {
+     "id": "z7",
+     "lo": 2.04021,
+     "hi": 2.04549
+    }
+   ],
+   "inside": [],
+   "alerted": {},
+   "price": 1.9926,
+   "checked_at": "2026-11-10T21:46:44Z"
+  },
+  {
+   "pair": "CADJPY",
+   "symbol": "OANDA:CADJPY",
+   "pip": 0.01,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 104.933,
+     "hi": 105.289
+    },
+    {
+     "id": "z2",
+     "lo": 105.76,
+     "hi": 105.992
+    },
+    {
+     "id": "z3",
+     "lo": 105.891,
+     "hi": 106.093
+    },
+    {
+     "id": "z4",
+     "lo": 106.596,
+     "hi": 106.739
+    },
+    {
+     "id": "z5",
+     "lo": 110.61,
+     "hi": 111.217
+    },
+    {
+     "id": "z6",
+     "lo": 111.882,
+     "hi": 112.537
+    },
+    {
+     "id": "z7",
+     "lo": 113.052,
+     "hi": 113.37
+    },
+    {
+     "id": "z8",
+     "lo": 113.448,
+     "hi": 113.488
+    },
+    {
+     "id": "z9",
+     "lo": 113.625,
+     "hi": 113.988
+    },
+    {
+     "id": "z10",
+     "lo": 114.878,
+     "hi": 115.191
+    },
+    {
+     "id": "z11",
+     "lo": 115.963,
+     "hi": 116.233
+    }
+   ],
+   "inside": [
+    "z6"
+   ],
+   "alerted": {},
+   "price": 111.917,
+   "checked_at": "2026-11-10T21:46:44Z"
+  },
+  {
+   "pair": "GBPJPY",
+   "symbol": "OANDA:GBPJPY",
+   "pip": 0.01,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 192.855,
+     "hi": 193.442
+    },
+    {
+     "id": "z2",
+     "lo": 198.212,
+     "hi": 198.548
+    },
+    {
+     "id": "z3",
+     "lo": 206.612,
+     "hi": 206.976
+    },
+    {
+     "id": "z4",
+     "lo": 210.614,
+     "hi": 210.925
+    },
+    {
+     "id": "z5",
+     "lo": 211.145,
+     "hi": 211.802
+    },
+    {
+     "id": "z6",
+     "lo": 212.707,
+     "hi": 212.861
+    },
+    {
+     "id": "z7",
+     "lo": 213.617,
+     "hi": 214.137
+    },
+    {
+     "id": "z8",
+     "lo": 216.506,
+     "hi": 217.637
+    }
+   ],
+   "inside": [],
+   "alerted": {},
+   "price": 211.889,
+   "checked_at": "2026-11-10T21:46:44Z"
+  },
+  {
+   "pair": "GBPAUD",
+   "symbol": "OANDA:GBPAUD",
+   "pip": 0.0001,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 1.86288,
+     "hi": 1.87323
+    },
+    {
+     "id": "z2",
+     "lo": 1.89227,
+     "hi": 1.89924
+    },
+    {
+     "id": "z3",
+     "lo": 1.92699,
+     "hi": 1.93239
+    },
+    {
+     "id": "z4",
+     "lo": 1.96566,
+     "hi": 1.96885
+    },
+    {
+     "id": "z5",
+     "lo": 2.00073,
+     "hi": 2.00253
+    },
+    {
+     "id": "z6",
+     "lo": 2.00755,
+     "hi": 2.01066
+    },
+    {
+     "id": "z7",
+     "lo": 2.0125,
+     "hi": 2.01564
+    },
+    {
+     "id": "z8",
+     "lo": 2.02152,
+     "hi": 2.02374
+    },
+    {
+     "id": "z9",
+     "lo": 2.02564,
+     "hi": 2.02706
+    },
+    {
+     "id": "z10",
+     "lo": 2.02952,
+     "hi": 2.03463
+    },
+    {
+     "id": "z11",
+     "lo": 2.04062,
+     "hi": 2.04238
+    },
+    {
+     "id": "z12",
+     "lo": 2.04635,
+     "hi": 2.05005
+    },
+    {
+     "id": "z13",
+     "lo": 2.06751,
+     "hi": 2.07245
+    }
+   ],
+   "inside": [],
+   "alerted": {},
+   "price": 1.94352,
+   "checked_at": "2026-11-10T21:46:44Z"
+  },
+  {
+   "pair": "EURUSD",
+   "symbol": "OANDA:EURUSD",
+   "pip": 0.0001,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 1.11714,
+     "hi": 1.12371
+    },
+    {
+     "id": "z2",
+     "lo": 1.12752,
+     "hi": 1.12881
+    },
+    {
+     "id": "z3",
+     "lo": 1.13271,
+     "hi": 1.13409
+    },
+    {
+     "id": "z4",
+     "lo": 1.14784,
+     "hi": 1.15138
+    },
+    {
+     "id": "z5",
+     "lo": 1.15691,
+     "hi": 1.16023
+    },
+    {
+     "id": "z6",
+     "lo": 1.16274,
+     "hi": 1.1647
+    },
+    {
+     "id": "z7",
+     "lo": 1.17141,
+     "hi": 1.17217
+    },
+    {
+     "id": "z8",
+     "lo": 1.17411,
+     "hi": 1.1766
+    },
+    {
+     "id": "z9",
+     "lo": 1.17918,
+     "hi": 1.18196
+    }
+   ],
+   "inside": [],
+   "alerted": {},
+   "price": 1.11644,
+   "checked_at": "2026-11-10T21:46:44Z"
+  },
+  {
+   "pair": "NZDUSD",
+   "symbol": "OANDA:NZDUSD",
+   "pip": 0.0001,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 0.55966,
+     "hi": 0.56367
+    },
+    {
+     "id": "z2",
+     "lo": 0.56807,
+     "hi": 0.57017
+    },
+    {
+     "id": "z3",
+     "lo": 0.57461,
+     "hi": 0.57538
+    },
+    {
+     "id": "z4",
+     "lo": 0.5756,
+     "hi": 0.57658
+    },
+    {
+     "id": "z5",
+     "lo": 0.58142,
+     "hi": 0.58165
+    },
+    {
+     "id": "z6",
+     "lo": 0.58204,
+     "hi": 0.58289
+    },
+    {
+     "id": "z7",
+     "lo": 0.58634,
+     "hi": 0.58698
+    },
+    {
+     "id": "z8",
+     "lo": 0.5888,
+     "hi": 0.59052
+    },
+    {
+     "id": "z9",
+     "lo": 0.59333,
+     "hi": 0.59512
+    },
+    {
+     "id": "z10",
+     "lo": 0.59842,
+     "hi": 0.60002
+    },
+    {
+     "id": "z11",
+     "lo": 0.60471,
+     "hi": 0.6065
+    }
+   ],
+   "inside": [
+    "z1"
+   ],
+   "alerted": {},
+   "price": 0.5603,
+   "checked_at": "2026-11-10T21:46:44Z"
+  },
+  {
+   "pair": "GBPUSD",
+   "symbol": "OANDA:GBPUSD",
+   "pip": 0.0001,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 1.31679,
+     "hi": 1.32107
+    },
+    {
+     "id": "z2",
+     "lo": 1.32874,
+     "hi": 1.33044
+    },
+    {
+     "id": "z3",
+     "lo": 1.33179,
+     "hi": 1.33563
+    },
+    {
+     "id": "z4",
+     "lo": 1.33758,
+     "hi": 1.34254
+    },
+    {
+     "id": "z5",
+     "lo": 1.34814,
+     "hi": 1.34885
+    },
+    {
+     "id": "z6",
+     "lo": 1.3503,
+     "hi": 1.35238
+    },
+    {
+     "id": "z7",
+     "lo": 1.35577,
+     "hi": 1.3571
+    },
+    {
+     "id": "z8",
+     "lo": 1.3615,
+     "hi": 1.36568
+    }
+   ],
+   "inside": [
+    "z3"
+   ],
+   "alerted": {},
+   "price": 1.33452,
+   "checked_at": "2026-11-10T21:46:44Z"
+  },
+  {
+   "pair": "AUDNZD",
+   "symbol": "OANDA:AUDNZD",
+   "pip": 0.0001,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 1.09084,
+     "hi": 1.09185
+    },
+    {
+     "id": "z2",
+     "lo": 1.14792,
+     "hi": 1.15023
+    },
+    {
+     "id": "z3",
+     "lo": 1.16188,
+     "hi": 1.16258
+    },
+    {
+     "id": "z4",
+     "lo": 1.16603,
+     "hi": 1.16725
+    },
+    {
+     "id": "z5",
+     "lo": 1.1999,
+     "hi": 1.20596
+    },
+    {
+     "id": "z6",
+     "lo": 1.22015,
+     "hi": 1.22116
+    },
+    {
+     "id": "z7",
+     "lo": 1.221,
+     "hi": 1.22408
+    },
+    {
+     "id": "z8",
+     "lo": 1.23306,
+     "hi": 1.23628
+    },
+    {
+     "id": "z9",
+     "lo": 1.23397,
+     "hi": 1.24541
+    },
+    {
+     "id": "z10",
+     "lo": 1.24162,
+     "hi": 1.24675
+    },
+    {
+     "id": "z11",
+     "lo": 1.24717,
+     "hi": 1.24885
+    }
+   ],
+   "inside": [],
+   "alerted": {},
+   "price": 1.22544,
+   "checked_at": "2026-11-10T21:46:44Z"
+  },
+  {
+   "pair": "EURCAD",
+   "symbol": "OANDA:EURCAD",
+   "pip": 0.0001,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 1.55838,
+     "hi": 1.57051
+    },
+    {
+     "id": "z2",
+     "lo": 1.56316,
+     "hi": 1.56471
+    },
+    {
+     "id": "z3",
+     "lo": 1.56564,
+     "hi": 1.56601
+    },
+    {
+     "id": "z4",
+     "lo": 1.56715,
+     "hi": 1.57146
+    },
+    {
+     "id": "z5",
+     "lo": 1.59057,
+     "hi": 1.5925
+    },
+    {
+     "id": "z6",
+     "lo": 1.60734,
+     "hi": 1.6085
+    },
+    {
+     "id": "z7",
+     "lo": 1.60933,
+     "hi": 1.61163
+    },
+    {
+     "id": "z8",
+     "lo": 1.6182,
+     "hi": 1.62092
+    },
+    {
+     "id": "z9",
+     "lo": 1.62466,
+     "hi": 1.62774
+    }
+   ],
+   "inside": [],
+   "alerted": {},
+   "price": 1.58392,
+   "checked_at": "2026-11-10T21:46:44Z"
+  },
+  {
+   "pair": "GBPCHF",
+   "symbol": "OANDA:GBPCHF",
+   "pip": 0.0001,
+   "zones": [
+    {
+     "id": "z1",
+     "lo": 1.05306,
+     "hi": 1.05577
+    },
+    {
+     "id": "z2",
+     "lo": 1.06033,
+     "hi": 1.06171
+    },
+    {
+     "id": "z3",
+     "lo": 1.06604,
+     "hi": 1.06829
+    },
+    {
+     "id": "z4",
+     "lo": 1.07011,
+     "hi": 1.07067
+    },
+    {
+     "id": "z5",
+     "lo": 1.07359,
+     "hi": 1.07564
+    },
+    {
+     "id": "z6",
+     "lo": 1.07689,
+     "hi": 1.07763
+    },
+    {
+     "id": "z7",
+     "lo": 1.07872,
+     "hi": 1.07932
+    },
+    {
+     "id": "z8",
+     "lo": 1.08382,
+     "hi": 1.08615
+    },
+    {
+     "id": "z9",
+     "lo": 1.09309,
+     "hi": 1.09649
+    },
+    {
+     "id": "z10",
+     "lo": 1.09747,
+     "hi": 1.09803
+    },
+    {
+     "id": "z11",
+     "lo": 1.10362,
+     "hi": 1.10442
+    },
+    {
+     "id": "z12",
+     "lo": 1.10459,
+     "hi": 1.10693
+    },
+    {
+     "id": "z13",
+     "lo": 1.11191,
+     "hi": 1.1136
+    }
+   ],
+   "inside": [],
+   "alerted": {},
+   "price": 1.1014,
+   "checked_at": "2026-11-10T21:46:44Z"
+  }
+ ],
+ "alerts": [
+  {
+   "at": "2026-11-10T21:10:00Z",
+   "pair": "CADJPY",
+   "text": "Price 111.912 is inside your AOI 111.882-112.537 (lower edge). On this week's plan as a sell; no 1H shift or engulfing yet."
+  },
+  {
+   "at": "2026-11-10T21:10:00Z",
+   "pair": "NZDUSD",
+   "text": "Price 0.56026 is inside your AOI 0.55966-0.56367. Not on the plan: the weekly is at its low."
+  },
+  {
+   "at": "2026-11-10T21:10:00Z",
+   "pair": "GBPUSD",
+   "text": "Price 1.33436 is inside your AOI 1.33179-1.33563. Not on the plan: structure is unclear."
+  }
+ ]
+}
