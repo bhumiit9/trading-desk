@@ -1,7 +1,7 @@
 {
  "updated": "2026-11-10T22:00:04Z",
  "week": {
-  "label": "Week of 9 Nov 2026 \u00b7 four pairs waiting for a pullback"
+  "label": "Week of 9 Nov"
  },
  "setups": [
   {
@@ -25,7 +25,8 @@
    "price_at": "2026-11-10T22:00:04Z",
    "step": 0,
    "chart": "charts/eurnzd.jpg",
-   "note": "Best of the four. Monday's daily candle was a bearish engulfing from the zone and the 4H turned bearish on 10 Nov. Needs a pullback into the zone first."
+   "note": "Best of the four. Monday's daily candle was a bearish engulfing from the zone and the 4H turned bearish on 10 Nov. Needs a pullback into the zone first.",
+   "shot_at": "2026-11-10T20:52:00Z"
   },
   {
    "pair": "CADJPY",
@@ -48,7 +49,8 @@
    "price_at": "2026-11-10T22:00:04Z",
    "step": 0,
    "chart": "charts/cadjpy.jpg",
-   "note": "Weakest of the four. The daily only turned bearish on 9 Nov by a 6-pip close below 111.92."
+   "note": "Weakest of the four. The daily only turned bearish on 9 Nov by a 6-pip close below 111.92.",
+   "shot_at": "2026-11-10T20:52:00Z"
   },
   {
    "pair": "GBPJPY",
@@ -71,7 +73,8 @@
    "price_at": "2026-11-10T22:00:04Z",
    "step": 0,
    "chart": "charts/gbpjpy.jpg",
-   "note": "Support at 211.15-211.80 sits just below, so the first target is the top of that zone."
+   "note": "Support at 211.15-211.80 sits just below, so the first target is the top of that zone.",
+   "shot_at": "2026-11-10T20:52:00Z"
   },
   {
    "pair": "GBPAUD",
@@ -94,7 +97,8 @@
    "price_at": "2026-11-10T22:00:04Z",
    "step": 0,
    "chart": "charts/gbpaud.jpg",
-   "note": "Weekly and daily both turned bullish last week. Price is at the high, so the buy only comes on a pullback into the zone."
+   "note": "Weekly and daily both turned bullish last week. Price is at the high, so the buy only comes on a pullback into the zone.",
+   "shot_at": "2026-11-10T20:52:00Z"
   },
   {
    "pair": "EURUSD",

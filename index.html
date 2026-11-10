@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Set & Forget Desk</title>
-<meta name="description" content="Charts of your pairs with your AOIs, and trade notifications.">
+<meta name="description" content="This week's trades as TradingView screenshots with entry, stop and target, plus notifications.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="icons/icon-192.png">
@@ -13,277 +13,131 @@
 <meta name="apple-mobile-web-app-title" content="S&F Desk">
 <meta name="theme-color" content="#ffffff">
 <style>
-/* The app is the chart. One row of controls above it, the pairs below it, everything else behind the bell. */
+/* The screenshots are the app: one TradingView picture per trade, edge to edge, one caption line each.
+   Everything else (notification log, device setup) sits behind the bell. */
 :root{
   --bg:#ffffff; --surf:#F1F4FA; --ink:#0F1B33; --mute:#62708C; --line:#E1E6F0;
-  --up:#2962FF; --down:#E5484D; --ok:#0E9F6E; --amber:#F5A300; --amber-ink:#8A5300;
-  --zone:rgba(41,98,255,.11); --zone-edge:rgba(41,98,255,.45);
-  --sellzone:rgba(229,72,77,.16); --buyzone:rgba(14,159,110,.18);
+  --sell:#E5484D; --buy:#0E9F6E; --amber-ink:#8A5300; --amber-bg:#FFF2D0; --link:#2962FF;
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;height:100%;overflow:hidden;overscroll-behavior:none}
-body{background:var(--bg);color:var(--ink);font:400 15px/1.35 var(--font);font-variant-numeric:tabular-nums;
-  display:flex;flex-direction:column;height:100dvh;
-  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.35 var(--font);font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%;
+  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) calc(env(safe-area-inset-bottom,0px) + 28px) env(safe-area-inset-left,0px)}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
-.top{display:flex;align-items:center;gap:12px;padding:10px 14px 8px 16px}
-.id{min-width:0;flex:1}
-.name{font-size:24px;font-weight:700;letter-spacing:-.02em;line-height:1.1;display:flex;align-items:center;gap:8px}
-.tag{font-size:11.5px;font-weight:700;letter-spacing:0;border-radius:5px;padding:2px 7px}
-.tag.sell{color:var(--down);background:rgba(229,72,77,.12)} .tag.buy{color:var(--ok);background:rgba(14,159,110,.13)}
-.sub{font-size:13px;color:var(--mute);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sub b{color:var(--ink);font-weight:600} .sub .hot{color:var(--amber-ink);font-weight:600} .sub .go{color:var(--ok);font-weight:600}
-.tf{display:flex;background:var(--surf);border-radius:9px;padding:3px}
-.tf button{font-size:13px;font-weight:600;color:var(--mute);padding:6px 11px;border-radius:7px;min-width:38px}
-.tf button[aria-pressed="true"]{background:var(--bg);color:var(--ink);box-shadow:0 1px 2px rgba(15,27,51,.12)}
-.tf button:disabled{opacity:.35}
-.bell{position:relative;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--ink)}
-.bell svg{width:23px;height:23px}
-.bell i{position:absolute;top:7px;right:8px;width:9px;height:9px;border-radius:50%;background:var(--amber);border:2px solid var(--bg);display:none}
+.top{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:12px 10px 10px 16px;
+  padding-top:calc(12px + env(safe-area-inset-top,0px));margin-top:calc(-1 * env(safe-area-inset-top,0px))}
+h1{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0;line-height:1.1}
+.bell{position:relative;width:42px;height:42px;border-radius:50%;display:grid;place-items:center}
+.bell svg{width:24px;height:24px}
+.bell i{position:absolute;top:8px;right:9px;width:10px;height:10px;border-radius:50%;background:#F5A300;border:2px solid var(--bg);display:none}
 .bell.new i{display:block}
-.stage{position:relative;flex:1;min-height:0}
-#chart{position:absolute;inset:0}
-#zones{position:absolute;left:0;top:0;overflow:hidden;pointer-events:none;z-index:3}
-.z{position:absolute;left:0;right:0;background:var(--zone);border-block:1px solid var(--zone-edge)}
-.z.plan{border:0;background:var(--sellzone)} .z.plan.buy{background:var(--buyzone)}
-.z.plan span{position:absolute;left:8px;top:3px;font-size:11px;font-weight:700;color:var(--down)} .z.plan.buy span{color:var(--ok)}
-.msg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;color:var(--mute);padding:24px;z-index:4;background:var(--bg)}
-.msg[hidden]{display:none}
-.pairs{display:flex;gap:7px;overflow-x:auto;padding:10px 14px 12px;scrollbar-width:none;border-top:1px solid var(--line)}
-.pairs::-webkit-scrollbar{display:none}
-.pairs button{flex:none;display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--mute);background:var(--surf);border-radius:999px;padding:8px 13px}
-.pairs button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
-.pairs i{width:7px;height:7px;border-radius:50%;background:transparent}
-.pairs .in i{background:var(--amber)} .pairs .plan i{box-shadow:0 0 0 1.5px var(--mute) inset} .pairs .plan.in i{box-shadow:none}
+.feed{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:26px 20px;max-width:1500px;margin:0 auto}
+@media (min-width:700px){.feed{padding:0 20px}}
+.cap{display:flex;align-items:center;gap:9px;padding:0 16px 8px}
+@media (min-width:700px){.cap{padding-inline:2px}}
+.pair{font-size:20px;font-weight:700;letter-spacing:-.01em}
+.tag{font-size:12px;font-weight:700;border-radius:5px;padding:2px 8px}
+.tag.sell{color:var(--sell);background:rgba(229,72,77,.12)} .tag.buy{color:var(--buy);background:rgba(14,159,110,.13)}
+.st{margin-left:auto;font-size:13px;color:var(--mute);font-weight:500}
+.st.at_zone{color:var(--amber-ink);background:var(--amber-bg);border-radius:999px;padding:2px 10px;font-weight:600}
+.st.triggered{color:#fff;background:var(--buy);border-radius:999px;padding:2px 10px;font-weight:600}
+.st.invalid{color:var(--sell);font-weight:600}
+.shot{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:var(--surf);cursor:zoom-in;border-block:1px solid var(--line)}
+@media (min-width:700px){.shot{border:1px solid var(--line);border-radius:10px}}
+.none{padding:40px 24px;text-align:center;color:var(--mute)}
+.view{position:fixed;inset:0;z-index:30;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch;display:flex}
+.view[hidden]{display:none}
+.view img{margin:auto;width:100%;max-width:min(100%,100dvh);height:auto;cursor:zoom-in}
+.view.big img{width:230%;max-width:none;cursor:zoom-out}
+.view button{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:12px;z-index:31;background:var(--ink);color:#fff;font-weight:600;border-radius:999px;padding:8px 16px}
 .sheet{position:fixed;inset:0;z-index:20;background:rgba(15,27,51,.35);display:flex;align-items:flex-end;justify-content:center}
 .sheet[hidden]{display:none}
 .panel{background:var(--bg);width:min(100%,560px);max-height:86dvh;border-radius:18px 18px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (min-width:700px){.sheet{align-items:center}.panel{border-radius:18px;max-height:80dvh}}
 .phead{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 10px}
 .phead h2{font-size:19px;font-weight:700;margin:0;letter-spacing:-.01em}
-.phead button{font-weight:600;color:var(--up);padding:6px 4px}
+.phead button{font-weight:600;color:var(--link);padding:6px 4px}
 .pbody{overflow-y:auto;padding:0 18px 18px;display:flex;flex-direction:column;gap:14px;-webkit-overflow-scrolling:touch}
 .dev{background:var(--surf);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:9px;font-size:14px}
 .dev p{margin:0} .dev ol{margin:0;padding-left:20px} .dev b{font-weight:600}
 .btn{align-self:flex-start;font-weight:600;color:#fff;background:var(--ink);border-radius:9px;padding:10px 16px}
 .code{width:100%;height:64px;font:11.5px ui-monospace,Menlo,monospace;color:var(--mute);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;resize:none}
-.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--ok);margin-right:7px}
-.al{display:flex;flex-direction:column}
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--buy);margin-right:7px}
 .a{padding:11px 0;border-top:1px solid var(--line);font-size:14px}
 .a:first-child{border-top:0}
 .a .h{display:flex;justify-content:space-between;gap:10px;font-weight:600}
 .a .h time{font-weight:400;font-size:12.5px;color:var(--mute);white-space:nowrap}
 .a p{margin:3px 0 0;color:var(--mute)}
-.none{color:var(--mute);font-size:14px;padding:6px 0}
-.foot{font-size:12px;color:var(--mute);line-height:1.45} .foot a{color:inherit}
-:focus-visible{outline:2px solid var(--up);outline-offset:2px}
+.quiet{color:var(--mute);font-size:14px;padding:6px 0}
+.foot{font-size:12px;color:var(--mute);line-height:1.45}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px}
 </style>
 </head>
 <body>
 <header class="top">
-  <div class="id">
-    <div class="name"><span id="name">&nbsp;</span><span class="tag" id="tag" hidden></span></div>
-    <div class="sub" id="sub">&nbsp;</div>
-  </div>
-  <div class="tf" id="tf" role="group" aria-label="Timeframe">
-    <button data-tf="1h" aria-pressed="false">1H</button><button data-tf="4h" aria-pressed="true">4H</button><button data-tf="D" aria-pressed="false">D</button>
-  </div>
+  <h1 id="week">This week</h1>
   <button class="bell" id="bell" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><i></i></button>
 </header>
-<main class="stage">
-  <div id="chart"></div>
-  <div id="zones"></div>
-  <div class="msg" id="msg">Loading charts</div>
-</main>
-<nav class="pairs" id="pairs" aria-label="Pairs"></nav>
+<main class="feed" id="feed"><div class="none">Loading this week's charts</div></main>
+
+<div class="view" id="view" hidden><button id="viewClose">Close</button><img id="viewImg" alt=""></div>
 
 <div class="sheet" id="sheet" hidden>
   <div class="panel" role="dialog" aria-label="Notifications">
     <div class="phead"><h2>Notifications</h2><button id="close">Done</button></div>
     <div class="pbody">
       <div id="dev"></div>
-      <div class="al" id="alerts"></div>
-      <div class="foot">Blue bands are the zones you drew. Rule-based analysis of Alex G's Set &amp; Forget strategy, not financial advice. The trade decision is yours.<br>Charts by <a href="https://www.tradingview.com/" target="_blank" rel="noopener">TradingView</a> Lightweight Charts.</div>
+      <div id="alerts"></div>
+      <div class="foot">Entries on the charts are plans. They count only after the 1H shift of structure and a closed engulfing at the zone. Rule-based analysis of Alex G's Set &amp; Forget strategy, not financial advice. The trade decision is yours.</div>
     </div>
   </div>
 </div>
 
-<script src="vendor/lightweight-charts.js"></script>
 <script>
 const $ = s => document.querySelector(s);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
-const PER = { '1h':3600, '4h':14400, 'D':86400 };
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
-const S = { feed:null, bars:{}, pair:store.get('pair', null), tf:store.get('tf', '4h') };
-const isJPY = p => /JPY/.test(p);
-const fmt = (p, v) => Number(v).toFixed(isJPY(p) ? 3 : 5);
+const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
+const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
+let feed = null;
 const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday:'short', hour:'2-digit', minute:'2-digit'}); };
-
+const safeChart = c => (typeof c === 'string' && /^charts\/[a-z0-9_-]+\.(png|jpg)$/.test(c)) ? c : null;
 async function getJSON(url){ const r = await fetch(url + '?t=' + Date.now(), {cache:'no-store'}); if (!r.ok) throw new Error(r.status); return r.json(); }
-/* the same file is served by the app's own site and by GitHub directly; use whichever copy is newer */
-async function newest(path, stamp){
-  const got = await Promise.allSettled([getJSON(path), getJSON(RAW + path)]);
-  const ok = got.filter(g => g.status === 'fulfilled' && g.value).map(g => g.value).sort((a,b) => stamp(b) - stamp(a));
-  if (!ok.length) throw new Error('offline');
-  return ok[0];
-}
 
-/* ---------- data ---------- */
-const zoneDoc = p => (S.feed?.zones || []).find(z => z.pair === p);
-const setup = p => { const s = (S.feed?.setups || []).find(s => s.pair === p); return s && s.status !== 'no_trade' && typeof s.zone_lo === 'number' ? s : null; };
-function priceOf(p){ const b = S.bars[p]?.['1h']; return b && b.c.length ? b.c[b.c.length-1] : zoneDoc(p)?.price; }
-function nearest(p){
-  const d = zoneDoc(p), px = priceOf(p); if (!d || typeof px !== 'number') return null;
-  const inside = d.zones.find(z => px >= z.lo && px <= z.hi); if (inside) return {dist:0, z:inside};
-  let best = null; for (const z of d.zones){ const dd = Math.min(Math.abs(px-z.lo), Math.abs(px-z.hi))/d.pip; if (!best || dd < best.dist) best = {dist:dd, z}; }
-  return best;
+function draw(){
+  const trades = (feed.setups || []).filter(s => s.status !== 'no_trade' && safeChart(s.chart))
+    .sort((a,b) => (RANK[a.status] ?? 2) - (RANK[b.status] ?? 2) || (a.order ?? 99) - (b.order ?? 99));
+  $('#week').textContent = (feed.week && feed.week.label) || 'This week';
+  $('#feed').innerHTML = trades.length ? trades.map(s => {
+    const side = s.side === 'buy' ? 'buy' : 'sell', st = STATUS[s.status] ? s.status : 'waiting';
+    const v = s.shot_at ? '?v=' + encodeURIComponent(s.shot_at) : '';
+    return `<article><div class="cap"><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span><span class="st ${st}">${STATUS[st]}</span></div>
+      <img class="shot" src="${safeChart(s.chart)}${v}" alt="${esc(s.pair)} TradingView chart with entry, stop and target" loading="lazy" tabindex="0"></article>`; }).join('')
+    : `<div class="none">No trades this week yet. The charts appear here after the weekly analysis.</div>`;
+  const al = (feed.alerts || []).slice(0, 25);
+  $('#alerts').innerHTML = al.length ? al.map(a => `<div class="a"><div class="h"><span>${esc(a.pair || 'Desk')}</span><time>${esc(when(a.at))}</time></div><p>${esc(a.text || '')}</p></div>`).join('') : '<div class="quiet">Nothing yet. A note appears here each time price reaches one of your zones.</div>';
+  $('#bell').classList.toggle('new', (al[0] ? Date.parse(al[0].at) : 0) > Number(store.get('seen', 0)));
 }
-async function loadFeed(){
-  try {
-    const f = await newest('data/feed.json', x => Date.parse(x.updated || 0));
-    if (!S.feed || Date.parse(f.updated) >= Date.parse(S.feed.updated)) S.feed = f;
-  } catch (e) { if (!S.feed) { say('The charts could not be loaded. Check the connection; the app retries by itself.'); return; } }
-  const pairs = order();
-  if (!S.pair || !pairs.includes(S.pair)) S.pair = pairs[0];
-  drawPairs(); drawAlerts(); await show();
+async function load(){
+  if (document.hidden) return;
+  const got = await Promise.allSettled([getJSON('data/feed.json'), getJSON(RAW + 'data/feed.json')]);
+  const ok = got.filter(g => g.status === 'fulfilled' && g.value && g.value.updated).map(g => g.value).sort((a,b) => Date.parse(b.updated) - Date.parse(a.updated));
+  if (ok.length){ if (!feed || Date.parse(ok[0].updated) > Date.parse(feed.updated)){ feed = ok[0]; draw(); } }
+  else if (!feed) $('#feed').innerHTML = '<div class="none">The charts could not be loaded. Check the connection; the app retries by itself.</div>';
 }
-async function loadBars(p){
-  const d = zoneDoc(p); if (!d) return;
-  const base = 'data/bars/' + d.symbol.replace(':','_') + '_';
-  const got = await Promise.allSettled(Object.keys(PER).map(tf => newest(base + tf + '.json', x => x.fetched_at || 0)));
-  const o = S.bars[p] || {}; Object.keys(PER).forEach((tf,i) => { if (got[i].status === 'fulfilled') o[tf] = got[i].value; }); S.bars[p] = o;
-}
-/* candles for a timeframe; the newest 4H and daily candle is kept current from the hourly bars */
-function candles(p, tf){
-  const b = S.bars[p]?.[tf]; if (!b || !b.t.length) return [];
-  const out = b.t.map((t,i) => ({t, o:b.o[i], h:b.h[i], l:b.l[i], c:b.c[i]}));
-  const h1 = S.bars[p]?.['1h'];
-  if (tf !== '1h' && h1){
-    const per = PER[tf], f = b.fetched_at || 0;
-    for (let i = 0; i < h1.t.length; i++){
-      const t = h1.t[i]; let last = out[out.length-1];
-      if (t + 3600 <= f || t < last.t) continue;
-      if (t >= last.t + per){ const k = Math.floor((t - last.t)/per); out.push({t:last.t + k*per, o:h1.o[i], h:h1.h[i], l:h1.l[i], c:h1.c[i]}); }
-      else { last.h = Math.max(last.h, h1.h[i]); last.l = Math.min(last.l, h1.l[i]); last.c = h1.c[i]; }
-    }
-  }
-  return out.map(x => ({ time: x.t - new Date(x.t*1000).getTimezoneOffset()*60, open:x.o, high:x.h, low:x.l, close:x.c }));
-}
+load(); setInterval(load, 5 * 60000); document.addEventListener('visibilitychange', load);
 
-/* ---------- chart ---------- */
-let chart, series, lines = [], extra = null, bands = [];
-function initChart(){
-  chart = LightweightCharts.createChart($('#chart'), {
-    autoSize: true,
-    layout: { background: { type:'solid', color:'#ffffff' }, textColor:'#62708C', fontSize:12,
-      fontFamily: getComputedStyle(document.body).fontFamily },
-    grid: { vertLines: { visible:false }, horzLines: { color:'#EEF1F6' } },
-    rightPriceScale: { borderVisible:false, scaleMargins: { top:.08, bottom:.08 } },
-    timeScale: { borderVisible:false, timeVisible:true, secondsVisible:false, rightOffset:6 },
-    crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-  });
-  series = chart.addCandlestickSeries({
-    upColor:'#2962FF', downColor:'#E5484D', borderVisible:false, wickUpColor:'#2962FF', wickDownColor:'#E5484D',
-    priceLineColor:'#0F1B33',
-    autoscaleInfoProvider: original => {
-      const r = original();
-      if (r && r.priceRange && extra){ r.priceRange.minValue = Math.min(r.priceRange.minValue, extra.min); r.priceRange.maxValue = Math.max(r.priceRange.maxValue, extra.max); }
-      return r;
-    },
-  });
-  requestAnimationFrame(place);
-}
-/* keep the zone bands glued to the price scale while the chart moves */
-function place(){
-  const layer = $('#zones'), stage = $('.stage');
-  let pw = 0, th = 0; try { pw = chart.priceScale('right').width(); th = chart.timeScale().height(); } catch (e) {}
-  layer.style.width = Math.max(0, stage.clientWidth - pw) + 'px'; layer.style.height = Math.max(0, stage.clientHeight - th) + 'px';
-  for (const b of bands){
-    const y1 = series.priceToCoordinate(b.hi), y2 = series.priceToCoordinate(b.lo);
-    if (y1 === null || y2 === null){ b.el.style.display = 'none'; continue; }
-    const top = Math.round(Math.min(y1, y2)), h = Math.max(2, Math.round(Math.abs(y2 - y1)));
-    if (b.top !== top || b.h !== h){ b.top = top; b.h = h; b.el.style.display = ''; b.el.style.top = top + 'px'; b.el.style.height = h + 'px'; }
-  }
-  requestAnimationFrame(place);
-}
-function say(t){ const m = $('#msg'); if (t){ m.textContent = t; m.hidden = false; } else m.hidden = true; }
-async function show(){
-  const p = S.pair; if (!p) return;
-  header();
-  if (!S.bars[p]) { say('Loading ' + p); await loadBars(p); if (S.pair !== p) return; }
-  const have = tf => (S.bars[p]?.[tf]?.t.length || 0);
-  document.querySelectorAll('#tf button').forEach(b => { b.disabled = have(b.dataset.tf) < 30; });
-  if (have(S.tf) < 30) S.tf = ['4h','D','1h'].find(tf => have(tf) >= 30) || S.tf;
-  document.querySelectorAll('#tf button').forEach(b => b.setAttribute('aria-pressed', b.dataset.tf === S.tf));
-  const data = candles(p, S.tf);
-  if (data.length < 2){ say('No chart data for ' + p + ' yet. It fills in after the next hourly check.'); return; }
-  say('');
-  // levels the price scale should keep in view: the nearest zone on each side, and the plan
-  const d = zoneDoc(p), s = setup(p), px = data[data.length-1].close, pip = d?.pip || (isJPY(p) ? .01 : .0001);
-  const keep = [];
-  if (d){ const below = d.zones.filter(z => z.hi < px).sort((a,b) => b.hi - a.hi)[0], above = d.zones.filter(z => z.lo > px).sort((a,b) => a.lo - b.lo)[0];
-    for (const z of [below, above]) if (z && Math.min(Math.abs(px - z.lo), Math.abs(px - z.hi))/pip <= 250) keep.push(z.lo, z.hi); }
-  if (s) keep.push(s.zone_lo, s.zone_hi, s.invalid_level, ...(s.targets || []).slice(0,1));
-  const nums = keep.filter(v => typeof v === 'number');
-  extra = nums.length ? { min: Math.min(...nums), max: Math.max(...nums) } : null;
-  series.applyOptions({ priceFormat: { type:'price', precision: isJPY(p) ? 3 : 5, minMove: isJPY(p) ? .001 : .00001 } });
-  series.setData(data);
-  lines.forEach(l => series.removePriceLine(l)); lines = [];
-  if (s){
-    const add = (price, color, title) => { if (typeof price === 'number') lines.push(series.createPriceLine({ price, color, lineWidth:1, lineStyle: LightweightCharts.LineStyle.Dashed, axisLabelVisible:true, title })); };
-    (s.targets || []).forEach((t,i) => add(t, '#0E9F6E', 'Target ' + (i+1)));
-    add(s.invalid_level, '#E5484D', 'Idea fails');
-  }
-  // bands
-  const layer = $('#zones'); layer.innerHTML = ''; bands = [];
-  for (const z of (d?.zones || [])){ const el = document.createElement('div'); el.className = 'z'; layer.appendChild(el); bands.push({lo:z.lo, hi:z.hi, el}); }
-  if (s){ const el = document.createElement('div'); el.className = 'z plan ' + (s.side === 'buy' ? 'buy' : 'sell'); el.innerHTML = `<span>${s.side === 'buy' ? 'Buy' : 'Sell'} zone</span>`; layer.appendChild(el); bands.push({lo:s.zone_lo, hi:s.zone_hi, el}); }
-  const n = data.length, vis = Math.max(40, Math.min(160, Math.round($('.stage').clientWidth / 6.5)));
-  chart.timeScale().setVisibleLogicalRange({ from: n - vis, to: n + 6 });
-  header();
-}
-function header(){
-  const p = S.pair, s = setup(p), px = priceOf(p), n = nearest(p);
-  $('#name').textContent = p || '';
-  const tag = $('#tag'); tag.hidden = !s; if (s){ tag.textContent = s.side === 'buy' ? 'Buy' : 'Sell'; tag.className = 'tag ' + (s.side === 'buy' ? 'buy' : 'sell'); }
-  let state = '';
-  if (s && s.status === 'triggered') state = '<span class="go">Trigger seen</span>';
-  else if (s && s.status === 'invalid') state = 'Idea failed';
-  else if (s && typeof px === 'number' && px >= s.zone_lo && px <= s.zone_hi) state = `<span class="hot">At the ${s.side} zone</span>`;
-  else if (n && n.dist === 0) state = '<span class="hot">In your AOI</span>';
-  else if (s && typeof px === 'number') state = Math.round(Math.min(Math.abs(px - s.zone_lo), Math.abs(px - s.zone_hi)) / (isJPY(p) ? .01 : .0001)) + ' pips to zone';
-  else if (n) state = Math.round(n.dist) + ' pips to AOI';
-  $('#sub').innerHTML = (typeof px === 'number' ? `<b>${fmt(p, px)}</b>&ensp;` : '') + state;
-}
-function order(){
-  const zs = (S.feed?.zones || []).map(z => z.pair);
-  const rank = p => { const n = nearest(p), s = setup(p), inside = n && n.dist === 0;
-    return inside && s ? (s.order ?? 50) : inside ? 100 : s ? 1000 + (s.order ?? 50) : 2000 + Math.min(900, n ? n.dist : 900); };
-  return zs.sort((a,b) => rank(a) - rank(b));
-}
-function drawPairs(){
-  $('#pairs').innerHTML = order().map(p => { const n = nearest(p), s = setup(p);
-    return `<button data-pair="${esc(p)}" class="${n && n.dist === 0 ? 'in' : ''} ${s ? 'plan' : ''}" aria-pressed="${p === S.pair}"><i></i>${esc(p)}</button>`; }).join('');
-}
-function drawAlerts(){
-  const al = (S.feed?.alerts || []).slice(0, 25);
-  $('#alerts').innerHTML = al.length ? al.map(a => `<div class="a"><div class="h"><span>${esc(a.pair || 'Desk')}</span><time>${esc(when(a.at))}</time></div><p>${esc(a.text || '')}</p></div>`).join('') : '<div class="none">Nothing yet. A note appears here each time price reaches one of your zones.</div>';
-  const newest = al[0] ? Date.parse(al[0].at) : 0;
-  $('#bell').classList.toggle('new', newest > Number(store.get('seen', 0)));
-}
-document.addEventListener('click', async e => {
-  const pb = e.target.closest('#pairs button'); if (pb){ S.pair = pb.dataset.pair; store.set('pair', S.pair); drawPairs(); pb.scrollIntoView({inline:'center', block:'nearest', behavior:'smooth'}); return show(); }
-  const tb = e.target.closest('#tf button'); if (tb && !tb.disabled){ S.tf = tb.dataset.tf; store.set('tf', S.tf); return show(); }
-  if (e.target.closest('#bell')){ $('#sheet').hidden = false; const a = S.feed?.alerts?.[0]; if (a) store.set('seen', Date.parse(a.at)); $('#bell').classList.remove('new'); return; }
-  if (e.target.id === 'close' || e.target.id === 'sheet') $('#sheet').hidden = true;
+document.addEventListener('click', e => {
+  const t = e.target;
+  if (t.classList.contains('shot')){ $('#viewImg').src = t.src; $('#view').classList.remove('big'); $('#view').hidden = false; return; }
+  if (t.id === 'viewImg'){ const v = $('#view'), big = v.classList.toggle('big'); if (big){ const r = t.getBoundingClientRect(); v.scrollLeft = (v.scrollWidth - v.clientWidth) * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); v.scrollTop = (v.scrollHeight - v.clientHeight) * Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)); } return; }
+  if (t.id === 'viewClose'){ $('#view').hidden = true; return; }
+  if (t.closest('#bell')){ $('#sheet').hidden = false; const a = feed?.alerts?.[0]; if (a) store.set('seen', Date.parse(a.at)); $('#bell').classList.remove('new'); return; }
+  if (t.id === 'close' || t.id === 'sheet') $('#sheet').hidden = true;
 });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') $('#sheet').hidden = true; });
-async function refresh(){ if (document.hidden) return; if (S.pair) await loadBars(S.pair); await loadFeed(); }
-initChart(); loadFeed();
-setInterval(refresh, 5 * 60000);
-document.addEventListener('visibilitychange', refresh);
+document.addEventListener('keydown', e => { if (e.key === 'Escape'){ $('#sheet').hidden = true; $('#view').hidden = true; } if (e.key === 'Enter' && e.target.classList?.contains('shot')) e.target.click(); });
 
 /* ---------- notifications on this device ---------- */
 const b64uToBytes = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while (s.length % 4) s += '='; return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
