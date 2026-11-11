@@ -147,6 +147,22 @@ def cmd_need(a):
         print(" ", l)
 
 
+def zone_confluence(s, at_zone, now):
+    """Tick or untick the "At the zone" confluence on a trade card (10 points) and redo its percentage."""
+    conf = s.get("conf")
+    if not isinstance(conf, list):
+        return
+    for c in conf:
+        if isinstance(c, dict) and c.get("name") == "At the zone":
+            c["ok"] = bool(at_zone)
+            if at_zone:
+                c["pts"] = 10
+            else:
+                c.pop("pts", None)
+    s["score"] = sum(int(c.get("pts") or 0) for c in conf if isinstance(c, dict) and c.get("ok"))
+    s["score_at"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def tidy_bars():
     """Keep the bar files small: newest bars only, compact JSON."""
     if not os.path.isdir(BARS):
@@ -260,6 +276,7 @@ def cmd_run(a):
         if watched and plan_reached:
             if s.get("status") == "waiting":
                 s["status"], s["step"] = "at_zone", max(1, int(s.get("step") or 0))
+                zone_confluence(s, True, now)
                 if not covered_plan:
                     seq += 1
                     text = (f"Price reached the plan's {s['side']} zone {fp(pair, s['zone_lo'])}-{fp(pair, s['zone_hi'])} "
@@ -274,6 +291,7 @@ def cmd_run(a):
         elif watched and s.get("status") == "at_zone" and int(s.get("step") or 0) <= 1 and not (
                 s["zone_lo"] - KEEP_PIPS * pip <= price <= s["zone_hi"] + KEEP_PIPS * pip):
             s["status"], s["step"] = "waiting", 0
+            zone_confluence(s, False, now)
             report.append(f"INFO {pair}: left the plan zone without a shift; back to waiting.")
         if watched and isinstance(s.get("invalid_level"), (int, float)):
             above = "above" in (s.get("invalid_note") or "")

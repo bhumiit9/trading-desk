@@ -25,9 +25,12 @@ HISTORY = 5000       # hourly candles asked for once, when a pair has no rolled-
 
 
 def bucket(t, tf):
-    """Start (UTC seconds) of the 4H, daily or weekly candle that the hourly candle at t belongs to."""
+    """Start (UTC seconds) of the 4H, daily or weekly candle that the hourly candle at t belongs to.
+    None for weekend quotes (Friday 5 PM to Sunday 5 PM New York), which OANDA charts do not show."""
     sh = datetime.fromtimestamp(t, NY) + timedelta(hours=7)        # 5 PM New York becomes midnight
     day = sh.replace(hour=0, minute=0, second=0, microsecond=0)
+    if day.weekday() >= 5:
+        return None
     if tf == "4h":
         start = day + timedelta(hours=4 * (sh.hour // 4))
     elif tf == "1d":
@@ -44,7 +47,7 @@ def roll_up(symbol, hourly, now):
         fresh = {}
         for t in sorted(hourly):
             b = bucket(t, tf)
-            if b < first:                       # this candle started before our hourly history did
+            if b is None or b < first:          # weekend quote, or a candle that started before our hourly history did
                 continue
             o, h, l, c = hourly[t]
             if b in fresh:

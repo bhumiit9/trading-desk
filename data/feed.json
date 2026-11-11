@@ -124,8 +124,8 @@
    "stop": 112.7,
    "target": 111.4,
    "rr": 2.7,
-   "score": 25,
-   "score_at": "2026-11-11T11:55:00Z",
+   "score": 35,
+   "score_at": "2026-11-11T17:17:38Z",
    "charts": [
     {
      "tf": "W",
@@ -165,7 +165,8 @@
     {
      "tf": "D",
      "name": "At the zone",
-     "ok": false
+     "ok": true,
+     "pts": 10
     },
     {
      "tf": "4H",
