@@ -13,8 +13,8 @@
 <meta name="apple-mobile-web-app-title" content="S&F Desk">
 <meta name="theme-color" content="#ffffff">
 <style>
-/* One trade per screen: the chart on top, its three prices underneath in large type, swipe sideways for the next trade.
-   Everything else (notification log, device setup) sits behind the bell. */
+/* The app opens on a plain list of this week's pairs. Tapping a pair opens its chart with stop, entry and target;
+   swipe sideways there for the next pair. The notification log and device setup sit behind the bell. */
 :root{
   --bg:#ffffff; --surf:#F1F4FA; --ink:#0F1B33; --mute:#5A6782; --line:#E1E6F0;
   --sell:#D93A3F; --buy:#0B8A5F; --amber-ink:#8A5300; --amber-bg:#FFF2D0; --link:#2962FF;
@@ -24,8 +24,16 @@
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--ink);font:400 16px/1.35 var(--font);font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
-.app{height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
-.bell{position:fixed;z-index:6;top:calc(env(safe-area-inset-top,0px) + 6px);right:calc(env(safe-area-inset-right,0px) + 8px);width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
+.app{position:relative;height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+[hidden]{display:none !important}
+.home{flex:1;min-height:0;overflow-y:auto;padding-top:56px;-webkit-overflow-scrolling:touch}
+.row{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;height:72px;padding:0 18px;border-top:1px solid var(--line);font-size:25px;font-weight:700;letter-spacing:-.02em}
+.row:last-child{border-bottom:1px solid var(--line)}
+.row:active{background:var(--surf)}
+.row svg{width:20px;height:20px;color:#A9B3C6;flex:none}
+.back{width:44px;height:44px;margin-left:-12px;margin-right:-6px;display:grid;place-items:center}
+.back svg{width:24px;height:24px}
+.bell{position:absolute;z-index:6;top:calc(env(safe-area-inset-top,0px) + 6px);right:calc(env(safe-area-inset-right,0px) + 8px);width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
 .bell svg{width:25px;height:25px}
 .bell i{position:absolute;top:8px;right:9px;width:10px;height:10px;border-radius:50%;background:#F5A300;border:2px solid var(--bg);display:none}
 .bell.new i{display:block}
@@ -50,12 +58,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .dots{display:flex;justify-content:center;gap:7px;padding:2px 0 12px}
 .dots i{width:7px;height:7px;border-radius:50%;background:var(--line)} .dots i.on{background:var(--ink)}
 .none{margin:auto;padding:40px 28px;text-align:center;color:var(--mute)}
-@media (min-width:800px){
-  .app{height:auto;min-height:100dvh}
-  .deck{flex:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:26px;overflow:visible;max-width:1500px;margin:0 auto;padding:10px 64px 30px 24px;width:100%}
-  .slide{border:1px solid var(--line);border-radius:14px;overflow:hidden}
-  .pic{flex:none;aspect-ratio:4/5} .dots{display:none}
-}
+@media (min-width:800px){ body{background:var(--surf)} .app{max-width:520px;margin:0 auto;background:var(--bg);box-shadow:0 0 0 1px var(--line)} }
 .view{position:fixed;inset:0;z-index:30;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch;display:flex}
 .view[hidden]{display:none}
 .view img{margin:auto;width:100%;max-width:min(100%,80dvh);height:auto;cursor:zoom-in}
@@ -88,8 +91,9 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 <body>
 <div class="app">
   <button class="bell" id="bell" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><i></i></button>
-  <main class="deck" id="deck"><div class="none">Loading this week's trades</div></main>
-  <nav class="dots" id="dots" aria-hidden="true"></nav>
+  <main class="home" id="home"><div class="none">Loading this week's pairs</div></main>
+  <section class="deck" id="deck" hidden></section>
+  <nav class="dots" id="dots" aria-hidden="true" hidden></nav>
 </div>
 
 <div class="view" id="view" hidden><button id="viewClose">Close</button><img id="viewImg" alt=""></div>
@@ -112,8 +116,8 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.5';
-let feed = null, shown = '';
+const BUILD = '2026-11-11.6';
+let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
 const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday:'short', hour:'numeric', minute:'2-digit'}); };
@@ -129,7 +133,7 @@ function slide(s){
   }
   const v = s.shot_at ? '?v=' + encodeURIComponent(s.shot_at) : '';
   return `<article class="slide" data-pair="${esc(s.pair)}">
-    <header class="cap"><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span></header>
+    <header class="cap"><button class="back" data-back aria-label="Back to the list of pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span></header>
     <div class="pic"><img class="shot" src="${safeChart(s.chart)}${v}" alt="${esc(s.pair)} TradingView chart with entry, stop and target" tabindex="0"></div>
     <div class="levels">
       <div class="lv stop"><span>Stop</span><b>${px(s.pair, s.stop)}</b></div>
@@ -142,12 +146,21 @@ function slide(s){
 function draw(){
   const trades = (feed.setups || []).filter(s => s.status !== 'no_trade' && safeChart(s.chart))
     .sort((a,b) => (RANK[a.status] ?? 2) - (RANK[b.status] ?? 2) || (a.order ?? 99) - (b.order ?? 99));
-  const html = trades.length ? trades.map(slide).join('') : `<div class="none">No trades this week yet. The charts appear here after the weekly analysis.</div>`;
+  const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+  const list = trades.length ? trades.map(s => `<button class="row" data-open="${esc(s.pair)}">${esc(s.pair)}${chev}</button>`).join('') : `<div class="none">No pairs this week yet. They appear here after the weekly analysis.</div>`;
+  if (list !== shownHome) $('#home').innerHTML = shownHome = list;
+  const html = trades.map(slide).join('');
   if (html !== shown){ const deck = $('#deck'), x = deck.scrollLeft; deck.innerHTML = shown = html; deck.scrollLeft = x; }
+  if (view && !trades.some(s => s.pair === view)) show(null);
   $('#dots').innerHTML = trades.length > 1 ? trades.map(() => '<i></i>').join('') : ''; dots();
   const al = (feed.alerts || []).slice(0, 25);
   $('#alerts').innerHTML = al.length ? al.map(a => `<button class="a"><span class="h"><span>${esc(a.pair || 'Desk')}</span><time>${esc(when(a.at))}</time></span><p>${esc(a.text || '')}</p></button>`).join('') : '<div class="quiet">Nothing yet. A note appears here each time price reaches one of your zones.</div>';
   $('#bell').classList.toggle('new', (al[0] ? Date.parse(al[0].at) : 0) > Number(store.get('seen', 0)));
+}
+function show(pair){
+  view = pair || null;
+  $('#home').hidden = !!view; $('#deck').hidden = !view; $('#dots').hidden = !view;
+  if (view){ const deck = $('#deck'), el = [...deck.querySelectorAll('.slide')].find(x => x.dataset.pair === view); if (el) deck.scrollLeft = el.offsetLeft - deck.offsetLeft; dots(); }
 }
 function dots(){ const deck = $('#deck'), i = Math.round(deck.scrollLeft / Math.max(1, deck.clientWidth)); document.querySelectorAll('#dots i').forEach((d, k) => d.classList.toggle('on', k === i)); }
 $('#deck').addEventListener('scroll', () => requestAnimationFrame(dots), {passive:true});
@@ -170,6 +183,8 @@ document.addEventListener('click', e => {
   if (t.classList.contains('shot')){ $('#viewImg').src = t.src; $('#view').classList.remove('big'); $('#view').hidden = false; return; }
   if (t.id === 'viewImg'){ const v = $('#view'), big = v.classList.toggle('big'); if (big){ const r = t.getBoundingClientRect(); v.scrollLeft = (v.scrollWidth - v.clientWidth) * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); v.scrollTop = (v.scrollHeight - v.clientHeight) * Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)); } return; }
   if (t.id === 'viewClose'){ $('#view').hidden = true; return; }
+  const open = t.closest('[data-open]'); if (open){ show(open.dataset.open); return; }
+  if (t.closest('[data-back]')){ show(null); return; }
   const row = t.closest('.a'); if (row){ row.classList.toggle('open'); return; }
   if (t.closest('#bell')){ $('#sheet').hidden = false; const a = feed?.alerts?.[0]; if (a) store.set('seen', Date.parse(a.at)); $('#bell').classList.remove('new'); return; }
   if (t.id === 'refresh'){ t.textContent = 'Refreshing'; update(true); return; }
