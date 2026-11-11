@@ -207,8 +207,8 @@
    "stop": 112.7,
    "target": 111.4,
    "rr": 2.7,
-   "score": 60,
-   "score_at": "2026-11-11T19:14:00Z",
+   "score": 65,
+   "score_at": "2026-11-11T19:17:08Z",
    "charts": [
     {
      "tf": "W",
@@ -249,7 +249,7 @@
      "tf": "W",
      "name": "Touching EMA",
      "pts": 5,
-     "ok": false
+     "ok": true
     },
     {
      "tf": "W",
