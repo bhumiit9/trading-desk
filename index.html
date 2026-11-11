@@ -63,6 +63,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 @keyframes fadeTo{to{opacity:.2}}
 .row .pct{font-size:17px;font-weight:700;color:var(--mute);letter-spacing:0;text-align:right}
 .row .tk{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 6px;margin-right:-2px;border-radius:12px;font-size:12.5px;font-weight:700;letter-spacing:0;flex:none;color:#00140C;background:var(--buy);animation:pop .4s cubic-bezier(.2,.9,.3,1.2) both}
+.pk{display:inline-flex;align-items:center;gap:4px;color:var(--amber-ink);font-size:13px;font-weight:700;letter-spacing:0;flex:none;animation:pop .4s cubic-bezier(.2,.9,.3,1.2) both}
+.pk[hidden]{display:none} .pk svg{width:16px;height:16px} .row .pk svg{width:19px;height:19px}
+.cap .pk{background:var(--amber-bg);border-radius:6px;padding:3px 8px 3px 6px}
+.pickline{display:flex;gap:7px;margin:0 18px 10px;font-size:14px;line-height:1.35;color:var(--ink)} .pickline[hidden]{display:none}
+.pickline svg{width:15px;height:15px;flex:none;margin-top:2px;color:var(--amber-ink)} .pickline span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .row .tk[hidden]{display:none} .row .tk svg{width:13px;height:13px}
 @media (max-width:359px){ .row .tk b{display:none} .row .tk{padding:0 6px} }
 .took{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 18px 10px;height:46px;flex:none;border-radius:14px;font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:var(--surf);border:0;box-shadow:inset 0 0 0 1px var(--line);cursor:pointer;transition:background .25s,color .25s,transform .12s}
@@ -106,6 +111,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .msg{max-width:100%;font-size:16px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere;animation:rise .3s cubic-bezier(.2,.8,.2,1) both}
 .msg.me{align-self:flex-end;max-width:86%;background:var(--surf);border-radius:18px 18px 4px 18px;padding:9px 14px}
 .msg.err{color:var(--sell);font-size:14.5px}
+.msg.wait{display:flex;align-items:center;gap:10px;color:var(--mute);font-size:14.5px}
 .msg .loader{height:26px;margin:0;gap:5px} .msg .loader i{width:6px;animation-name:candleS}
 @keyframes candleS{from{height:6px}to{height:22px}}
 .cstart{margin:auto 0 0;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
@@ -246,7 +252,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.14';
+const BUILD = '2026-11-11.15';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -255,6 +261,7 @@ const safeChart = c => (typeof c === 'string' && /^charts\/[a-z0-9_-]+\.(png|jpg
 async function getJSON(url){ const r = await fetch(url + '?t=' + Date.now(), {cache:'no-store'}); if (!r.ok) throw new Error(r.status); return r.json(); }
 
 const TICK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const STAR = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.6l1.9 4 4.4.5-3.3 3 .9 4.3L8 11.2l-3.9 2.2.9-4.3-3.3-3 4.4-.5z" fill="currentColor"/></svg>';
 const RING = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2.6 2.6"/></svg>';
 /* Trades the owner marked as taken. Kept on this device only, never sent anywhere. */
 let takenMem = null;
@@ -306,7 +313,7 @@ function slide(s){
   const ch = chartsOf(s), first = ch['4H'] || Object.values(ch)[0] || ['', ''];
   const v = first[1] ? '?v=' + encodeURIComponent(first[1]) : '';
   return `<article class="slide" data-pair="${esc(s.pair)}" data-charts="${esc(JSON.stringify(ch))}">
-    <header class="cap"><button class="back" data-back aria-label="Back to the list of pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span></header>
+    <header class="cap"><button class="back" data-back aria-label="Back to the list of pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span><span class="pk" hidden>${STAR}Pick</span></header>
     ${tabs(s)}
     <div class="pic"><img class="shot" src="${first[0]}${v}" alt="${esc(s.pair)} TradingView chart with entry, stop and target" tabindex="0"></div>
     <div class="levels">
@@ -316,6 +323,7 @@ function slide(s){
     </div>
     ${typeof s.score === 'number' ? `<div class="conf"><span>Confluence</span><b>${Math.round(s.score)}%</b><span class="meter" role="img" aria-label="Confluence ${Math.round(s.score)} percent; 70 is the minimum grade"><u style="--w:${Math.min(100, Math.max(0, s.score))}%"></u><em></em></span></div>` : ''}
     ${chips(s)}
+    <p class="pickline" hidden>${STAR}<span></span></p>
     <div class="state"><span class="st ${st}">${STATUS[st]}</span>${dist ? `<span>${dist}</span>` : ''}<span class="when">${first[1] ? 'Chart from ' + esc(when(first[1])) : ''}</span></div>
     <div class="acts"><button class="took" data-took="${esc(s.pair)}" aria-pressed="false"><svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="1" d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mark as taken</span></button><button class="askp" data-ask="${esc(s.pair)}" aria-label="Ask Claude about ${esc(s.pair)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg>Ask Claude</button></div>
   </article>`;
@@ -325,13 +333,13 @@ function draw(){
     .sort((a,b) => (RANK[a.status] ?? 2) - (RANK[b.status] ?? 2) || (a.order ?? 99) - (b.order ?? 99));
   const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
   const list = trades.length ? trades.map((s, i) => { const hot = s.status === 'triggered' || s.status === 'at_zone' || (typeof s.price === 'number' && typeof s.zone_lo === 'number' && s.price >= s.zone_lo && s.price <= s.zone_hi);
-      return `<button class="row" style="--i:${i}" data-open="${esc(s.pair)}"><span class="ico" data-pair="${esc(s.pair)}"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M9 8v20M18 5v24M27 10v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="6" y="13" width="6" height="10" rx="1.5" fill="currentColor"/><rect x="15" y="10" width="6" height="12" rx="1.5" fill="currentColor"/><rect x="24" y="14" width="6" height="9" rx="1.5" fill="currentColor"/></svg></span><span class="nm">${esc(s.pair)}</span><span class="tk" hidden>${TICK}<b>Taken</b></span>${typeof s.score === 'number' ? `<span class="pct">${Math.round(s.score)}%</span>` : ''}${hot ? '<i class="live" title="Price is at the zone"></i>' : ''}${chev}</button>`; }).join('') : `<div class="none">No pairs this week yet. They appear here after the weekly analysis.</div>`;
+      return `<button class="row" style="--i:${i}" data-open="${esc(s.pair)}"><span class="ico" data-pair="${esc(s.pair)}"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M9 8v20M18 5v24M27 10v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="6" y="13" width="6" height="10" rx="1.5" fill="currentColor"/><rect x="15" y="10" width="6" height="12" rx="1.5" fill="currentColor"/><rect x="24" y="14" width="6" height="9" rx="1.5" fill="currentColor"/></svg></span><span class="nm">${esc(s.pair)}</span><span class="pk" hidden role="img" aria-label="Pick of the week">${STAR}</span><span class="tk" hidden>${TICK}<b>Taken</b></span>${typeof s.score === 'number' ? `<span class="pct">${Math.round(s.score)}%</span>` : ''}${hot ? '<i class="live" title="Price is at the zone"></i>' : ''}${chev}</button>`; }).join('') : `<div class="none">No pairs this week yet. They appear here after the weekly analysis.</div>`;
   if (list !== shownHome){ $('#rows').innerHTML = shownHome = list; sparks(); }
   $('#week').textContent = (feed.week && feed.week.label) || 'This week';
   const html = trades.map(slide).join('');
   if (html !== shown){ const deck = $('#deck'), x = deck.scrollLeft; deck.innerHTML = shown = html; deck.scrollLeft = x; if (view) deck.querySelectorAll('.slide').forEach(el => el.classList.toggle('cur', el.dataset.pair === view)); }
   document.querySelectorAll('#deck .slide').forEach(el => setTF(el, tfSel[el.dataset.pair] || '4H', false));
-  markTaken();
+  markTaken(); markPick();
   if (view && !trades.some(s => s.pair === view)) show(null);
   $('#dots').innerHTML = trades.length > 1 ? trades.map(() => '<i></i>').join('') : ''; dots();
   const al = (feed.alerts || []).slice(0, 25);
@@ -469,6 +477,14 @@ How the strategy scores a setup (percent):
 Hard gates, whatever the score: price is at a Weekly or Daily AOI; there is a closed rejection candle; the shift of structure happened at the AOI; reward to risk is at least 1:2 to the next structure point; it is in session and not Friday; the trade is not buying the high or selling the low of the weekly range.
 Stops go 10 to 15 pips beyond the swing that made the shift, and beyond the AOI. Targets are the next daily structure. Never stretch a target or shrink a stop to reach 1:2. If reward to risk is under 1:2, waiting for a pullback entry is allowed. Market orders only; set it and leave it.
 
+Reading the market yourself:
+- You can read candles with the get_candles tool for any pair in the app data. When asked to analyse, re-analyse or compare, read them first; never answer from the saved notes alone. Go top-down: Weekly, Daily, 4H, and 1H only if price is at a zone.
+- Structure comes from the obvious swing highs and lows. Up trend: higher highs and higher lows. Down trend: lower highs and lower lows. A trend changes only when a candle closes beyond the last higher low (up trend) or the last lower high (down trend); a wick through it does not count. If it is not obvious, call it ranging.
+- An area of interest needs at least three clear touches. The trader's own areas come back with the candles; use them, and say so if you think one no longer holds.
+- Say where price sits in the weekly range, because buying the high or selling the low fails a hard gate.
+- To choose the pair of the week, compare the pairs on: trends in line (Weekly, Daily, 4H), a clean Weekly or Daily area that price can reach this week, room to the next daily structure for at least 1:2, and weekly placement. Pick one, say why in two or three lines, name the runner-up, and say what would change your mind. Then call set_week_pick. If nothing qualifies, say so and clear the pick.
+- You cannot change the trade cards, levels or percentages in the app, and you cannot take new chart screenshots. If your reading differs from a card, say exactly what differs so the trader can get it updated.
+
 How to answer:
 - Short, plain words, written for a phone. Lead with the answer. No tables and no headings.
 - Use the app data and any charts you are given. Prices in the data are refreshed about once an hour and the chart screenshots are older (their times are given). Say so when your answer depends on a price that may have moved, and ask for the current price or candle if you need it.
@@ -478,7 +494,7 @@ How to answer:
 const okMsgs = c => Array.isArray(c) ? c.filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.text === 'string') : [];
 let chats = {}; try { const c = JSON.parse(store.get('chats', '{}')); if (c && typeof c === 'object') for (const k of Object.keys(c)) chats[k] = okMsgs(c[k]); } catch (e) {}
 let chatId = 'home', chatLog = chats.home || (chats.home = []);
-let chatBusy = false, busyId = '', chatErr = '', chatKeyNote = '';
+let chatBusy = false, busyId = '', chatErr = '', chatKeyNote = '', chatStat = '';
 const chatPair = () => chatId === 'home' ? null : chatId;
 const chatKey = () => store.get('ckey', '');
 function chatContext(){
@@ -490,6 +506,7 @@ function chatContext(){
     last_price:s.price, last_price_time:s.price_at, idea_fails_at:s.invalid_level, idea_fails_note:s.invalid_note, note:s.note,
     marked_as_taken:!!takenAll()[takenKey(s.pair)] });
   return JSON.stringify({ now_india_time:new Date().toLocaleString('en-IN', { timeZone:'Asia/Kolkata', dateStyle:'full', timeStyle:'short' }), week:f.week && f.week.label, data_updated:f.updated,
+    pick_of_the_week:(pickGet() || {}).pair || null,
     this_chat_is_about:chatPair() ? `the ${chatPair()} trade only (the other pairs are background)` : 'the whole watchlist', setups, recent_alerts:(f.alerts || []).slice(0, 8) });
 }
 const b64 = blob => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1] || ''); r.onerror = no; r.readAsDataURL(blob); });
@@ -511,11 +528,12 @@ function chatDraw(){
     body.innerHTML = `<div class="ckey"><h3>Add your Claude API key</h3><p>To chat here, the app needs your own key from the Claude Console. Paste it below. It is saved only on this device and is sent only to Anthropic when you ask something. Usage is billed to your API account.</p><input type="password" id="ckeyIn" placeholder="API key" aria-label="Claude API key" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="btn" id="ckeySave">Save key on this device</button><div class="note" role="status">${esc(chatKeyNote)}</div></div>`;
     return;
   }
-  let html = chatLog.map(m => `<div class="msg ${m.role === 'user' ? 'me' : 'ai'}">${md(m.text)}</div>`).join('');
-  if (chatBusy && busyId === chatId && (!chatLog.length || chatLog[chatLog.length - 1].role === 'user')) html += '<div class="msg ai" id="cwait" role="status" aria-label="Claude is thinking"><div class="loader"><i></i><i></i><i></i></div></div>';
+  const busyHere = chatBusy && busyId === chatId, lastAi = chatLog.length && chatLog[chatLog.length - 1].role === 'assistant';
+  let html = chatLog.map((m, i) => `<div class="msg ${m.role === 'user' ? 'me' : 'ai'}"${busyHere && lastAi && i === chatLog.length - 1 ? ' id="clive"' : ''}>${md(m.text)}</div>`).join('');
+  if (busyHere && (!lastAi || chatStat)) html += `<div class="msg ai wait" role="status"><div class="loader"><i></i><i></i><i></i></div><span>${esc(chatStat || 'Thinking')}</span></div>`;
   if (chatErr) html += `<div class="msg err" role="alert">${esc(chatErr)}</div>${/key/i.test(chatErr) && chatLog.length ? '<button class="linkbtn" id="ckeyDrop" style="align-self:flex-start;padding-top:0">Remove the key from this device</button>' : ''}`;
   if (!chatLog.length && !chatBusy){
-    const pr = chatPair(), sug = pr ? [`What is ${pr} still missing?`, `How far is ${pr} from its zone?`, `What would cancel the ${pr} idea?`] : ['Which pair is closest to its zone?', 'What should I watch for today?', 'Explain this week\'s plan in short'];
+    const pr = chatPair(), sug = pr ? [`Re-analyse ${pr} on all timeframes`, `What is ${pr} still missing?`, `What would cancel the ${pr} idea?`] : ['Re-analyse the watchlist and choose the pair of the week', 'Which pair is closest to its zone?', 'What should I watch for today?'];
     html += `<div class="cstart"><p>${pr ? 'This chat is only about ' + esc(pr) + '. It can see its four charts.' : 'This chat is about your whole watchlist.'}</p>${sug.map((t, i) => `<button class="sug" style="--i:${i}" data-sug="${esc(t)}">${esc(t)}</button>`).join('')}<button class="linkbtn" id="ckeyDrop">Remove the key from this device</button></div>`;
   }
   body.innerHTML = html; body.scrollTop = body.scrollHeight;
@@ -526,41 +544,117 @@ function chatSave(){ const keep = new Set(['home', ...((feed && feed.setups) || 
 function chatOpen(id){ chatId = id || 'home'; chatLog = chats[chatId] || (chats[chatId] = []); $('#chat').hidden = false; chatErr = ''; chatDraw(); chatGrow(); chatFit(); }
 function chatFit(){ const vv = window.visualViewport, el = $('#chat'); if (!vv || el.hidden) return; el.style.setProperty('--vvh', vv.height + 'px'); el.style.top = vv.offsetTop + 'px'; const b = $('#cbody'); b.scrollTop = b.scrollHeight; }
 if (window.visualViewport){ visualViewport.addEventListener('resize', chatFit); visualViewport.addEventListener('scroll', chatFit); }
+/* What the chat can do in the app: read candles (built hourly into data/bars) and mark a pick of the week. */
+const CHAT_TOOLS = [
+  { name:'get_candles', description:'Read the latest price candles for one pair and one timeframe, oldest first, plus the 50 EMA, recent swing highs and lows, and the trader\'s own areas of interest for that pair. Use it whenever you are asked to analyse, re-analyse, check or compare pairs. Work top-down: Weekly, then Daily, then 4H, and 1H only when price is at a zone.',
+    input_schema:{ type:'object', properties:{ pair:{ type:'string', description:'Six letters, for example EURNZD. Must be a pair from the app data.' }, timeframe:{ type:'string', enum:['W','D','4H','1H'] }, count:{ type:'integer', description:'How many candles. Default: W 52, D 90, 4H 90, 1H 72. Most available: 150.' } }, required:['pair','timeframe'] } },
+  { name:'set_week_pick', description:'Mark one pair as the pick of the week in the app (a star on the list), or clear the pick. Call it only when the trader asks you to choose or change the pick, and only after you have read the candles for the pairs you compared.',
+    input_schema:{ type:'object', properties:{ pair:{ type:'string', description:'The pair to star, for example CADJPY, or "none" to clear the pick.' }, reason:{ type:'string', description:'One short plain sentence shown in the app under the pair.' } }, required:['pair'] } }
+];
+const TF_FILE = { W:'1w', D:'1d', '4H':'4h', '1H':'1h' }, TF_SECS = { W:432000, D:86400, '4H':14400, '1H':3600 }, TF_COUNT = { W:52, D:90, '4H':90, '1H':72 };
+const pickGet = () => { try { const p = JSON.parse(store.get('pick', 'null')); return p && p.week === ((feed && feed.week && feed.week.label) || '') ? p : null; } catch (e) { return null; } };
+function markPick(){
+  const p = pickGet();
+  document.querySelectorAll('.row[data-open]').forEach(r => { const k = r.querySelector('.pk'); if (k) k.hidden = !(p && p.pair === r.dataset.open); });
+  document.querySelectorAll('#deck .slide').forEach(el => { const on = !!(p && p.pair === el.dataset.pair), k = el.querySelector('.cap .pk'), l = el.querySelector('.pickline');
+    if (k) k.hidden = !on; if (l){ l.hidden = !(on && p.reason); l.querySelector('span').textContent = on ? p.reason || '' : ''; } });
+}
+async function runTool(name, input){
+  input = input || {};
+  const pair = String(input.pair || '').toUpperCase().replace(/[^A-Z]/g, '');
+  const doc = ((feed && feed.zones) || []).find(z => z.pair === pair);
+  if (name === 'set_week_pick'){
+    if (!pair || pair === 'NONE'){ try { localStorage.removeItem('pick'); } catch (e) {} markPick(); return 'The pick of the week was cleared.'; }
+    if (!((feed && feed.setups) || []).some(s => s.pair === pair)) return `${pair} is not in the app data, so nothing was marked.`;
+    store.set('pick', JSON.stringify({ week:(feed.week && feed.week.label) || '', pair, reason:String(input.reason || '').slice(0, 220), at:Date.now() })); markPick();
+    return `${pair} is now marked as the pick of the week on this device.` + (((feed.setups || []).find(s => s.pair === pair) || {}).status === 'no_trade' ? ' Note: this pair has no trade card in the app this week, so the star will not be visible; tell the trader.' : '');
+  }
+  if (name !== 'get_candles') return 'Unknown tool.';
+  const tf = TF_FILE[input.timeframe]; if (!doc || !tf) return `No candles for ${pair || 'that pair'} ${input.timeframe || ''}. Pairs available: ${((feed && feed.zones) || []).map(z => z.pair).join(', ')}.`;
+  let b; try { b = await getJSON(`data/bars/${doc.symbol.replace(':', '_')}_${tf}.json`); } catch (e) { return `The ${input.timeframe} candles for ${pair} are not ready yet. They are built by the hourly check; try again after its next run.`; }
+  const n = Math.max(5, Math.min(150, Number(input.count) || TF_COUNT[input.timeframe])), len = b.t.length, from = Math.max(0, len - n), dp = isJPY(pair) ? 3 : 5;
+  const big = input.timeframe === 'W' || input.timeframe === 'D';
+  const label = t => big ? new Date((t + 7 * 3600) * 1000).toLocaleDateString('en-CA', { timeZone:'America/New_York' })
+    : new Date(t * 1000).toLocaleString('en-GB', { timeZone:'Asia/Kolkata', day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit', hour12:false }).replace(',', '');
+  let ema = null; if (len >= 50){ const k = 2 / 51; ema = b.c.slice(0, 50).reduce((a, x) => a + x, 0) / 50; for (let i = 50; i < len; i++) ema = b.c[i] * k + ema * (1 - k); }
+  const sw = []; for (let i = Math.max(from, 2); i < len - 2; i++){
+    if (b.h[i] > b.h[i-1] && b.h[i] > b.h[i-2] && b.h[i] >= b.h[i+1] && b.h[i] >= b.h[i+2]) sw.push(`high ${b.h[i].toFixed(dp)} (${label(b.t[i])})`);
+    if (b.l[i] < b.l[i-1] && b.l[i] < b.l[i-2] && b.l[i] <= b.l[i+1] && b.l[i] <= b.l[i+2]) sw.push(`low ${b.l[i].toFixed(dp)} (${label(b.t[i])})`); }
+  const rows = []; for (let i = from; i < len; i++) rows.push(`${label(b.t[i])},${b.o[i].toFixed(dp)},${b.h[i].toFixed(dp)},${b.l[i].toFixed(dp)},${b.c[i].toFixed(dp)}`);
+  const upto = b.upto || (input.timeframe === '1H' ? Math.min(Date.now() / 1000, b.t[len - 1] + 3600) : b.fetched_at || 0), forming = upto < b.t[len - 1] + TF_SECS[input.timeframe];
+  const age = Math.round((Date.now() / 1000 - (b.fetched_at || 0)) / 3600);
+  return [`${pair} ${TFNAME[input.timeframe]} candles, ${len - from} of them, oldest first. ${big ? 'Each date is the trading day (it ends 5 PM New York)' : 'Times are India time, the candle\'s open'}${input.timeframe === 'W' ? '; the date is the Monday of the week' : ''}.`,
+    `Data read ${new Date((b.fetched_at || 0) * 1000).toLocaleString('en-IN', { timeZone:'Asia/Kolkata', dateStyle:'medium', timeStyle:'short' })} India time${age >= 2 ? `, about ${age} hours ago, so price may have moved since; tell the trader` : ''}. Source: Twelve Data; it can differ from the trader's OANDA chart by a pip or two.`,
+    forming ? 'The last candle was still forming when the data was read. Do not count it as closed.' : 'The last candle is closed.',
+    ema ? `50 EMA now: ${ema.toFixed(dp)}. Last close: ${b.c[len - 1].toFixed(dp)}.` : `Last close: ${b.c[len - 1].toFixed(dp)}. Too few candles for a 50 EMA.`,
+    `Swing points (a rough machine pick, judge the obvious ones yourself): ${sw.slice(-14).join('; ') || 'none found'}.`,
+    `The trader's areas of interest for ${pair}: ${(doc.zones || []).map(z => `${z.lo} to ${z.hi}`).join('; ') || 'none saved'}.`,
+    'date,open,high,low,close', ...rows].join('\n');
+}
+const toolSay = (name, input) => name === 'get_candles' ? `Reading ${String(input && input.pair || '').toUpperCase()} ${TFNAME[input && input.timeframe] || ''} candles` : name === 'set_week_pick' ? 'Marking the pick of the week' : 'Working';
+/* One streamed call. Returns the content blocks and why Claude stopped. */
+async function chatCall(key, messages, onText){
+  const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
+    headers:{ 'content-type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
+    body:JSON.stringify({ model:CHAT_MODEL, max_tokens:3000, stream:true, system:CHAT_RULES + '\n\nApp data right now (JSON):\n' + chatContext(), tools:CHAT_TOOLS, messages }) });
+  if (!res.ok){ let msg = ''; try { msg = (await res.json()).error.message || ''; } catch (e) {}
+    throw Object.assign(new Error(msg || 'The request failed.'), { status:res.status }); }
+  const blocks = [], json = {}; let stop = '';
+  const reader = res.body.getReader(), dec = new TextDecoder(); let buf = '';
+  for (;;){ const { done, value } = await reader.read(); if (done) break; buf += dec.decode(value, { stream:true });
+    let nl; while ((nl = buf.indexOf('\n')) >= 0){ const line = buf.slice(0, nl).trim(); buf = buf.slice(nl + 1);
+      if (!line.startsWith('data:')) continue; let ev; try { ev = JSON.parse(line.slice(5)); } catch (e) { continue; }
+      if (ev.type === 'error') throw new Error((ev.error && ev.error.message) || 'Claude stopped with an error.');
+      if (ev.type === 'content_block_start' && ev.content_block){ const c = ev.content_block;
+        if (c.type === 'tool_use'){ blocks[ev.index] = { type:'tool_use', id:c.id, name:c.name, input:{} }; json[ev.index] = ''; }
+        else if (c.type === 'text') blocks[ev.index] = { type:'text', text:c.text || '' }; }
+      else if (ev.type === 'content_block_delta' && ev.delta){ const bl = blocks[ev.index] || (blocks[ev.index] = { type:'text', text:'' });
+        if (ev.delta.type === 'text_delta' && bl.type === 'text'){ bl.text += ev.delta.text; onText(ev.delta.text); }
+        else if (ev.delta.type === 'input_json_delta') json[ev.index] = (json[ev.index] || '') + (ev.delta.partial_json || ''); }
+      else if (ev.type === 'content_block_stop'){ const bl = blocks[ev.index]; if (bl && bl.type === 'tool_use'){ try { bl.input = json[ev.index] ? JSON.parse(json[ev.index]) : {}; } catch (e) { bl.input = {}; } } }
+      else if (ev.type === 'message_delta' && ev.delta && ev.delta.stop_reason) stop = ev.delta.stop_reason; } }
+  return { blocks:blocks.filter(x => x && (x.type !== 'text' || x.text)), stop };
+}
 async function chatSend(text){
   text = String(text || '').trim(); const key = chatKey(); if (!text || chatBusy || !key) return;
   const id = chatId, log = chatLog, pair = chatPair(); const here = () => chatId === id && !$('#chat').hidden;
-  chatErr = ''; chatBusy = true; busyId = id; log.push({ role:'user', text }); $('#cin').value = ''; chatGrow(); chatDraw();
+  chatErr = ''; chatStat = ''; chatBusy = true; busyId = id; log.push({ role:'user', text }); $('#cin').value = ''; chatGrow(); chatDraw();
+  const reply = { role:'assistant', text:'' }; let started = false;
+  const onText = d => { reply.text += d; if (!started){ started = true; log.push(reply); }
+    if (!here()) return; const live = document.getElementById('clive');
+    if (chatStat || !live){ chatStat = ''; chatDraw(); } else { live.innerHTML = md(reply.text); const b = $('#cbody'); b.scrollTop = b.scrollHeight; } };
   try {
     const charts = pair ? await chartBlocks(pair) : [];
     const hist = log.slice(-24); while (hist.length && hist[0].role !== 'user') hist.shift();
     const messages = hist.map(m => ({ role:m.role, content:[{ type:'text', text:m.text }] }));
     if (charts.length) messages[0].content = [{ type:'text', text:`Charts for ${pair}, the trade this chat is about:` }, ...charts, ...messages[0].content];
-    const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
-      headers:{ 'content-type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
-      body:JSON.stringify({ model:CHAT_MODEL, max_tokens:1024, stream:true, system:CHAT_RULES + '\n\nApp data right now (JSON):\n' + chatContext(), messages }) });
-    if (!res.ok){ let msg = ''; try { msg = (await res.json()).error.message || ''; } catch (e) {}
-      throw Object.assign(new Error(msg || 'The request failed.'), { status:res.status }); }
-    const reply = { role:'assistant', text:'' }; let started = false;
-    const reader = res.body.getReader(), dec = new TextDecoder(); let buf = '';
-    for (;;){ const { done, value } = await reader.read(); if (done) break; buf += dec.decode(value, { stream:true });
-      let nl; while ((nl = buf.indexOf('\n')) >= 0){ const line = buf.slice(0, nl).trim(); buf = buf.slice(nl + 1);
-        if (!line.startsWith('data:')) continue; let ev; try { ev = JSON.parse(line.slice(5)); } catch (e) { continue; }
-        if (ev.type === 'error') throw new Error((ev.error && ev.error.message) || 'Claude stopped with an error.');
-        if (ev.type === 'content_block_delta' && ev.delta && ev.delta.type === 'text_delta'){ reply.text += ev.delta.text;
-          if (!started){ started = true; log.push(reply); if (here()) chatDraw(); }
-          else if (here()){ const last = $('#cbody').querySelector('.msg.ai:last-of-type'); if (last){ last.innerHTML = md(reply.text); const b = $('#cbody'); b.scrollTop = b.scrollHeight; } } } } }
-    if (!started) throw new Error('Claude sent an empty reply. Try again.');
+    for (let round = 0; round < 14; round++){
+      const r = await chatCall(key, messages, onText);
+      if (r.stop === 'max_tokens') onText('\n\n(The answer was cut short. Ask me to continue.)');
+      const uses = r.blocks.filter(x => x.type === 'tool_use'); if (r.stop !== 'tool_use' || !uses.length) break;
+      messages.push({ role:'assistant', content:r.blocks });
+      const results = [];
+      for (const u of uses){ chatStat = toolSay(u.name, u.input); if (here()) chatDraw();
+        let out; try { out = await runTool(u.name, u.input); } catch (e) { out = 'The tool failed: ' + String(e && e.message || e).slice(0, 200); }
+        results.push({ type:'tool_result', tool_use_id:u.id, content:String(out) }); }
+      messages.push({ role:'user', content:results });
+      if (reply.text && !/\n\n$/.test(reply.text)) reply.text += '\n\n';
+      chatStat = 'Thinking it through'; if (here()) chatDraw();
+    }
+    reply.text = reply.text.trim();
+    if (!started || !reply.text) throw new Error('Claude sent an empty reply. Try again.');
     chatSave();
   } catch (err) {
-    if (log.length && log[log.length - 1].role === 'assistant' && log[log.length - 1].text) chatSave();
-    else { while (log.length && log[log.length - 1].role !== 'user') log.pop(); const u = log.pop(); if (u && here() && !$('#cin').value) $('#cin').value = u.text; }
+    reply.text = reply.text.trim();
+    if (log.length && log[log.length - 1] === reply && reply.text) chatSave();
+    else { if (log[log.length - 1] === reply) log.pop(); while (log.length && log[log.length - 1].role !== 'user') log.pop(); const u = log.pop(); if (u && here() && !$('#cin').value) $('#cin').value = u.text; }
     const m = String(err && err.message || '');
     const say = err.status === 401 ? (/CORS/i.test(m) ? 'This key\'s organization does not allow use from an app. Create a key in a personal Console account and save it here.' : 'The key was not accepted. Remove it and save a valid one.')
       : err.status === 429 || err.status === 529 ? 'Claude is busy or the key has hit its limit. Try again in a minute.'
-      : err.status ? 'Claude could not answer: ' + (m || 'error ' + err.status) : 'Could not reach Claude. Check your connection and try again.';
+      : err.status ? 'Claude could not answer: ' + (m || 'error ' + err.status) : m && !/fetch|network|load failed/i.test(m) ? m : 'Could not reach Claude. Check your connection and try again.';
     if (here()) chatErr = say;
   }
-  chatBusy = false; busyId = ''; if (!$('#chat').hidden){ chatDraw(); chatGrow(); }
+  chatBusy = false; busyId = ''; chatStat = ''; if (!$('#chat').hidden){ chatDraw(); chatGrow(); }
 }
 function chatGrow(){ const t = $('#cin'); t.style.height = 'auto'; t.style.height = Math.min(132, t.scrollHeight) + 'px'; $('#csend').disabled = chatBusy || !t.value.trim(); }
 $('#cin').addEventListener('input', chatGrow);

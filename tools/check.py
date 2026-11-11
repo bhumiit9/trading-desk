@@ -28,7 +28,7 @@ FEED = os.path.join(ROOT, "data", "feed.json")
 OUTBOX = os.path.join(ROOT, "data", "outbox")
 BARS = os.path.join(ROOT, "data", "bars")
 PERIOD = {"1h": 3600}
-KEEP_BARS = {"1h": 240}
+KEEP_BARS = {"1h": 240, "4h": 200, "1d": 220, "1w": 80}   # the last three are built by fetch_prices.py for the in-app chat
 SEED = {"1h": 150}
 IST = ZoneInfo("Asia/Kolkata")
 NY = ZoneInfo("America/New_York")
@@ -163,7 +163,7 @@ def tidy_bars():
         except Exception:
             continue
         k = KEEP_BARS[tf]
-        out = {"symbol": b.get("symbol"), "tf": tf, "fetched_at": int(b.get("fetched_at", 0)), **{x: b[x][-k:] for x in "tohlc"}}
+        out = {"symbol": b.get("symbol"), "tf": tf, "fetched_at": int(b.get("fetched_at", 0)), **({"upto": int(b["upto"])} if "upto" in b else {}), **{x: b[x][-k:] for x in "tohlc"}}
         txt = json.dumps(out, separators=(",", ":"))
         if txt != open(fn).read():
             open(fn, "w").write(txt)

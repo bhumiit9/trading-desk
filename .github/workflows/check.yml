@@ -1,10 +1,11 @@
 name: Hourly check
 
-# Every hour of the entry window (9:37 AM to 9:37 PM IST, Monday to Friday):
+# Twice an hour through the entry window (9:37 AM to 10:07 PM IST, Monday to Friday). GitHub sometimes
+# skips a scheduled run, so the second slot is a backup; the check never repeats an alert.
 # read prices, check them against the zones, save the result and send notifications.
 on:
   schedule:
-    - cron: '7 4-16 * * 1-5'
+    - cron: '7,37 4-16 * * 1-5'
   workflow_dispatch:
   push:
     branches: [main]
