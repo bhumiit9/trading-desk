@@ -201,14 +201,14 @@
    "price_at": "2026-11-11T17:31:51Z",
    "step": 1,
    "chart": "charts/cadjpy.jpg",
-   "note": "At the daily zone. Weekly rejected the 113.6 structure last week; Monday's daily candle rejected the 112.28 retest. Today's candle is testing 112.28 again. No 1H shift of structure yet, and that box is a must.",
+   "note": "At the daily zone. Weekly rejected the 113.6 structure last week. On the daily, price is testing 112.28 for the second time with no clean rejection candle yet. No 1H shift of structure, and that box is a must.",
    "shot_at": "2026-11-10T20:52:00Z",
    "entry": 112.35,
    "stop": 112.7,
    "target": 111.4,
    "rr": 2.7,
-   "score": 85,
-   "score_at": "2026-11-11T19:19:14Z",
+   "score": 75,
+   "score_at": "2026-11-11T19:26:08Z",
    "charts": [
     {
      "tf": "W",
@@ -298,7 +298,7 @@
      "tf": "D",
      "name": "Previous structure rejection",
      "pts": 10,
-     "ok": true
+     "ok": false
     },
     {
      "tf": "D",
