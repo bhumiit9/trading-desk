@@ -110,7 +110,7 @@
    "pair": "NZDUSD",
    "status": "no_trade",
    "order": 11,
-   "note": "Price is in a daily sell zone, but the weekly made a new low last week."
+   "note": "Weekly and daily bearish. Price was rejected from your zone and is back under it; a sell only has 1:2 from 0.5626-0.5637, so it needs another pullback."
   },
   {
    "pair": "AUDNZD",
@@ -181,8 +181,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.99144,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "price": 1.99455,
+   "checked_at": "2026-11-11T10:06:19Z"
   },
   {
    "pair": "CADJPY",
@@ -245,12 +245,10 @@
      "hi": 116.233
     }
    ],
-   "inside": [
-    "z6"
-   ],
+   "inside": [],
    "alerted": {},
-   "price": 111.823,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "price": 111.82,
+   "checked_at": "2026-11-11T10:06:19Z"
   },
   {
    "pair": "GBPJPY",
@@ -298,12 +296,14 @@
      "hi": 217.637
     }
    ],
-   "inside": [],
+   "inside": [
+    "z5"
+   ],
    "alerted": {
     "z5": "2026-11-11"
    },
-   "price": 211.987,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "price": 211.844,
+   "checked_at": "2026-11-11T10:06:19Z"
   },
   {
    "pair": "GBPAUD",
@@ -378,8 +378,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.94091,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "price": 1.94063,
+   "checked_at": "2026-11-11T10:06:19Z"
   },
   {
    "pair": "EURUSD",
@@ -434,8 +434,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.11654,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "price": 1.11402,
+   "checked_at": "2026-11-11T10:06:19Z"
   },
   {
    "pair": "NZDUSD",
@@ -498,12 +498,10 @@
      "hi": 0.6065
     }
    ],
-   "inside": [
-    "z1"
-   ],
+   "inside": [],
    "alerted": {},
-   "price": 0.56067,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "price": 0.55856,
+   "checked_at": "2026-11-11T10:06:19Z"
   },
   {
    "pair": "GBPUSD",
@@ -555,8 +553,8 @@
     "z3"
    ],
    "alerted": {},
-   "price": 1.33474,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "price": 1.33266,
+   "checked_at": "2026-11-11T10:06:19Z"
   },
   {
    "pair": "AUDNZD",
@@ -621,8 +619,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.22656,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "price": 1.22946,
+   "checked_at": "2026-11-11T10:06:19Z"
   },
   {
    "pair": "EURCAD",
@@ -677,8 +675,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.58582,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "price": 1.58371,
+   "checked_at": "2026-11-11T10:06:19Z"
   },
   {
    "pair": "GBPCHF",
@@ -751,13 +749,22 @@
      "hi": 1.1136
     }
    ],
-   "inside": [],
-   "alerted": {},
-   "price": 1.10248,
-   "checked_at": "2026-11-11T04:26:56Z"
+   "inside": [
+    "z11"
+   ],
+   "alerted": {
+    "z11": "2026-11-11"
+   },
+   "price": 1.10394,
+   "checked_at": "2026-11-11T10:06:19Z"
   }
  ],
  "alerts": [
+  {
+   "at": "2026-11-11T09:06:12Z",
+   "pair": "GBPCHF",
+   "text": "Price came up into your AOI 1.10362-1.10442 (high 1.10392) and has moved back out; now 1.10311. Not on this week's plan: weekly at its highs and the daily has gone sideways for six weeks. Information only."
+  },
   {
    "at": "2026-11-11T04:26:56Z",
    "pair": "",

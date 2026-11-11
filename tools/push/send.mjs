@@ -53,7 +53,8 @@ let messages = [];
 if (process.env.TEST_BODY) {
   messages.push({ title: process.env.TEST_TITLE || 'Set & Forget Desk', body: process.env.TEST_BODY, tag: 'test-' + Date.now(), url: './' });
 } else {
-  for (const f of newOutboxFiles()) {
+  const listed = (process.env.OUTBOX_FILES || '').split(/\s+/).filter(f => f.endsWith('.json'));
+  for (const f of (listed.length ? listed : newOutboxFiles())) {
     try {
       const m = JSON.parse(fs.readFileSync(path.join(root, f), 'utf8'));
       if (m.at && Date.now() - Date.parse(m.at) > MAX_AGE_MS) { console.log('skip (too old):', f); continue; }
