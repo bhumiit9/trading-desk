@@ -1,5 +1,10 @@
 {
  "vapidPublicKey": "BCO5UJ3DdErZhKwAOksyBFdrk3mwVZBuBHXpDEJYo9IQpykhf3wupdFSU8rfVGhjhnLmu7neObG953GxCOcKldo",
  "encPublicKey": "BEO0V__QBup7S3-pXezF7oAFVgR_8Nx8GTMHERQM3ucxTtDxFLut3giNP9tt2HI4XQGrYdY4Q2IYKEPbQ5d1H4k",
- "devices": []
+ "devices": [
+  {
+   "name": "device 1",
+   "fp": "a911b70d"
+  }
+ ]
 }
