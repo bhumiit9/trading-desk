@@ -65,7 +65,7 @@ def roll_up(symbol, hourly, now):
                 m = {}
         m.update(fresh)
         ts = sorted(m)[-keep:]
-        out = {"symbol": symbol, "tf": tf, "fetched_at": now, "upto": max(hourly) + 3600,   # upto: end of the newest hourly candle used
+        out = {"symbol": symbol, "tf": tf, "fetched_at": now, "upto": min(max(hourly) + 3600, now),   # upto: the moment the candles are complete to
                "t": ts, "o": [m[t][0] for t in ts], "h": [m[t][1] for t in ts], "l": [m[t][2] for t in ts], "c": [m[t][3] for t in ts]}
         open(fn, "w").write(json.dumps(out, separators=(",", ":")))
 
