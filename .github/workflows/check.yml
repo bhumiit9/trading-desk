@@ -27,10 +27,15 @@ jobs:
         with:
           node-version: 20
       - name: Read prices
+        id: prices
         run: python3 tools/fetch_prices.py
+        env:
+          TWELVEDATA_KEY: ${{ secrets.TWELVEDATA_KEY }}
       - name: Check zones
+        if: steps.prices.outputs.ready == 'true'
         run: python3 tools/check.py run
       - name: Save
+        if: steps.prices.outputs.ready == 'true'
         run: |
           git config user.name "desk-bot"
           git config user.email "desk-bot@users.noreply.github.com"

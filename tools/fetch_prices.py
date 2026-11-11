@@ -3,92 +3,91 @@
 Fetch the latest hourly candles for every pair in data/feed.json and merge them into
 data/bars/OANDA_<PAIR>_1h.json. Runs inside GitHub Actions before tools/check.py.
 
-Source: Yahoo Finance chart data (no key). Its prices can differ from OANDA's by a pip or two.
+Source: Twelve Data (free plan: 8 requests a minute, 800 a day). The API key comes from the
+repository secret TWELVEDATA_KEY. Its prices can differ from OANDA's by a pip or two.
 """
-import json, os, sys, time, urllib.request
+import calendar, json, os, sys, time, urllib.parse, urllib.request
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BARS = os.path.join(ROOT, "data", "bars")
-UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Safari/537.36"
+BATCH = 5            # symbols per request; two requests a minute apart stay under the free limit
 
 
-def yahoo(pair):
-    last = None
-    for attempt in range(4):
-        host = "query1" if attempt % 2 == 0 else "query2"
-        url = f"https://{host}.finance.yahoo.com/v8/finance/chart/{pair}=X?interval=1h&range=5d&includePrePost=false"
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
-            with urllib.request.urlopen(req, timeout=20) as r:
-                d = json.load(r)
-            res = d["chart"]["result"][0]
-            q = res["indicators"]["quote"][0]
-            rows = {}
-            for i, t in enumerate(res["timestamp"]):
-                o, h, l, c = q["open"][i], q["high"][i], q["low"][i], q["close"][i]
-                if None in (o, h, l, c):
-                    continue
-                t = int(t) - int(t) % 3600          # the newest row can carry the current time: put it in its hour
-                if t in rows:
-                    r0 = rows[t]
-                    rows[t] = (r0[0], max(r0[1], h), min(r0[2], l), c)
-                else:
-                    rows[t] = (o, h, l, c)
-            return rows
-        except Exception as e:                      # noqa: BLE001
-            last = e
-            time.sleep(2 + 3 * attempt)
-    raise RuntimeError(f"{pair}: {last}")
+def ready(flag):
+    out = os.environ.get("GITHUB_OUTPUT")
+    if out:
+        open(out, "a").write(f"ready={'true' if flag else 'false'}\n")
 
 
-def clean(pair, row):
-    """Yahoo sometimes prints a wild wick; cut wicks longer than 100 pips back to the body."""
-    pip = 0.01 if pair.endswith("JPY") else 0.0001
-    o, h, l, c = row
-    top, bot = max(o, c), min(o, c)
-    if h - top > 100 * pip:
-        h = top
-    if bot - l > 100 * pip:
-        l = bot
-    dp = 3 if pair.endswith("JPY") else 5
-    return tuple(round(v, dp) for v in (o, h, l, c))
+def fetch(symbols, key):
+    q = urllib.parse.urlencode({"symbol": ",".join(symbols), "interval": "1h", "outputsize": 48,
+                                "timezone": "UTC", "order": "desc", "apikey": key})
+    req = urllib.request.Request("https://api.twelvedata.com/time_series?" + q, headers={"Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        d = json.load(r)
+    if len(symbols) == 1 or "values" in d or "code" in d:
+        d = {symbols[0]: d} if len(symbols) == 1 else {s: d for s in symbols}
+    return d
 
 
 def main():
+    key = os.environ.get("TWELVEDATA_KEY", "").strip()
+    if not key:
+        print("The price key (repository secret TWELVEDATA_KEY) is not set, so prices were not read and nothing was checked.")
+        ready(False)
+        return
     feed = json.load(open(os.path.join(ROOT, "data", "feed.json")))
+    docs = feed.get("zones", [])
     os.makedirs(BARS, exist_ok=True)
-    ok, bad = 0, []
-    now = int(time.time())
-    for doc in feed.get("zones", []):
-        pair, sym = doc["pair"], doc["symbol"]
+    now, ok, bad = int(time.time()), 0, []
+    for i in range(0, len(docs), BATCH):
+        part = docs[i:i + BATCH]
+        if i:
+            time.sleep(62)
+        syms = [f"{d['pair'][:3]}/{d['pair'][3:]}" for d in part]
         try:
-            rows = yahoo(pair)
+            res = fetch(syms, key)
         except Exception as e:                      # noqa: BLE001
-            bad.append(str(e)[:160]); continue
-        if not rows:
-            bad.append(f"{pair}: no rows"); continue
-        fn = os.path.join(BARS, f"{sym.replace(':', '_')}_1h.json")
-        m = {}
-        if os.path.exists(fn):
-            try:
-                b = json.load(open(fn))
-                m = {t: (b["o"][i], b["h"][i], b["l"][i], b["c"][i]) for i, t in enumerate(b["t"])}
-            except Exception:                       # noqa: BLE001
-                m = {}
-        for t, row in rows.items():
-            m[t] = clean(pair, row)
-        ts = sorted(m)[-240:]
-        out = {"symbol": sym, "tf": "1h", "fetched_at": now, "source": "yahoo",
-               "t": ts, "o": [m[t][0] for t in ts], "h": [m[t][1] for t in ts], "l": [m[t][2] for t in ts], "c": [m[t][3] for t in ts]}
-        open(fn, "w").write(json.dumps(out, separators=(",", ":")))
-        last = max(rows)
-        print(f"{pair}: {len(rows)} bars, newest {time.strftime('%d %b %H:%M UTC', time.gmtime(last))} close {rows[last][3]:.5f}")
-        ok += 1
-        time.sleep(0.6)
+            bad += [f"{d['pair']}: {str(e)[:120]}" for d in part]
+            continue
+        for d, s in zip(part, syms):
+            r = res.get(s) or {}
+            vals = r.get("values")
+            if not vals:
+                bad.append(f"{d['pair']}: {str(r.get('message') or r.get('status') or 'no data')[:160]}")
+                continue
+            rows = {}
+            for v in vals:
+                try:
+                    t = calendar.timegm(time.strptime(v["datetime"], "%Y-%m-%d %H:%M:%S"))
+                    rows[t - t % 3600] = tuple(float(v[k]) for k in ("open", "high", "low", "close"))
+                except Exception:                   # noqa: BLE001
+                    continue
+            if not rows:
+                bad.append(f"{d['pair']}: unreadable rows")
+                continue
+            fn = os.path.join(BARS, f"{d['symbol'].replace(':', '_')}_1h.json")
+            m = {}
+            if os.path.exists(fn):
+                try:
+                    b = json.load(open(fn))
+                    m = {t: (b["o"][j], b["h"][j], b["l"][j], b["c"][j]) for j, t in enumerate(b["t"])}
+                except Exception:                   # noqa: BLE001
+                    m = {}
+            m.update(rows)
+            ts = sorted(m)[-240:]
+            out = {"symbol": d["symbol"], "tf": "1h", "fetched_at": now, "source": "twelvedata",
+                   "t": ts, "o": [m[t][0] for t in ts], "h": [m[t][1] for t in ts], "l": [m[t][2] for t in ts], "c": [m[t][3] for t in ts]}
+            open(fn, "w").write(json.dumps(out, separators=(",", ":")))
+            last = max(rows)
+            print(f"{d['pair']}: {len(rows)} bars, newest {time.strftime('%d %b %H:%M UTC', time.gmtime(last))} close {rows[last][3]}")
+            ok += 1
     for b in bad:
         print("FAILED", b)
-    if ok < max(1, len(feed.get("zones", [])) // 2):
-        sys.exit("too few pairs could be read; nothing will be checked")
+    if ok == 0:
+        ready(False)
+        sys.exit("no pair could be read; nothing was checked")
+    ready(True)
 
 
 if __name__ == "__main__":
