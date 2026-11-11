@@ -1,5 +1,5 @@
 // Service worker for the Set & Forget Desk: shows push notifications and keeps the app usable offline.
-const CACHE = 'desk-v1';
+const CACHE = 'desk-v2';
 
 self.addEventListener('install', e => { self.skipWaiting(); });
 self.addEventListener('activate', e => { e.waitUntil(self.clients.claim()); });

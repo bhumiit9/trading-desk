@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Set & Forget Desk</title>
-<meta name="description" content="This week's trades as TradingView screenshots with entry, stop and target, plus notifications.">
+<meta name="description" content="This week's trades: one TradingView chart per trade with entry, stop and target, plus notifications.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="icons/icon-192.png">
@@ -13,83 +13,94 @@
 <meta name="apple-mobile-web-app-title" content="S&F Desk">
 <meta name="theme-color" content="#ffffff">
 <style>
-/* The screenshots are the app: one TradingView picture per trade, edge to edge, one caption line each.
+/* One trade per screen: the chart on top, its three prices underneath in large type, swipe sideways for the next trade.
    Everything else (notification log, device setup) sits behind the bell. */
 :root{
-  --bg:#ffffff; --surf:#F1F4FA; --ink:#0F1B33; --mute:#62708C; --line:#E1E6F0;
-  --sell:#E5484D; --buy:#0E9F6E; --amber-ink:#8A5300; --amber-bg:#FFF2D0; --link:#2962FF;
+  --bg:#ffffff; --surf:#F1F4FA; --ink:#0F1B33; --mute:#5A6782; --line:#E1E6F0;
+  --sell:#D93A3F; --buy:#0B8A5F; --amber-ink:#8A5300; --amber-bg:#FFF2D0; --link:#2962FF;
   --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Helvetica,Arial,sans-serif;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0}
-body{background:var(--bg);color:var(--ink);font:400 15px/1.35 var(--font);font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%;
-  padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) calc(env(safe-area-inset-bottom,0px) + 28px) env(safe-area-inset-left,0px)}
+html,body{margin:0;height:100%}
+body{background:var(--bg);color:var(--ink);font:400 16px/1.35 var(--font);font-variant-numeric:tabular-nums;-webkit-text-size-adjust:100%}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
-.top{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;align-items:center;justify-content:space-between;padding:12px 10px 10px 16px;
-  padding-top:calc(12px + env(safe-area-inset-top,0px));margin-top:calc(-1 * env(safe-area-inset-top,0px))}
-h1{font-size:24px;font-weight:700;letter-spacing:-.02em;margin:0;line-height:1.1}
-.bell{position:relative;width:42px;height:42px;border-radius:50%;display:grid;place-items:center}
-.bell svg{width:24px;height:24px}
+.app{height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
+.bell{position:fixed;z-index:6;top:calc(env(safe-area-inset-top,0px) + 6px);right:calc(env(safe-area-inset-right,0px) + 8px);width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
+.bell svg{width:25px;height:25px}
 .bell i{position:absolute;top:8px;right:9px;width:10px;height:10px;border-radius:50%;background:#F5A300;border:2px solid var(--bg);display:none}
 .bell.new i{display:block}
-.feed{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:26px 20px;max-width:1500px;margin:0 auto}
-@media (min-width:700px){.feed{padding:0 20px}}
-.cap{display:flex;align-items:center;gap:9px;padding:0 16px 8px}
-@media (min-width:700px){.cap{padding-inline:2px}}
-.pair{font-size:20px;font-weight:700;letter-spacing:-.01em}
-.tag{font-size:12px;font-weight:700;border-radius:5px;padding:2px 8px}
-.tag.sell{color:var(--sell);background:rgba(229,72,77,.12)} .tag.buy{color:var(--buy);background:rgba(14,159,110,.13)}
-.st{margin-left:auto;font-size:13px;color:var(--mute);font-weight:500}
-.st.at_zone{color:var(--amber-ink);background:var(--amber-bg);border-radius:999px;padding:2px 10px;font-weight:600}
-.st.triggered{color:#fff;background:var(--buy);border-radius:999px;padding:2px 10px;font-weight:600}
-.st.invalid{color:var(--sell);font-weight:600}
-.shot{display:block;width:100%;height:auto;aspect-ratio:1/1;object-fit:cover;background:var(--surf);cursor:zoom-in;border-block:1px solid var(--line)}
-@media (min-width:700px){.shot{border:1px solid var(--line);border-radius:10px}}
-.none{padding:40px 24px;text-align:center;color:var(--mute)}
+.deck{flex:1;min-height:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.deck::-webkit-scrollbar{display:none}
+.slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column}
+.cap{display:flex;align-items:center;gap:10px;height:56px;padding:0 60px 0 18px}
+.pair{font-size:26px;font-weight:700;letter-spacing:-.02em}
+.tag{font-size:13px;font-weight:700;border-radius:6px;padding:3px 9px}
+.tag.sell{color:var(--sell);background:rgba(217,58,63,.12)} .tag.buy{color:var(--buy);background:rgba(11,138,95,.13)}
+.pic{flex:1;min-height:0;border-block:1px solid var(--line);display:flex}
+.shot{width:100%;height:100%;object-fit:contain;object-position:center top;cursor:zoom-in;display:block}
+.levels{display:grid;grid-template-columns:repeat(3,1fr);padding:12px 18px 4px;gap:8px}
+.lv span{display:block;font-size:13px;color:var(--mute)}
+.lv b{display:block;font-size:22px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.lv.stop b{color:var(--sell)} .lv.target b{color:var(--buy)}
+.lv small{font-size:13px;font-weight:600;color:var(--buy);margin-left:5px}
+.state{display:flex;align-items:center;gap:8px;padding:6px 18px 10px;font-size:14px;color:var(--mute)}
+.st{font-weight:600;color:var(--ink);background:var(--surf);border-radius:999px;padding:3px 11px}
+.st.at_zone{color:var(--amber-ink);background:var(--amber-bg)} .st.triggered{color:#fff;background:var(--buy)} .st.invalid{color:var(--sell)}
+.state .when{margin-left:auto;font-size:12.5px;white-space:nowrap}
+.dots{display:flex;justify-content:center;gap:7px;padding:2px 0 12px}
+.dots i{width:7px;height:7px;border-radius:50%;background:var(--line)} .dots i.on{background:var(--ink)}
+.none{margin:auto;padding:40px 28px;text-align:center;color:var(--mute)}
+@media (min-width:800px){
+  .app{height:auto;min-height:100dvh}
+  .deck{flex:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:26px;overflow:visible;max-width:1500px;margin:0 auto;padding:10px 64px 30px 24px;width:100%}
+  .slide{border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .pic{flex:none;aspect-ratio:4/5} .dots{display:none}
+}
 .view{position:fixed;inset:0;z-index:30;background:var(--bg);overflow:auto;-webkit-overflow-scrolling:touch;display:flex}
 .view[hidden]{display:none}
-.view img{margin:auto;width:100%;max-width:min(100%,100dvh);height:auto;cursor:zoom-in}
+.view img{margin:auto;width:100%;max-width:min(100%,80dvh);height:auto;cursor:zoom-in}
 .view.big img{width:230%;max-width:none;cursor:zoom-out}
-.view button{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:12px;z-index:31;background:var(--ink);color:#fff;font-weight:600;border-radius:999px;padding:8px 16px}
+.view button{position:fixed;top:calc(10px + env(safe-area-inset-top,0px));right:12px;z-index:31;background:var(--ink);color:#fff;font-weight:600;border-radius:999px;padding:11px 18px}
 .sheet{position:fixed;inset:0;z-index:20;background:rgba(15,27,51,.35);display:flex;align-items:flex-end;justify-content:center}
 .sheet[hidden]{display:none}
 .panel{background:var(--bg);width:min(100%,560px);max-height:86dvh;border-radius:18px 18px 0 0;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
-@media (min-width:700px){.sheet{align-items:center}.panel{border-radius:18px;max-height:80dvh}}
-.phead{display:flex;justify-content:space-between;align-items:center;padding:16px 18px 10px}
-.phead h2{font-size:19px;font-weight:700;margin:0;letter-spacing:-.01em}
-.phead button{font-weight:600;color:var(--link);padding:6px 4px}
+@media (min-width:800px){.sheet{align-items:center}.panel{border-radius:18px;max-height:80dvh}}
+.phead{display:flex;justify-content:space-between;align-items:center;padding:14px 18px 8px}
+.phead h2{font-size:20px;font-weight:700;margin:0;letter-spacing:-.01em}
+.phead button{font-weight:600;color:var(--link);padding:11px 6px}
 .pbody{overflow-y:auto;padding:0 18px 18px;display:flex;flex-direction:column;gap:14px;-webkit-overflow-scrolling:touch}
-.dev{background:var(--surf);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:9px;font-size:14px}
+.dev{background:var(--surf);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column;gap:9px;font-size:14.5px}
 .dev p{margin:0} .dev ol{margin:0;padding-left:20px} .dev b{font-weight:600}
-.btn{align-self:flex-start;font-weight:600;color:#fff;background:var(--ink);border-radius:9px;padding:10px 16px}
+.btn{align-self:flex-start;font-weight:600;color:#fff;background:var(--ink);border-radius:10px;padding:12px 18px}
 .code{width:100%;height:64px;font:11.5px ui-monospace,Menlo,monospace;color:var(--mute);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;resize:none}
 .dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--buy);margin-right:7px}
-.a{padding:11px 0;border-top:1px solid var(--line);font-size:14px}
+.a{display:block;width:100%;text-align:left;padding:11px 0;border-top:1px solid var(--line);font-size:14.5px}
 .a:first-child{border-top:0}
 .a .h{display:flex;justify-content:space-between;gap:10px;font-weight:600}
-.a .h time{font-weight:400;font-size:12.5px;color:var(--mute);white-space:nowrap}
-.a p{margin:3px 0 0;color:var(--mute)}
-.quiet{color:var(--mute);font-size:14px;padding:6px 0}
-.foot{font-size:12px;color:var(--mute);line-height:1.45}
+.a .h time{font-weight:400;font-size:13px;color:var(--mute);white-space:nowrap}
+.a p{margin:2px 0 0;color:var(--mute);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.a.open p{display:block}
+.quiet{color:var(--mute);font-size:14.5px;padding:6px 0}
+.foot{font-size:12.5px;color:var(--mute);line-height:1.45}
 :focus-visible{outline:2px solid var(--link);outline-offset:2px}
 </style>
 </head>
 <body>
-<header class="top">
-  <h1 id="week">This week</h1>
+<div class="app">
   <button class="bell" id="bell" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><i></i></button>
-</header>
-<main class="feed" id="feed"><div class="none">Loading this week's charts</div></main>
+  <main class="deck" id="deck"><div class="none">Loading this week's trades</div></main>
+  <nav class="dots" id="dots" aria-hidden="true"></nav>
+</div>
 
 <div class="view" id="view" hidden><button id="viewClose">Close</button><img id="viewImg" alt=""></div>
 
 <div class="sheet" id="sheet" hidden>
   <div class="panel" role="dialog" aria-label="Notifications">
-    <div class="phead"><h2>Notifications</h2><button id="close">Done</button></div>
+    <div class="phead"><h2>Notifications</h2><span><button id="refresh">Refresh</button>&ensp;<button id="close">Done</button></span></div>
     <div class="pbody">
       <div id="dev"></div>
       <div id="alerts"></div>
-      <div class="foot">Entries on the charts are plans. They count only after the 1H shift of structure and a closed engulfing at the zone. Rule-based analysis of Alex G's Set &amp; Forget strategy, not financial advice. The trade decision is yours.</div>
+      <div class="foot">Entries on the charts are plans. They count only after the 1H shift of structure and a closed entry candle at the zone. Rule-based analysis, not financial advice. The trade decision is yours.</div>
     </div>
   </div>
 </div>
@@ -101,31 +112,56 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-let feed = null;
-const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday:'short', hour:'2-digit', minute:'2-digit'}); };
+const BUILD = '2026-11-11.5';
+let feed = null, shown = '';
+const isJPY = p => /JPY/.test(p);
+const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
+const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday:'short', hour:'numeric', minute:'2-digit'}); };
 const safeChart = c => (typeof c === 'string' && /^charts\/[a-z0-9_-]+\.(png|jpg)$/.test(c)) ? c : null;
 async function getJSON(url){ const r = await fetch(url + '?t=' + Date.now(), {cache:'no-store'}); if (!r.ok) throw new Error(r.status); return r.json(); }
 
+function slide(s){
+  const side = s.side === 'buy' ? 'buy' : 'sell';
+  let st = STATUS[s.status] ? s.status : 'waiting', dist = '';
+  if (typeof s.price === 'number' && typeof s.zone_lo === 'number'){
+    if (s.price >= s.zone_lo && s.price <= s.zone_hi){ if (st === 'waiting') st = 'at_zone'; }
+    else if (st === 'waiting') dist = Math.round(Math.min(Math.abs(s.price - s.zone_lo), Math.abs(s.price - s.zone_hi)) / (isJPY(s.pair) ? .01 : .0001)) + ' pips to zone';
+  }
+  const v = s.shot_at ? '?v=' + encodeURIComponent(s.shot_at) : '';
+  return `<article class="slide" data-pair="${esc(s.pair)}">
+    <header class="cap"><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span></header>
+    <div class="pic"><img class="shot" src="${safeChart(s.chart)}${v}" alt="${esc(s.pair)} TradingView chart with entry, stop and target" tabindex="0"></div>
+    <div class="levels">
+      <div class="lv stop"><span>Stop</span><b>${px(s.pair, s.stop)}</b></div>
+      <div class="lv"><span>Entry</span><b>${px(s.pair, s.entry)}</b></div>
+      <div class="lv target"><span>Target</span><b>${px(s.pair, s.target)}${s.rr ? `<small>1:${esc(s.rr)}</small>` : ''}</b></div>
+    </div>
+    <div class="state"><span class="st ${st}">${STATUS[st]}</span>${dist ? `<span>${dist}</span>` : ''}${s.shot_at ? `<span class="when">Chart from ${esc(when(s.shot_at))}</span>` : ''}</div>
+  </article>`;
+}
 function draw(){
   const trades = (feed.setups || []).filter(s => s.status !== 'no_trade' && safeChart(s.chart))
     .sort((a,b) => (RANK[a.status] ?? 2) - (RANK[b.status] ?? 2) || (a.order ?? 99) - (b.order ?? 99));
-  $('#week').textContent = (feed.week && feed.week.label) || 'This week';
-  $('#feed').innerHTML = trades.length ? trades.map(s => {
-    const side = s.side === 'buy' ? 'buy' : 'sell', st = STATUS[s.status] ? s.status : 'waiting';
-    const v = s.shot_at ? '?v=' + encodeURIComponent(s.shot_at) : '';
-    return `<article><div class="cap"><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span><span class="st ${st}">${STATUS[st]}</span></div>
-      <img class="shot" src="${safeChart(s.chart)}${v}" alt="${esc(s.pair)} TradingView chart with entry, stop and target" loading="lazy" tabindex="0"></article>`; }).join('')
-    : `<div class="none">No trades this week yet. The charts appear here after the weekly analysis.</div>`;
+  const html = trades.length ? trades.map(slide).join('') : `<div class="none">No trades this week yet. The charts appear here after the weekly analysis.</div>`;
+  if (html !== shown){ const deck = $('#deck'), x = deck.scrollLeft; deck.innerHTML = shown = html; deck.scrollLeft = x; }
+  $('#dots').innerHTML = trades.length > 1 ? trades.map(() => '<i></i>').join('') : ''; dots();
   const al = (feed.alerts || []).slice(0, 25);
-  $('#alerts').innerHTML = al.length ? al.map(a => `<div class="a"><div class="h"><span>${esc(a.pair || 'Desk')}</span><time>${esc(when(a.at))}</time></div><p>${esc(a.text || '')}</p></div>`).join('') : '<div class="quiet">Nothing yet. A note appears here each time price reaches one of your zones.</div>';
+  $('#alerts').innerHTML = al.length ? al.map(a => `<button class="a"><span class="h"><span>${esc(a.pair || 'Desk')}</span><time>${esc(when(a.at))}</time></span><p>${esc(a.text || '')}</p></button>`).join('') : '<div class="quiet">Nothing yet. A note appears here each time price reaches one of your zones.</div>';
   $('#bell').classList.toggle('new', (al[0] ? Date.parse(al[0].at) : 0) > Number(store.get('seen', 0)));
+}
+function dots(){ const deck = $('#deck'), i = Math.round(deck.scrollLeft / Math.max(1, deck.clientWidth)); document.querySelectorAll('#dots i').forEach((d, k) => d.classList.toggle('on', k === i)); }
+$('#deck').addEventListener('scroll', () => requestAnimationFrame(dots), {passive:true});
+async function update(force){
+  try { const v = await getJSON('version.json'); if (force || (v && v.build && v.build !== BUILD)) location.replace('./?v=' + encodeURIComponent((v && v.build) || Date.now())); }
+  catch (e) { if (force) location.reload(); }
 }
 async function load(){
   if (document.hidden) return;
+  update(false);
   const got = await Promise.allSettled([getJSON('data/feed.json'), getJSON(RAW + 'data/feed.json')]);
   const ok = got.filter(g => g.status === 'fulfilled' && g.value && g.value.updated).map(g => g.value).sort((a,b) => Date.parse(b.updated) - Date.parse(a.updated));
   if (ok.length){ if (!feed || Date.parse(ok[0].updated) > Date.parse(feed.updated)){ feed = ok[0]; draw(); } }
-  else if (!feed) $('#feed').innerHTML = '<div class="none">The charts could not be loaded. Check the connection; the app retries by itself.</div>';
+  else if (!feed) $('#deck').innerHTML = '<div class="none">The charts could not be loaded. Check the connection; the app retries by itself.</div>';
 }
 load(); setInterval(load, 5 * 60000); document.addEventListener('visibilitychange', load);
 
@@ -134,7 +170,9 @@ document.addEventListener('click', e => {
   if (t.classList.contains('shot')){ $('#viewImg').src = t.src; $('#view').classList.remove('big'); $('#view').hidden = false; return; }
   if (t.id === 'viewImg'){ const v = $('#view'), big = v.classList.toggle('big'); if (big){ const r = t.getBoundingClientRect(); v.scrollLeft = (v.scrollWidth - v.clientWidth) * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); v.scrollTop = (v.scrollHeight - v.clientHeight) * Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)); } return; }
   if (t.id === 'viewClose'){ $('#view').hidden = true; return; }
+  const row = t.closest('.a'); if (row){ row.classList.toggle('open'); return; }
   if (t.closest('#bell')){ $('#sheet').hidden = false; const a = feed?.alerts?.[0]; if (a) store.set('seen', Date.parse(a.at)); $('#bell').classList.remove('new'); return; }
+  if (t.id === 'refresh'){ t.textContent = 'Refreshing'; update(true); return; }
   if (t.id === 'close' || t.id === 'sheet') $('#sheet').hidden = true;
 });
 document.addEventListener('keydown', e => { if (e.key === 'Escape'){ $('#sheet').hidden = true; $('#view').hidden = true; } if (e.key === 'Enter' && e.target.classList?.contains('shot')) e.target.click(); });
