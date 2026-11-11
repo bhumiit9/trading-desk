@@ -181,7 +181,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .chips li{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 8px;border-radius:14px;font-size:13px;font-weight:600;white-space:nowrap}
 .chips li svg{width:14px;height:14px;flex:none}
 .chips .ok{background:rgba(31,201,142,.15);color:var(--ink)} .chips .ok svg{color:var(--buy)} .chips .ok small{font-size:12px;font-weight:600;color:var(--buy)}
-.chips .no{box-shadow:inset 0 0 0 1px var(--line);color:var(--mute);font-weight:500}
+.chips .no{box-shadow:inset 0 0 0 1px var(--line);color:var(--mute);font-weight:500} .chips .no small{font-size:12px;color:#6B7486}
 .slide.cur .chips li{animation:pop .42s cubic-bezier(.2,.9,.3,1.2) calc(.55s + var(--i)*.06s) both}
 @keyframes pop{from{opacity:0;transform:scale(.8) translateY(6px)}to{opacity:1;transform:none}}
 .dots{display:flex;justify-content:center;gap:7px;padding:2px 0 12px}
@@ -255,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.17';
+const BUILD = '2026-11-11.18';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -292,7 +292,7 @@ function chips(s) {
   let i = 0;
   return `<ul class="chips" aria-label="Confluences on this timeframe">${all.map(c => c.ok
     ? `<li class="ok" data-tf="${esc(c.tf)}" style="--i:${i++}">${TICK}<span class="sr">Have: </span>${esc(c.name)} <small>+${Number(c.pts) || 0}</small></li>`
-    : `<li class="no" data-tf="${esc(c.tf)}" style="--i:${i++}">${RING}<span class="sr">Still needed: </span>${esc(c.name)}</li>`).join('')}</ul>`;
+    : `<li class="no" data-tf="${esc(c.tf)}" style="--i:${i++}">${RING}<span class="sr">Not yet: </span>${esc(c.name)}${Number(c.pts) ? ` <small>${Number(c.pts)}</small>` : ''}</li>`).join('')}</ul>`;
 }
 function tabs(s){
   const ch = chartsOf(s), have = TFS.filter(t => ch[t]); if (have.length < 2) return '';
@@ -473,17 +473,13 @@ document.addEventListener('click', async e => {
 const CHAT_MODEL = 'claude-sonnet-5-5';
 const CHAT_RULES = `You are Claude, working as the trader's second pair of eyes inside their Set & Forget Desk app. The trader uses the Set & Forget forex strategy: top-down Weekly, Daily, 4H, with entries on 1H, 2H or 30m.
 
-How the strategy scores a setup (percent):
-- Trend in the trade direction: Weekly 10, Daily 10, 4H 5.
-- Price at, or rejecting, a Weekly or Daily area of interest (AOI): 10 each. Nothing else counts until price is at a Weekly or Daily AOI.
-- Touching or rejecting the 50 EMA: 5 per timeframe.
-- A closed candle rejection from the AOI: 10 per timeframe.
-- A previous structure point rejecting inside the AOI: 10 per timeframe.
-- A round number inside the AOI: 5, counted once.
-- A pattern at its first neckline retest: 10.
-- A shift of structure on the entry timeframe, at the AOI: 10, and it is a must.
-- Entry signal, a closed engulfing candle on 1H, 2H or 4H: 10. A morning star or evening star after the shift of structure also counts as the entry signal.
-- 70 is the minimum grade; 80, 90 and 100 or more are better. A grade is not a win rate.
+How the strategy scores a setup (percent). These are the boxes of the "Set & Forget, AlexG Club, Checklist" indicator the trader uses, and the app's cards use the same boxes:
+- Weekly: in favor 10; at or rejected an area of interest (AOI) 10; touching the 50 EMA 5; candlestick rejection 10; rejection from a previous structure point 10; pattern 10.
+- Daily: the same six boxes with the same points.
+- 4H: in favor 10; touching the EMA 5; candlestick rejection 10; rejection from a previous structure point 10; pattern 10. There is no 4H AOI box.
+- Entry timeframes (2H, 1H, 30m): round psychological level 5; shift of structure 10, and it is a must; engulfing pattern 10. A morning star or evening star after the shift of structure also counts as the entry candle.
+- The total is a plain sum and can pass 100. 70 is the minimum grade; 80, 90 and 100 or more are better. A grade is not a win rate.
+- Nothing beyond the "in favor" boxes counts until price is at a Weekly or Daily AOI. A rejection needs a closed candle. Count only what is true now.
 Hard gates, whatever the score: price is at a Weekly or Daily AOI; there is a closed rejection candle; the shift of structure happened at the AOI; reward to risk is at least 1:2 to the next structure point; it is in session and not Friday; the trade is not buying the high or selling the low of the weekly range.
 Stops go 10 to 15 pips beyond the swing that made the shift, and beyond the AOI. Targets are the next daily structure. Never stretch a target or shrink a stop to reach 1:2. If reward to risk is under 1:2, waiting for a pullback entry is allowed. Market orders only; set it and leave it.
 

@@ -31,8 +31,8 @@
    "stop": 2.0122,
    "target": 1.9789,
    "rr": 3.8,
-   "score": 25,
-   "score_at": "2026-11-11T11:55:00Z",
+   "score": 30,
+   "score_at": "2026-11-11T17:54:18Z",
    "charts": [
     {
      "tf": "W",
@@ -59,40 +59,123 @@
    "conf": [
     {
      "tf": "W",
-     "name": "Trend",
+     "name": "In favor",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "W",
+     "name": "At / rejected AOI",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Pattern",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "In favor",
      "pts": 10,
      "ok": true
     },
     {
      "tf": "D",
-     "name": "Trend",
+     "name": "At / rejected AOI",
      "pts": 10,
-     "ok": true
+     "ok": false,
+     "auto": "zone"
     },
     {
      "tf": "D",
-     "name": "At the zone",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Pattern",
+     "pts": 10,
      "ok": false
     },
     {
      "tf": "4H",
-     "name": "Trend",
-     "pts": 5,
+     "name": "In favor",
+     "pts": 10,
      "ok": true
     },
     {
      "tf": "4H",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "4H",
      "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Pattern",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Round level",
+     "pts": 5,
      "ok": false
     },
     {
      "tf": "1H",
      "name": "Shift of structure",
+     "pts": 10,
      "ok": false
     },
     {
      "tf": "1H",
-     "name": "Entry candle",
+     "name": "Engulfing",
+     "pts": 10,
      "ok": false
     }
    ]
@@ -124,8 +207,8 @@
    "stop": 112.7,
    "target": 111.4,
    "rr": 2.7,
-   "score": 35,
-   "score_at": "2026-11-11T17:17:38Z",
+   "score": 40,
+   "score_at": "2026-11-11T17:54:18Z",
    "charts": [
     {
      "tf": "W",
@@ -152,41 +235,123 @@
    "conf": [
     {
      "tf": "W",
-     "name": "Trend",
+     "name": "In favor",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "W",
+     "name": "At / rejected AOI",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Pattern",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "In favor",
      "pts": 10,
      "ok": true
     },
     {
      "tf": "D",
-     "name": "Trend",
+     "name": "At / rejected AOI",
      "pts": 10,
-     "ok": true
-    },
-    {
-     "tf": "D",
-     "name": "At the zone",
      "ok": true,
-     "pts": 10
+     "auto": "zone"
+    },
+    {
+     "tf": "D",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Pattern",
+     "pts": 10,
+     "ok": false
     },
     {
      "tf": "4H",
-     "name": "Trend",
-     "pts": 5,
+     "name": "In favor",
+     "pts": 10,
      "ok": true
+    },
+    {
+     "tf": "4H",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
     },
     {
      "tf": "4H",
      "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Pattern",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Round level",
+     "pts": 5,
      "ok": false
     },
     {
      "tf": "1H",
      "name": "Shift of structure",
+     "pts": 10,
      "ok": false
     },
     {
      "tf": "1H",
-     "name": "Entry candle",
+     "name": "Engulfing",
+     "pts": 10,
      "ok": false
     }
    ]
@@ -218,8 +383,8 @@
    "stop": 213.32,
    "target": 211.85,
    "rr": 2.1,
-   "score": 25,
-   "score_at": "2026-11-11T11:55:00Z",
+   "score": 30,
+   "score_at": "2026-11-11T17:54:18Z",
    "charts": [
     {
      "tf": "W",
@@ -246,40 +411,123 @@
    "conf": [
     {
      "tf": "W",
-     "name": "Trend",
+     "name": "In favor",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "W",
+     "name": "At / rejected AOI",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Pattern",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "In favor",
      "pts": 10,
      "ok": true
     },
     {
      "tf": "D",
-     "name": "Trend",
+     "name": "At / rejected AOI",
      "pts": 10,
-     "ok": true
+     "ok": false,
+     "auto": "zone"
     },
     {
      "tf": "D",
-     "name": "At the zone",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Pattern",
+     "pts": 10,
      "ok": false
     },
     {
      "tf": "4H",
-     "name": "Trend",
-     "pts": 5,
+     "name": "In favor",
+     "pts": 10,
      "ok": true
     },
     {
      "tf": "4H",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "4H",
      "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Pattern",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Round level",
+     "pts": 5,
      "ok": false
     },
     {
      "tf": "1H",
      "name": "Shift of structure",
+     "pts": 10,
      "ok": false
     },
     {
      "tf": "1H",
-     "name": "Entry candle",
+     "name": "Engulfing",
+     "pts": 10,
      "ok": false
     }
    ]
@@ -312,7 +560,7 @@
    "target": 1.9445,
    "rr": 3.0,
    "score": 20,
-   "score_at": "2026-11-11T11:55:00Z",
+   "score_at": "2026-11-11T17:54:18Z",
    "charts": [
     {
      "tf": "W",
@@ -339,40 +587,123 @@
    "conf": [
     {
      "tf": "W",
-     "name": "Trend",
+     "name": "In favor",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "W",
+     "name": "At / rejected AOI",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "W",
+     "name": "Pattern",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "In favor",
      "pts": 10,
      "ok": true
     },
     {
      "tf": "D",
-     "name": "Trend",
+     "name": "At / rejected AOI",
      "pts": 10,
-     "ok": true
+     "ok": false,
+     "auto": "zone"
     },
     {
      "tf": "D",
-     "name": "At the zone",
+     "name": "Touching EMA",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "D",
+     "name": "Pattern",
+     "pts": 10,
      "ok": false
     },
     {
      "tf": "4H",
-     "name": "Trend",
+     "name": "In favor",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Touching EMA",
      "pts": 5,
      "ok": false
     },
     {
      "tf": "4H",
      "name": "Candle rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Previous structure rejection",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Pattern",
+     "pts": 10,
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Round level",
+     "pts": 5,
      "ok": false
     },
     {
      "tf": "1H",
      "name": "Shift of structure",
+     "pts": 10,
      "ok": false
     },
     {
      "tf": "1H",
-     "name": "Entry candle",
+     "name": "Engulfing",
+     "pts": 10,
      "ok": false
     }
    ]

@@ -148,17 +148,15 @@ def cmd_need(a):
 
 
 def zone_confluence(s, at_zone, now):
-    """Tick or untick the "At the zone" confluence on a trade card (10 points) and redo its percentage."""
+    """Tick or untick the "At / rejected AOI" box of the zone's timeframe on a trade card and redo its percentage.
+    The boxes and their points follow the "Set & Forget - AlexG Club - Checklist" indicator."""
     conf = s.get("conf")
     if not isinstance(conf, list):
         return
     for c in conf:
-        if isinstance(c, dict) and c.get("name") == "At the zone":
+        if isinstance(c, dict) and (c.get("auto") == "zone" or c.get("name") == "At the zone"):
             c["ok"] = bool(at_zone)
-            if at_zone:
-                c["pts"] = 10
-            else:
-                c.pop("pts", None)
+            c.setdefault("pts", 10)
     s["score"] = sum(int(c.get("pts") or 0) for c in conf if isinstance(c, dict) and c.get("ok"))
     s["score_at"] = now.strftime("%Y-%m-%dT%H:%M:%SZ")
 
