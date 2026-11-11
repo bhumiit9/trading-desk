@@ -5,6 +5,7 @@ data/bars/OANDA_<PAIR>_1h.json. Runs inside GitHub Actions before tools/check.py
 
 Source: Twelve Data (free plan: 8 requests a minute, 800 a day). The API key comes from the
 repository secret TWELVEDATA_KEY. Its prices can differ from OANDA's by a pip or two.
+Ten pairs take two requests a minute apart, so a run lasts a little over a minute.
 """
 import calendar, json, os, sys, time, urllib.parse, urllib.request
 
