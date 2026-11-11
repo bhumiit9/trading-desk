@@ -243,7 +243,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     <div class="pbody">
       <div id="dev"></div>
       <div id="alerts"></div>
-      <div class="foot">Entries on the charts are plans. They count only after the 1H shift of structure and a closed entry candle at the zone. Rule-based analysis, not financial advice. The trade decision is yours.</div>
+      <div class="foot">Entries on the charts are plans. They count only after the 1H shift of structure and a closed entry candle at the zone. Rule-based analysis, not financial advice. The trade decision is yours.<br><span id="ver"></span></div>
     </div>
   </div>
 </div>
@@ -255,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-12.2';
+const BUILD = '2026-11-12.3';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -396,6 +396,7 @@ async function load(){
   if (ok.length){ if (!feed || Date.parse(ok[0].updated) > Date.parse(feed.updated)){ feed = ok[0]; draw(); } else if (fresh) draw(); }
   else if (!feed) $('#deck').innerHTML = '<div class="none">The charts could not be loaded. Check the connection; the app retries by itself.</div>';
 }
+$('#ver').textContent = 'App version ' + BUILD;
 load(); setInterval(load, 5 * 60000); document.addEventListener('visibilitychange', load);
 
 document.addEventListener('click', e => {
