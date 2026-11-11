@@ -26,11 +26,39 @@ body{background:var(--bg);color:var(--ink);font:400 16px/1.35 var(--font);font-v
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 .app{position:relative;height:100dvh;display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px)}
 [hidden]{display:none !important}
-.home{flex:1;min-height:0;overflow-y:auto;padding-top:56px;-webkit-overflow-scrolling:touch}
-.row{display:flex;align-items:center;justify-content:space-between;width:100%;text-align:left;height:72px;padding:0 18px;border-top:1px solid var(--line);font-size:25px;font-weight:700;letter-spacing:-.02em}
+.stage{flex:1;min-height:0;position:relative;overflow:hidden}
+.home,.detail{position:absolute;inset:0;transition:transform .38s cubic-bezier(.22,.8,.24,1),opacity .38s ease}
+.home{overflow-y:auto;padding-top:56px;-webkit-overflow-scrolling:touch}
+.detail{display:flex;flex-direction:column;background:var(--bg);transform:translateX(100%);visibility:hidden;transition:transform .38s cubic-bezier(.22,.8,.24,1),visibility 0s .38s;box-shadow:-12px 0 30px rgba(15,27,51,.08)}
+.app.open .detail{transform:none;visibility:visible;transition:transform .38s cubic-bezier(.22,.8,.24,1),visibility 0s}
+.app.open .home{transform:translateX(-24%);opacity:.35}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes settle{from{opacity:0;transform:scale(1.035)}to{opacity:1;transform:none}}
+@keyframes ring{0%,100%{transform:rotate(0)}12%{transform:rotate(16deg)}28%{transform:rotate(-13deg)}44%{transform:rotate(9deg)}60%{transform:rotate(-6deg)}78%{transform:rotate(3deg)}}
+@keyframes candle{from{height:10px}to{height:40px}}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(245,163,0,.55)}100%{box-shadow:0 0 0 12px rgba(245,163,0,0)}}
+@keyframes sheetUp{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.loader{margin:auto;display:flex;gap:8px;align-items:center;height:48px}
+.loader i{width:9px;border-radius:2px;background:var(--link);animation:candle .9s ease-in-out infinite alternate}
+.loader i:nth-child(2){background:var(--sell);animation-delay:.18s} .loader i:nth-child(3){animation-delay:.36s}
+.none.wait{display:flex;height:60%}
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;height:72px;padding:0 18px;border-top:1px solid var(--line);font-size:25px;font-weight:700;letter-spacing:-.02em;
+  animation:rise .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 75ms + 60ms);transition:background .15s}
+.row span{flex:1}
+.row .live{width:10px;height:10px;border-radius:50%;background:#F5A300;animation:pulse 1.6s ease-out infinite}
 .row:last-child{border-bottom:1px solid var(--line)}
 .row:active{background:var(--surf)}
-.row svg{width:20px;height:20px;color:#A9B3C6;flex:none}
+.row svg{width:20px;height:20px;color:#A9B3C6;flex:none;transition:transform .2s}
+.row:active svg{transform:translateX(5px)}
+.slide.cur .shot{animation:settle .55s cubic-bezier(.2,.8,.2,1) both}
+.slide.cur .lv{animation:rise .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:.16s}
+.slide.cur .lv:nth-child(2){animation-delay:.24s} .slide.cur .lv:nth-child(3){animation-delay:.32s}
+.slide.cur .state{animation:rise .5s cubic-bezier(.2,.8,.2,1) .4s both}
+.bell svg{transform-origin:50% 12%} .bell.new svg{animation:ring 1.1s ease-in-out .9s 1}
+.sheet{animation:fade .2s ease} .sheet .panel{animation:sheetUp .34s cubic-bezier(.2,.8,.2,1)}
+.view{animation:fade .2s ease}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
 .back{width:44px;height:44px;margin-left:-12px;margin-right:-6px;display:grid;place-items:center}
 .back svg{width:24px;height:24px}
 .bell{position:absolute;z-index:6;top:calc(env(safe-area-inset-top,0px) + 6px);right:calc(env(safe-area-inset-right,0px) + 8px);width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
@@ -89,11 +117,15 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 </style>
 </head>
 <body>
-<div class="app">
+<div class="app" id="app">
   <button class="bell" id="bell" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><i></i></button>
-  <main class="home" id="home"><div class="none">Loading this week's pairs</div></main>
-  <section class="deck" id="deck" hidden></section>
-  <nav class="dots" id="dots" aria-hidden="true" hidden></nav>
+  <div class="stage">
+    <main class="home" id="home"><div class="none wait" role="status" aria-label="Loading this week's pairs"><div class="loader"><i></i><i></i><i></i></div></div></main>
+    <section class="detail" id="detail" aria-hidden="true">
+      <div class="deck" id="deck"></div>
+      <nav class="dots" id="dots" aria-hidden="true"></nav>
+    </section>
+  </div>
 </div>
 
 <div class="view" id="view" hidden><button id="viewClose">Close</button><img id="viewImg" alt=""></div>
@@ -116,7 +148,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.6';
+const BUILD = '2026-11-11.7';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -147,7 +179,8 @@ function draw(){
   const trades = (feed.setups || []).filter(s => s.status !== 'no_trade' && safeChart(s.chart))
     .sort((a,b) => (RANK[a.status] ?? 2) - (RANK[b.status] ?? 2) || (a.order ?? 99) - (b.order ?? 99));
   const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
-  const list = trades.length ? trades.map(s => `<button class="row" data-open="${esc(s.pair)}">${esc(s.pair)}${chev}</button>`).join('') : `<div class="none">No pairs this week yet. They appear here after the weekly analysis.</div>`;
+  const list = trades.length ? trades.map((s, i) => { const hot = s.status === 'triggered' || s.status === 'at_zone' || (typeof s.price === 'number' && typeof s.zone_lo === 'number' && s.price >= s.zone_lo && s.price <= s.zone_hi);
+      return `<button class="row" style="--i:${i}" data-open="${esc(s.pair)}"><span>${esc(s.pair)}</span>${hot ? '<i class="live" title="Price is at the zone"></i>' : ''}${chev}</button>`; }).join('') : `<div class="none">No pairs this week yet. They appear here after the weekly analysis.</div>`;
   if (list !== shownHome) $('#home').innerHTML = shownHome = list;
   const html = trades.map(slide).join('');
   if (html !== shown){ const deck = $('#deck'), x = deck.scrollLeft; deck.innerHTML = shown = html; deck.scrollLeft = x; }
@@ -159,8 +192,11 @@ function draw(){
 }
 function show(pair){
   view = pair || null;
-  $('#home').hidden = !!view; $('#deck').hidden = !view; $('#dots').hidden = !view;
-  if (view){ const deck = $('#deck'), el = [...deck.querySelectorAll('.slide')].find(x => x.dataset.pair === view); if (el) deck.scrollLeft = el.offsetLeft - deck.offsetLeft; dots(); }
+  const deck = $('#deck');
+  deck.querySelectorAll('.slide').forEach(x => x.classList.toggle('cur', x.dataset.pair === view));
+  if (view){ const el = deck.querySelector('.slide.cur'); if (el) deck.scrollLeft = el.offsetLeft - deck.offsetLeft; dots(); }
+  $('#app').classList.toggle('open', !!view);
+  $('#detail').setAttribute('aria-hidden', view ? 'false' : 'true');
 }
 function dots(){ const deck = $('#deck'), i = Math.round(deck.scrollLeft / Math.max(1, deck.clientWidth)); document.querySelectorAll('#dots i').forEach((d, k) => d.classList.toggle('on', k === i)); }
 $('#deck').addEventListener('scroll', () => requestAnimationFrame(dots), {passive:true});
