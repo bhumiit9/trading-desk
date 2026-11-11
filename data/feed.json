@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-10T22:00:04Z",
+ "updated": "2026-11-11T04:26:56Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -21,8 +21,8 @@
    ],
    "invalid_level": 2.0155,
    "invalid_note": "4H close above",
-   "price": 1.9926,
-   "price_at": "2026-11-10T22:00:04Z",
+   "price": 1.99144,
+   "price_at": "2026-11-11T04:26:56Z",
    "step": 0,
    "chart": "charts/eurnzd.jpg",
    "note": "Best of the four. Monday's daily candle was a bearish engulfing from the zone and the 4H turned bearish on 10 Nov. Needs a pullback into the zone first.",
@@ -45,8 +45,8 @@
    ],
    "invalid_level": 113.34,
    "invalid_note": "4H close above",
-   "price": 111.917,
-   "price_at": "2026-11-10T22:00:04Z",
+   "price": 111.823,
+   "price_at": "2026-11-11T04:26:56Z",
    "step": 0,
    "chart": "charts/cadjpy.jpg",
    "note": "Weakest of the four. The daily only turned bearish on 9 Nov by a 6-pip close below 111.92.",
@@ -69,8 +69,8 @@
    ],
    "invalid_level": 213.7,
    "invalid_note": "4H close above",
-   "price": 211.889,
-   "price_at": "2026-11-10T22:00:04Z",
+   "price": 211.987,
+   "price_at": "2026-11-11T04:26:56Z",
    "step": 0,
    "chart": "charts/gbpjpy.jpg",
    "note": "Support at 211.15-211.80 sits just below, so the first target is the top of that zone.",
@@ -93,8 +93,8 @@
    ],
    "invalid_level": 1.9229,
    "invalid_note": "4H close below",
-   "price": 1.94352,
-   "price_at": "2026-11-10T22:00:04Z",
+   "price": 1.94091,
+   "price_at": "2026-11-11T04:26:56Z",
    "step": 0,
    "chart": "charts/gbpaud.jpg",
    "note": "Weekly and daily both turned bullish last week. Price is at the high, so the buy only comes on a pullback into the zone.",
@@ -181,8 +181,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.9926,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "price": 1.99144,
+   "checked_at": "2026-11-11T04:26:56Z"
   },
   {
    "pair": "CADJPY",
@@ -249,8 +249,8 @@
     "z6"
    ],
    "alerted": {},
-   "price": 111.917,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "price": 111.823,
+   "checked_at": "2026-11-11T04:26:56Z"
   },
   {
    "pair": "GBPJPY",
@@ -299,9 +299,11 @@
     }
    ],
    "inside": [],
-   "alerted": {},
-   "price": 211.889,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "alerted": {
+    "z5": "2026-11-11"
+   },
+   "price": 211.987,
+   "checked_at": "2026-11-11T04:26:56Z"
   },
   {
    "pair": "GBPAUD",
@@ -376,8 +378,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.94352,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "price": 1.94091,
+   "checked_at": "2026-11-11T04:26:56Z"
   },
   {
    "pair": "EURUSD",
@@ -432,8 +434,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.11644,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "price": 1.11654,
+   "checked_at": "2026-11-11T04:26:56Z"
   },
   {
    "pair": "NZDUSD",
@@ -500,8 +502,8 @@
     "z1"
    ],
    "alerted": {},
-   "price": 0.5603,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "price": 0.56067,
+   "checked_at": "2026-11-11T04:26:56Z"
   },
   {
    "pair": "GBPUSD",
@@ -553,8 +555,8 @@
     "z3"
    ],
    "alerted": {},
-   "price": 1.33452,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "price": 1.33474,
+   "checked_at": "2026-11-11T04:26:56Z"
   },
   {
    "pair": "AUDNZD",
@@ -619,8 +621,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.22544,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "price": 1.22656,
+   "checked_at": "2026-11-11T04:26:56Z"
   },
   {
    "pair": "EURCAD",
@@ -675,8 +677,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.58392,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "price": 1.58582,
+   "checked_at": "2026-11-11T04:26:56Z"
   },
   {
    "pair": "GBPCHF",
@@ -751,11 +753,21 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.1014,
-   "checked_at": "2026-11-10T22:00:04Z"
+   "price": 1.10248,
+   "checked_at": "2026-11-11T04:26:56Z"
   }
  ],
  "alerts": [
+  {
+   "at": "2026-11-11T04:26:56Z",
+   "pair": "",
+   "text": "Plan: EURNZD sell 127 pips from zone; CADJPY sell 38 pips from zone; GBPJPY sell 71 pips from zone; GBPAUD buy 84 pips from zone. Inside your AOIs now: CADJPY, NZDUSD, GBPUSD."
+  },
+  {
+   "at": "2026-11-11T04:26:56Z",
+   "pair": "GBPJPY",
+   "text": "Price came down into your AOI 211.145-211.802 and has moved out again (now 211.987). On the plan as a sell, but this is not the plan's zone (212.700-213.200)."
+  },
   {
    "at": "2026-11-10T21:10:00Z",
    "pair": "CADJPY",
@@ -771,5 +783,6 @@
    "pair": "GBPUSD",
    "text": "Price 1.33436 is inside your AOI 1.33179-1.33563. Not on the plan: structure is unclear."
   }
- ]
+ ],
+ "morning_sent": "2026-11-11"
 }
