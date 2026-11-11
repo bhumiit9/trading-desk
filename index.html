@@ -255,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-12.1';
+const BUILD = '2026-11-12.2';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -634,14 +634,18 @@ const toolSay = (name, input) => name === 'scan_pairs' ? 'Scanning every pair on
 /* One streamed call. Returns the content blocks and why Claude stopped. */
 /* Claude thinks before it answers, and that thinking counts toward the answer's length limit, so the limit is generous. */
 let chatEffort = true;      // ask for a lighter thinking effort; switched off if the service rejects the setting
-async function chatCall(key, messages, onText){
-  const body = { model:CHAT_MODEL, max_tokens:16000, stream:true, system:CHAT_RULES + '\n\nApp data right now (JSON):\n' + chatContext(), tools:CHAT_TOOLS, messages };
+async function chatCall(key, messages, onText, system){
+  const body = { model:CHAT_MODEL, max_tokens:16000, stream:true, system, tools:CHAT_TOOLS, messages };
   if (chatEffort) body.output_config = { effort:'medium' };
   const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
     headers:{ 'content-type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
     body:JSON.stringify(body) });
   if (!res.ok){ let msg = ''; try { msg = (await res.json()).error.message || ''; } catch (e) {}
-    if (res.status === 400 && chatEffort && /output_config|effort/i.test(msg)){ chatEffort = false; return chatCall(key, messages, onText); }
+    if (res.status === 400 && chatEffort && /output_config|effort/i.test(msg)){ chatEffort = false; return chatCall(key, messages, onText, system); }
+    // Claude's thinking notes are tied to the exact conversation they were written in. If the service refuses them, send the turn again without them.
+    if (res.status === 400 && /thinking/i.test(msg) && messages.some(m => m.role === 'assistant' && m.content.some(c => /thinking/.test(c.type)))){
+      messages.forEach(m => { if (m.role === 'assistant') m.content = m.content.filter(c => !/thinking/.test(c.type)); });
+      return chatCall(key, messages, onText, system); }
     throw Object.assign(new Error(msg || 'The request failed.'), { status:res.status }); }
   const blocks = [], json = {}, broken = new Set(); let stop = '';
   const reader = res.body.getReader(), dec = new TextDecoder(); let buf = '';
@@ -676,9 +680,11 @@ async function chatSend(text){
     const hist = log.slice(-24); while (hist.length && hist[0].role !== 'user') hist.shift();
     const messages = hist.map(m => ({ role:m.role, content:[{ type:'text', text:m.text }] }));
     if (charts.length) messages[0].content = [{ type:'text', text:`Charts for ${pair}, the trade this chat is about:` }, ...charts, ...messages[0].content];
+    // One fixed briefing for the whole turn: it must not change between the steps of one answer.
+    const system = CHAT_RULES + '\n\nApp data right now (JSON):\n' + chatContext();
     let cuts = 0;
     for (let round = 0; round < 16; round++){
-      const r = await chatCall(key, messages, onText);
+      const r = await chatCall(key, messages, onText, system);
       if (r.stop === 'max_tokens'){
         // Cut off at the length limit: carry on by itself, twice at most, before saying so.
         const said = r.blocks.filter(x => x.type === 'text').map(x => x.text).join('').trim();
