@@ -64,7 +64,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .row .pct{font-size:17px;font-weight:700;color:var(--mute);letter-spacing:0;text-align:right}
 .row .tk{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 6px;margin-right:-2px;border-radius:12px;font-size:12.5px;font-weight:700;letter-spacing:0;flex:none;color:#00140C;background:var(--buy);animation:pop .4s cubic-bezier(.2,.9,.3,1.2) both}
 .pk{display:inline-flex;align-items:center;gap:4px;color:var(--amber-ink);font-size:13px;font-weight:700;letter-spacing:0;flex:none;animation:pop .4s cubic-bezier(.2,.9,.3,1.2) both}
-.pk[hidden]{display:none} .pk svg{width:16px;height:16px} .row .pk svg{width:19px;height:19px}
+.pk[hidden]{display:none}
+.pickrow{display:flex;align-items:center;gap:12px;width:100%;flex:none;text-align:left;padding:12px 16px 12px 14px;margin-bottom:10px;border-radius:20px;background:var(--amber-bg);animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+.pickrow[hidden]{display:none} .pickrow .pk svg{width:22px;height:22px}
+.pickrow .pt{display:flex;flex-direction:column;min-width:0} .pickrow b{font-size:17px;font-weight:700;letter-spacing:-.01em} .pickrow small{font-size:13.5px;color:var(--amber-ink);line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden} .pk svg{width:16px;height:16px} .row .pk svg{width:19px;height:19px}
 .cap .pk{background:var(--amber-bg);border-radius:6px;padding:3px 8px 3px 6px}
 .pickline{display:flex;gap:7px;margin:0 18px 10px;font-size:14px;line-height:1.35;color:var(--ink)} .pickline[hidden]{display:none}
 .pickline svg{width:15px;height:15px;flex:none;margin-top:2px;color:var(--amber-ink)} .pickline span{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
@@ -218,7 +221,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 <div class="app" id="app">
   <button class="bell" id="bell" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><i></i></button>
   <div class="stage">
-    <main class="home" id="home"><h1 class="title" id="week">This week</h1><div class="rows" id="rows"><div class="none wait" role="status" aria-label="Loading this week's pairs"><div class="loader"><i></i><i></i><i></i></div></div></div><button class="askbar" id="askHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg><span>Ask about your watchlist</span></button></main>
+    <main class="home" id="home"><h1 class="title" id="week">This week</h1><button class="pickrow" id="pickrow" hidden><span class="pk" id="pickstar"></span><span class="pt"><b></b><small></small></span></button><div class="rows" id="rows"><div class="none wait" role="status" aria-label="Loading this week's pairs"><div class="loader"><i></i><i></i><i></i></div></div></div><button class="askbar" id="askHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg><span>Ask about your watchlist</span></button></main>
     <section class="detail" id="detail" aria-hidden="true">
       <div class="deck" id="deck"></div>
       <nav class="dots" id="dots" aria-hidden="true"></nav>
@@ -252,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.15';
+const BUILD = '2026-11-11.16';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -478,7 +481,8 @@ Hard gates, whatever the score: price is at a Weekly or Daily AOI; there is a cl
 Stops go 10 to 15 pips beyond the swing that made the shift, and beyond the AOI. Targets are the next daily structure. Never stretch a target or shrink a stop to reach 1:2. If reward to risk is under 1:2, waiting for a pullback entry is allowed. Market orders only; set it and leave it.
 
 Reading the market yourself:
-- You can read candles with the get_candles tool for any pair in the app data. When asked to analyse, re-analyse or compare, read them first; never answer from the saved notes alone. Go top-down: Weekly, Daily, 4H, and 1H only if price is at a zone.
+- You can read candles with the get_candles tool for any pair on the watchlist (all_watchlist_pairs in the app data), not only the pairs that have trade cards. When asked to analyse, re-analyse or compare, read them first; never answer from the saved notes alone. Go top-down: Weekly, Daily, 4H, and 1H only if price is at a zone.
+- For the whole watchlist, call scan_pairs first. From it, shortlist at most five pairs worth a closer look, and read candles only for those (Weekly, Daily, 4H). Do not read candles for every pair; it is slow and costly. Say which pairs you shortlisted and, in one line, why the rest were left out.
 - Structure comes from the obvious swing highs and lows. Up trend: higher highs and higher lows. Down trend: lower highs and lower lows. A trend changes only when a candle closes beyond the last higher low (up trend) or the last lower high (down trend); a wick through it does not count. If it is not obvious, call it ranging.
 - An area of interest needs at least three clear touches. The trader's own areas come back with the candles; use them, and say so if you think one no longer holds.
 - Say where price sits in the weekly range, because buying the high or selling the low fails a hard gate.
@@ -507,6 +511,7 @@ function chatContext(){
     marked_as_taken:!!takenAll()[takenKey(s.pair)] });
   return JSON.stringify({ now_india_time:new Date().toLocaleString('en-IN', { timeZone:'Asia/Kolkata', dateStyle:'full', timeStyle:'short' }), week:f.week && f.week.label, data_updated:f.updated,
     pick_of_the_week:(pickGet() || {}).pair || null,
+    all_watchlist_pairs:(f.zones || []).map(z => z.pair), pairs_with_saved_areas:(f.zones || []).filter(z => (z.zones || []).length).map(z => z.pair),
     this_chat_is_about:chatPair() ? `the ${chatPair()} trade only (the other pairs are background)` : 'the whole watchlist', setups, recent_alerts:(f.alerts || []).slice(0, 8) });
 }
 const b64 = blob => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1] || ''); r.onerror = no; r.readAsDataURL(blob); });
@@ -547,17 +552,45 @@ if (window.visualViewport){ visualViewport.addEventListener('resize', chatFit); 
 /* What the chat can do in the app: read candles (built hourly into data/bars) and mark a pick of the week. */
 const CHAT_TOOLS = [
   { name:'get_candles', description:'Read the latest price candles for one pair and one timeframe, oldest first, plus the 50 EMA, recent swing highs and lows, and the trader\'s own areas of interest for that pair. Use it whenever you are asked to analyse, re-analyse, check or compare pairs. Work top-down: Weekly, then Daily, then 4H, and 1H only when price is at a zone.',
-    input_schema:{ type:'object', properties:{ pair:{ type:'string', description:'Six letters, for example EURNZD. Must be a pair from the app data.' }, timeframe:{ type:'string', enum:['W','D','4H','1H'] }, count:{ type:'integer', description:'How many candles. Default: W 52, D 90, 4H 90, 1H 72. Most available: 150.' } }, required:['pair','timeframe'] } },
+    input_schema:{ type:'object', properties:{ pair:{ type:'string', description:'Six letters, for example EURNZD. Must be a pair from the app data.' }, timeframe:{ type:'string', enum:['W','D','4H','1H'] }, count:{ type:'integer', description:'How many candles. Default: W 30, D 70, 4H 60, 1H 48. Most available: 150.' } }, required:['pair','timeframe'] } },
+  { name:'scan_pairs', description:'One line for every pair on the trader\'s watchlist: a rough machine read of the Weekly, Daily and 4H trend, where price sits in its range of the last 30 weeks, which side of the daily 50 EMA it is on, and the nearest saved area of interest with its distance in pips. Use it first when asked about the whole watchlist, then read candles only for the few pairs worth a closer look.',
+    input_schema:{ type:'object', properties:{}, required:[] } },
   { name:'set_week_pick', description:'Mark one pair as the pick of the week in the app (a star on the list), or clear the pick. Call it only when the trader asks you to choose or change the pick, and only after you have read the candles for the pairs you compared.',
     input_schema:{ type:'object', properties:{ pair:{ type:'string', description:'The pair to star, for example CADJPY, or "none" to clear the pick.' }, reason:{ type:'string', description:'One short plain sentence shown in the app under the pair.' } }, required:['pair'] } }
 ];
-const TF_FILE = { W:'1w', D:'1d', '4H':'4h', '1H':'1h' }, TF_SECS = { W:432000, D:86400, '4H':14400, '1H':3600 }, TF_COUNT = { W:52, D:90, '4H':90, '1H':72 };
+const TF_FILE = { W:'1w', D:'1d', '4H':'4h', '1H':'1h' }, TF_SECS = { W:432000, D:86400, '4H':14400, '1H':3600 }, TF_COUNT = { W:30, D:70, '4H':60, '1H':48 };
 const pickGet = () => { try { const p = JSON.parse(store.get('pick', 'null')); return p && p.week === ((feed && feed.week && feed.week.label) || '') ? p : null; } catch (e) { return null; } };
 function markPick(){
   const p = pickGet();
+  const pr = $('#pickrow'), carded = !!(p && document.querySelector(`.row[data-open="${p.pair}"]`));
+  if (pr){ pr.hidden = !p || carded; if (p && !carded){ $('#pickstar').innerHTML = STAR; pr.querySelector('b').textContent = p.pair + ', pick of the week'; pr.querySelector('small').textContent = (p.reason ? p.reason + ' ' : '') + 'No trade card yet.'; } }
   document.querySelectorAll('.row[data-open]').forEach(r => { const k = r.querySelector('.pk'); if (k) k.hidden = !(p && p.pair === r.dataset.open); });
   document.querySelectorAll('#deck .slide').forEach(el => { const on = !!(p && p.pair === el.dataset.pair), k = el.querySelector('.cap .pk'), l = el.querySelector('.pickline');
     if (k) k.hidden = !on; if (l){ l.hidden = !(on && p.reason); l.querySelector('span').textContent = on ? p.reason || '' : ''; } });
+}
+function swings(b, k, from){ const hi = [], lo = [], n = b.t.length;
+  for (let i = Math.max(from || 0, k); i < n - k; i++){ let H = true, L = true;
+    for (let j = 1; j <= k; j++){ if (b.h[i] <= b.h[i-j] || b.h[i] < b.h[i+j]) H = false; if (b.l[i] >= b.l[i-j] || b.l[i] > b.l[i+j]) L = false; }
+    if (H) hi.push(b.h[i]); if (L) lo.push(b.l[i]); }
+  return { hi, lo }; }
+function roughTrend(b, k){ if (!b || b.t.length < 12) return 'n/a'; const s = swings(b, k, b.t.length - 70), h = s.hi.slice(-2), l = s.lo.slice(-2);
+  if (h.length < 2 || l.length < 2) return 'unclear'; const up = h[1] > h[0] && l[1] > l[0], dn = h[1] < h[0] && l[1] < l[0]; return up ? 'up' : dn ? 'down' : 'mixed'; }
+async function scanPairs(){
+  const docs = (feed && feed.zones) || [], cards = {}; ((feed && feed.setups) || []).forEach(s => { cards[s.pair] = s; });
+  const lines = await Promise.all(docs.map(async d => {
+    const base = `data/bars/${d.symbol.replace(':', '_')}_`, get = tf => getJSON(base + tf + '.json').catch(() => null);
+    const [w, dd, h4] = await Promise.all([get('1w'), get('1d'), get('4h')]);
+    if (!dd || !dd.t.length) return `${d.pair} | candles not ready yet`;
+    const dp = d.pip >= 0.01 ? 3 : 5, px = dd.c[dd.c.length - 1];
+    let pos = 'n/a'; if (w && w.t.length){ const hi = Math.max(...w.h), lo = Math.min(...w.l); if (hi > lo) pos = Math.round((px - lo) / (hi - lo) * 100) + '%'; }
+    let ema = 'n/a'; if (dd.t.length >= 62){ const k = 2 / 51; let e = dd.c.slice(0, 50).reduce((a, x) => a + x, 0) / 50, was = e; for (let i = 50; i < dd.t.length; i++){ if (i === dd.t.length - 10) was = e; e = dd.c[i] * k + e * (1 - k); } ema = (px >= e ? 'above' : 'below') + (e > was ? ', EMA rising' : ', EMA falling'); }
+    let chg = 'n/a'; if (w && w.t.length > 10){ const a = w.c[w.c.length - 11]; chg = ((px - a) / a * 100).toFixed(1) + '%'; }
+    let near = 'no saved areas'; const zs = d.zones || [];
+    if (zs.length){ let best = null; for (const z of zs){ const dist = px > z.hi ? px - z.hi : px < z.lo ? z.lo - px : 0; if (!best || dist < best.dist) best = { z, dist, side:px > z.hi ? 'below price' : px < z.lo ? 'above price' : 'price is inside it' }; }
+      near = `${best.z.lo} to ${best.z.hi}, ${best.side}${best.dist ? ', ' + Math.round(best.dist / d.pip) + ' pips away' : ''}`; }
+    const c = cards[d.pair], card = c ? (c.status === 'no_trade' ? 'looked at this week, no trade' : `has a ${c.side} card, ${c.status}, ${c.score}%`) : 'no card';
+    return `${d.pair} | W ${roughTrend(w, 2)}, D ${roughTrend(dd, 3)}, 4H ${roughTrend(h4, 3)} | 10-week change ${chg} | range ${pos} | D 50 EMA: price ${ema} | nearest area: ${near} | last ${px.toFixed(dp)} | ${card}`; }));
+  return [`All ${docs.length} pairs on the watchlist. Trends are a rough machine read from swing highs and lows (up, down, mixed, unclear); confirm with get_candles before you rely on one. "10-week change" is the move in price over the last ten weekly candles. "range" is where price sits between the low (0%) and high (100%) of the last 30 weeks. Pairs with "no saved areas" have no areas of interest in the app yet, so judge their levels from the candles and say so.`, ...lines].join('\n');
 }
 async function runTool(name, input){
   input = input || {};
@@ -565,10 +598,11 @@ async function runTool(name, input){
   const doc = ((feed && feed.zones) || []).find(z => z.pair === pair);
   if (name === 'set_week_pick'){
     if (!pair || pair === 'NONE'){ try { localStorage.removeItem('pick'); } catch (e) {} markPick(); return 'The pick of the week was cleared.'; }
-    if (!((feed && feed.setups) || []).some(s => s.pair === pair)) return `${pair} is not in the app data, so nothing was marked.`;
+    if (!doc) return `${pair} is not on the watchlist in the app, so nothing was marked.`;
     store.set('pick', JSON.stringify({ week:(feed.week && feed.week.label) || '', pair, reason:String(input.reason || '').slice(0, 220), at:Date.now() })); markPick();
-    return `${pair} is now marked as the pick of the week on this device.` + (((feed.setups || []).find(s => s.pair === pair) || {}).status === 'no_trade' ? ' Note: this pair has no trade card in the app this week, so the star will not be visible; tell the trader.' : '');
+    return `${pair} is now marked as the pick of the week on this device.` + ((feed.setups || []).some(s => s.pair === pair && s.status !== 'no_trade') ? '' : ' It has no trade card in the app yet (no chart, entry, stop or target there). Tell the trader that, and that the card has to be built in their main Claude chat.');
   }
+  if (name === 'scan_pairs') return scanPairs();
   if (name !== 'get_candles') return 'Unknown tool.';
   const tf = TF_FILE[input.timeframe]; if (!doc || !tf) return `No candles for ${pair || 'that pair'} ${input.timeframe || ''}. Pairs available: ${((feed && feed.zones) || []).map(z => z.pair).join(', ')}.`;
   let b; try { b = await getJSON(`data/bars/${doc.symbol.replace(':', '_')}_${tf}.json`); } catch (e) { return `The ${input.timeframe} candles for ${pair} are not ready yet. They are built by the hourly check; try again after its next run.`; }
@@ -591,7 +625,7 @@ async function runTool(name, input){
     `The trader's areas of interest for ${pair}: ${(doc.zones || []).map(z => `${z.lo} to ${z.hi}`).join('; ') || 'none saved'}.`,
     'date,open,high,low,close', ...rows].join('\n');
 }
-const toolSay = (name, input) => name === 'get_candles' ? `Reading ${String(input && input.pair || '').toUpperCase()} ${TFNAME[input && input.timeframe] || ''} candles` : name === 'set_week_pick' ? 'Marking the pick of the week' : 'Working';
+const toolSay = (name, input) => name === 'scan_pairs' ? 'Scanning every pair on the watchlist' : name === 'get_candles' ? `Reading ${String(input && input.pair || '').toUpperCase()} ${TFNAME[input && input.timeframe] || ''} candles` : name === 'set_week_pick' ? 'Marking the pick of the week' : 'Working';
 /* One streamed call. Returns the content blocks and why Claude stopped. */
 async function chatCall(key, messages, onText){
   const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
@@ -662,7 +696,7 @@ $('#cin').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKe
 $('#cform').addEventListener('submit', e => { e.preventDefault(); chatSend($('#cin').value); });
 document.addEventListener('click', e => {
   const t = e.target;
-  if (t.closest('#askHome')){ chatOpen('home'); return; }
+  if (t.closest('#askHome') || t.closest('#pickrow')){ chatOpen('home'); return; }
   const ap = t.closest('[data-ask]'); if (ap){ chatOpen(ap.dataset.ask); return; }
   if (t.id === 'chatClose'){ $('#chat').hidden = true; return; }
   if (t.id === 'chatNew'){ if (chatBusy) return; chatLog = chats[chatId] = []; chatErr = ''; chatSave(); chatDraw(); return; }

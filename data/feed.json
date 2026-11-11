@@ -1037,6 +1037,176 @@
    },
    "price": 1.10625,
    "checked_at": "2026-11-11T17:22:41Z"
+  },
+  {
+   "pair": "EURGBP",
+   "symbol": "OANDA:EURGBP",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "EURAUD",
+   "symbol": "OANDA:EURAUD",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "GBPNZD",
+   "symbol": "OANDA:GBPNZD",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "NZDCAD",
+   "symbol": "OANDA:NZDCAD",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "GBPCAD",
+   "symbol": "OANDA:GBPCAD",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "AUDCHF",
+   "symbol": "OANDA:AUDCHF",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "AUDUSD",
+   "symbol": "OANDA:AUDUSD",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "NZDJPY",
+   "symbol": "OANDA:NZDJPY",
+   "pip": 0.01,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "USDCHF",
+   "symbol": "OANDA:USDCHF",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "EURJPY",
+   "symbol": "OANDA:EURJPY",
+   "pip": 0.01,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "AUDCAD",
+   "symbol": "OANDA:AUDCAD",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "USDCAD",
+   "symbol": "OANDA:USDCAD",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "USDJPY",
+   "symbol": "OANDA:USDJPY",
+   "pip": 0.01,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "AUDJPY",
+   "symbol": "OANDA:AUDJPY",
+   "pip": 0.01,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "CHFJPY",
+   "symbol": "OANDA:CHFJPY",
+   "pip": 0.01,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "NZDCHF",
+   "symbol": "OANDA:NZDCHF",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
+  },
+  {
+   "pair": "EURCHF",
+   "symbol": "OANDA:EURCHF",
+   "pip": 0.0001,
+   "zones": [],
+   "inside": [],
+   "alerted": {},
+   "price": null,
+   "checked_at": "2026-11-11T17:27:18Z"
   }
  ],
  "alerts": [

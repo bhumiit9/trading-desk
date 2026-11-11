@@ -5,7 +5,8 @@ data/bars/OANDA_<PAIR>_1h.json. Runs inside GitHub Actions before tools/check.py
 
 Source: Twelve Data (free plan: 8 requests a minute, 800 a day). The API key comes from the
 repository secret TWELVEDATA_KEY. Its prices can differ from OANDA's by a pip or two.
-Ten pairs take two requests a minute apart, so a run lasts a little over a minute.
+With 27 pairs that is four requests a minute apart, so a run lasts about four minutes.
+The second scheduled slot of each hour is a backup: it does nothing when the first one ran.
 
 The hourly candles are also rolled up into 4H, daily and weekly candles
 (data/bars/OANDA_<PAIR>_4h.json, _1d.json, _1w.json) for the chat inside the app. The roll-up
@@ -18,7 +19,7 @@ from zoneinfo import ZoneInfo
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BARS = os.path.join(ROOT, "data", "bars")
-BATCH = 5            # symbols per request; two requests a minute apart stay under the free limit
+BATCH = 8            # symbols per request; the free plan allows 8 a minute, so requests go a minute apart
 NY = ZoneInfo("America/New_York")
 KEEP = {"4h": 200, "1d": 220, "1w": 80}      # candles kept in each rolled-up file
 HISTORY = 5000       # hourly candles asked for once, when a pair has no rolled-up files yet
@@ -95,6 +96,15 @@ def main():
         return
     feed = json.load(open(os.path.join(ROOT, "data", "feed.json")))
     docs = feed.get("zones", [])
+    if os.environ.get("GITHUB_EVENT_NAME") == "schedule":
+        try:
+            age = time.time() - calendar.timegm(time.strptime(feed.get("updated", ""), "%Y-%m-%dT%H:%M:%SZ"))
+        except Exception:                       # noqa: BLE001
+            age = 1e9
+        if age < 22 * 60:
+            print(f"The check already ran {int(age / 60)} minutes ago; this backup slot has nothing to do.")
+            ready(False)
+            return
     os.makedirs(BARS, exist_ok=True)
     now, ok, bad = int(time.time()), 0, []
     for i in range(0, len(docs), BATCH):
