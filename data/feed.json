@@ -201,14 +201,14 @@
    "price_at": "2026-11-11T17:31:51Z",
    "step": 1,
    "chart": "charts/cadjpy.jpg",
-   "note": "Weakest of the four. The daily only turned bearish on 9 Nov by a 6-pip close below 111.92.",
+   "note": "At the daily zone. Last week's weekly candle rejected the 113.6 area. The daily is bearish only by a small close below 111.92, and the 4H lower high is 112.28. Still needs the 1H shift of structure and an entry candle.",
    "shot_at": "2026-11-10T20:52:00Z",
    "entry": 112.35,
    "stop": 112.7,
    "target": 111.4,
    "rr": 2.7,
-   "score": 40,
-   "score_at": "2026-11-11T17:54:18Z",
+   "score": 60,
+   "score_at": "2026-11-11T19:14:00Z",
    "charts": [
     {
      "tf": "W",
@@ -243,7 +243,7 @@
      "tf": "W",
      "name": "At / rejected AOI",
      "pts": 10,
-     "ok": false
+     "ok": true
     },
     {
      "tf": "W",
@@ -255,7 +255,7 @@
      "tf": "W",
      "name": "Candle rejection",
      "pts": 10,
-     "ok": false
+     "ok": true
     },
     {
      "tf": "W",
