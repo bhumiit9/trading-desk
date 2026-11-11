@@ -4,13 +4,13 @@ Publish fresh TradingView screenshots to the app.
 
 The screenshots are taken through the owner's own Chrome (their TradingView layout) and saved as
 files. This script turns them into the JPGs the app shows, adds the stop / entry / target tags on
-the 4H and 1H charts, and pushes everything to the `shots` branch as ONE commit that replaces the
+the 4H, 1H and 30m charts, and pushes everything to the `shots` branch as ONE commit that replaces the
 previous one, so the repository does not grow. The app reads shots.json from that branch.
 
 Usage:  python3 tools/shots/publish.py spec.json
 spec.json: {"at": "2026-11-11T17:40:00Z",            # when the screenshots were taken (UTC)
             "shots": [{"pair": "EURNZD", "tf": "4H", "file": "/path/shot.png",
-                       # only needed for the tags (4H and 1H):
+                       # only needed for the tags (4H, 1H and 30m):
                        "from": 1.94, "to": 2.02,     # visible price range of the chart pane
                        "h": 842, "top": 42,          # pane height and top, CSS pixels
                        "axis_left": 1228,            # left edge of the price axis, CSS pixels
@@ -23,11 +23,11 @@ from PIL import Image, ImageDraw, ImageFont
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 RED, GRN, INK = (217, 58, 63), (18, 140, 80), (19, 26, 43)
-TFS = ("W", "D", "4H", "1H")
+TFS = ("W", "D", "4H", "1H", "30m")
 
 
 def tags(im, s, setup):
-    """Draw the plan's stop, entry and target on a 4H or 1H screenshot."""
+    """Draw the plan's stop, entry and target on a 4H, 1H or 30m screenshot."""
     need = ("from", "to", "h", "k", "region")
     if not setup or any(k not in s for k in need) or not all(isinstance(setup.get(k), (int, float)) for k in ("entry", "stop", "target")):
         return im
@@ -93,7 +93,7 @@ def main():
         if tf not in TFS:
             continue
         im = Image.open(s["file"]).convert("RGB")
-        if tf in ("4H", "1H") and not s.get("plain"):
+        if tf in ("4H", "1H", "30m") and not s.get("plain"):
             im = tags(im, s, setups.get(pair)).convert("RGB")
         name = f"{pair.lower()}-{tf.lower()}.jpg"
         im.save(os.path.join(work, name), quality=84, optimize=True)

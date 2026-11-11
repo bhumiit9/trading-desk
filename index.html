@@ -147,11 +147,11 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .pair{font-size:26px;font-weight:700;letter-spacing:-.02em}
 .tag{font-size:13px;font-weight:700;border-radius:6px;padding:3px 9px}
 .tag.sell{color:var(--sell);background:rgba(255,92,97,.16)} .tag.buy{color:var(--buy);background:rgba(31,201,142,.16)}
-.tfs{position:relative;display:grid;grid-template-columns:repeat(4,1fr);flex:none;margin:0 10px 8px;padding:3px;border-radius:13px;background:var(--surf)}
-.tfs::before{content:"";position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/4);border-radius:10px;background:#2B3140;transform:translateX(calc(var(--k,2)*100%));transition:transform .32s cubic-bezier(.3,.8,.3,1)}
-.tfs button{position:relative;height:34px;border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--mute);cursor:pointer;border-radius:10px;white-space:nowrap;transition:color .2s}
-.tfs button[aria-selected="true"]{color:var(--ink)}
-.tfs button small{font-size:12px;font-weight:600;color:var(--buy);margin-left:3px}
+.tfs{position:relative;display:grid;grid-template-columns:1.45fr 1.3fr 1.1fr .8fr .9fr;flex:none;margin:0 10px 8px;padding:3px;border-radius:13px;background:var(--surf)}
+.tfs::before{content:"";position:absolute;top:3px;bottom:3px;left:0;width:var(--w,0px);border-radius:10px;background:#2B3140;transform:translateX(var(--x,0px));transition:transform .32s cubic-bezier(.3,.8,.3,1),width .32s cubic-bezier(.3,.8,.3,1)}
+.tfs button{position:relative;height:34px;min-width:0;padding:0;border:0;background:none;font:inherit;font-size:13.5px;font-weight:600;color:var(--mute);cursor:pointer;border-radius:10px;white-space:nowrap;transition:color .2s}
+.tfs button[aria-selected="true"]{color:var(--ink)} .tfs button:disabled{opacity:.35;cursor:default}
+.tfs button small{font-size:11.5px;font-weight:600;color:var(--buy);margin-left:2px}
 .tfs button:focus-visible{outline:2px solid var(--link);outline-offset:-2px}
 .shot.swap{animation:settle .4s cubic-bezier(.2,.8,.2,1) both}
 .chips li[hidden]{display:none}
@@ -255,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.18';
+const BUILD = '2026-11-11.19';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -277,7 +277,8 @@ function markTaken(){
   document.querySelectorAll('.row[data-open]').forEach(r => { const k = r.querySelector('.tk'); if (k) k.hidden = !all[takenKey(r.dataset.open)]; });
 }
 function toggleTaken(pair){ const all = takenAll(), k = takenKey(pair); if (all[k]) delete all[k]; else all[k] = Date.now(); store.set('taken', JSON.stringify(all)); markTaken(); }
-const TFS = ['W','D','4H','1H'], TFNAME = { W:'Weekly', D:'Daily', '4H':'4H', '1H':'1H' };
+const TFS = ['W','D','4H','1H','30m'], TFNAME = { W:'Weekly', D:'Daily', '4H':'4H', '1H':'1H', '30m':'30m' };
+const ENTRY_TFS = ['1H','30m'];   // the checklist's entry boxes (2H, 1H, 30m) show on both of these tabs
 const tfSel = {};
 function confOf(s){ return Array.isArray(s.conf) ? s.conf.filter(c => c && TFS.includes(c.tf)) : []; }
 /* Fresh TradingView screenshots are published to the `shots` branch; shots.json there lists them. */
@@ -304,11 +305,11 @@ function setTF(el, tf, animate){
   let ch = {}; try { ch = JSON.parse(el.dataset.charts || '{}'); } catch (e) {}
   if (!ch[tf]) tf = ch['4H'] ? '4H' : Object.keys(ch)[0]; if (!tf) return;
   tfSel[el.dataset.pair] = tf; el.dataset.tf = tf;
-  const bar = el.querySelector('.tfs'); if (bar){ bar.style.setProperty('--k', TFS.indexOf(tf)); bar.querySelectorAll('button').forEach(b => b.setAttribute('aria-selected', b.dataset.tf === tf ? 'true' : 'false')); }
+  const bar = el.querySelector('.tfs'); if (bar){ bar.querySelectorAll('button').forEach(b => { const on = b.dataset.tf === tf; b.setAttribute('aria-selected', on ? 'true' : 'false'); if (on){ bar.style.setProperty('--x', b.offsetLeft + 'px'); bar.style.setProperty('--w', b.offsetWidth + 'px'); } }); }
   const img = el.querySelector('.shot'), src = ch[tf][0] + (ch[tf][1] ? '?v=' + encodeURIComponent(ch[tf][1]) : '');
   if (img && img.getAttribute('src') !== src){ img.classList.remove('swap'); img.src = src; img.alt = `${el.dataset.pair} ${TFNAME[tf]} TradingView chart`; if (animate){ void img.offsetWidth; img.classList.add('swap'); } }
   let n = 0; if (animate) el.classList.add('quick');
-  el.querySelectorAll('.chips li').forEach(li => { li.hidden = li.dataset.tf !== tf; if (!li.hidden) li.style.setProperty('--i', n++); });
+  el.querySelectorAll('.chips li').forEach(li => { li.hidden = !(li.dataset.tf === tf || (ENTRY_TFS.includes(tf) && ENTRY_TFS.includes(li.dataset.tf))); if (!li.hidden) li.style.setProperty('--i', n++); });
   const w = el.querySelector('.when'); if (w) w.textContent = ch[tf][1] ? 'Chart from ' + when(ch[tf][1]) : '';
 }
 function slide(s){
@@ -380,6 +381,7 @@ function show(pair){
 function dots(){ const deck = $('#deck'), i = Math.round(deck.scrollLeft / Math.max(1, deck.clientWidth)); document.querySelectorAll('#dots i').forEach((d, k) => d.classList.toggle('on', k === i));
   const el = deck.children[i]; if (view && el && el.dataset.pair !== view){ view = el.dataset.pair; [...deck.children].forEach(x => x.classList.toggle('cur', x === el)); } }
 $('#deck').addEventListener('scroll', () => requestAnimationFrame(dots), {passive:true});
+addEventListener('resize', () => document.querySelectorAll('#deck .slide').forEach(el => setTF(el, tfSel[el.dataset.pair] || '4H', false)));
 async function update(force){
   try { const v = await getJSON('version.json'); if (force || (v && v.build && v.build !== BUILD)) location.replace('./?v=' + encodeURIComponent((v && v.build) || Date.now())); }
   catch (e) { if (force) location.reload(); }
