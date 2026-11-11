@@ -30,8 +30,9 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 [hidden]{display:none !important}
 .stage{flex:1;min-height:0;position:relative;overflow:hidden}
 .home,.detail{position:absolute;inset:0;transition:transform .38s cubic-bezier(.22,.8,.24,1),opacity .38s ease}
-.home{overflow-y:auto;padding:10px 14px 24px;-webkit-overflow-scrolling:touch}
-.title{font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:44px;margin:0;padding:0 104px 10px 6px;animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
+.home{overflow-y:auto;padding:10px 14px 14px;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column}
+.home > .rows{flex:none;margin-bottom:14px}
+.title{font-size:32px;font-weight:800;letter-spacing:-.03em;line-height:44px;margin:0;padding:0 56px 10px 6px;animation:rise .5s cubic-bezier(.2,.8,.2,1) both}
 .rows{display:flex;flex-direction:column;gap:10px}
 .detail{display:flex;flex-direction:column;background:var(--bg);transform:translateX(100%);visibility:hidden;transition:transform .38s cubic-bezier(.22,.8,.24,1),visibility 0s .38s;box-shadow:-1px 0 0 var(--line)}
 .app.open .detail{transform:none;visibility:visible;transition:transform .38s cubic-bezier(.22,.8,.24,1),visibility 0s}
@@ -69,7 +70,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .took .tick path{stroke-dasharray:1;stroke-dashoffset:1}
 .took.on{background:var(--buy);color:#00140C;box-shadow:none} .took.on .tick path{stroke-dashoffset:0;transition:stroke-dashoffset .35s ease-out .05s}
 .took:focus-visible{outline:2px solid var(--link);outline-offset:2px}
-.slide.cur .took{animation:rise .5s cubic-bezier(.2,.8,.2,1) .5s both}
+
 .row .live{width:10px;height:10px;border-radius:50%;background:#F5A300;animation:pulse 1.6s ease-out infinite}
 .row > svg{width:20px;height:20px;color:#5E6878;flex:none;transition:transform .2s}
 .row:active > svg{transform:translateX(5px)}
@@ -83,8 +84,14 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none !important;transition:none !important}}
 .back{width:44px;height:44px;margin-left:-12px;margin-right:-6px;display:grid;place-items:center}
 .back svg{width:24px;height:24px}
-.ask{position:absolute;z-index:6;top:calc(env(safe-area-inset-top,0px) + 6px);right:calc(env(safe-area-inset-right,0px) + 54px);width:44px;height:44px;border-radius:50%;display:grid;place-items:center}
-.ask svg{width:25px;height:25px}
+.askbar{position:sticky;bottom:0;margin-top:auto;display:flex;align-items:center;gap:10px;width:100%;height:50px;flex:none;padding:0 16px;border-radius:25px;background:var(--surf);box-shadow:inset 0 0 0 1px var(--line),0 -14px 18px 6px var(--bg);color:var(--mute);font-size:16px;text-align:left;animation:rise .5s cubic-bezier(.2,.8,.2,1) .35s both}
+.askbar svg{width:22px;height:22px;color:var(--link);flex:none} .askbar span{flex:1} .askbar:active{background:#1D2129}
+.askbar:focus-visible,.askp:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.acts{display:flex;gap:8px;margin:0 18px 10px;flex:none}
+.acts .took{margin:0;flex:1.35;min-width:0;white-space:nowrap}
+.askp{flex:1;min-width:0;display:flex;align-items:center;justify-content:center;gap:7px;height:46px;border-radius:14px;font-size:15px;font-weight:600;color:var(--ink);background:var(--surf);box-shadow:inset 0 0 0 1px var(--line);white-space:nowrap;transition:transform .12s}
+.askp svg{width:19px;height:19px;color:var(--link)} .askp:active{transform:scale(.98)}
+.slide.cur .acts{animation:rise .5s cubic-bezier(.2,.8,.2,1) .5s both}
 .chat{position:fixed;left:0;right:0;top:0;height:var(--vvh,100dvh);z-index:25;background:var(--bg);display:flex;flex-direction:column;padding:env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) 0 env(safe-area-inset-left,0px);animation:sheetUp .32s cubic-bezier(.2,.8,.2,1)}
 .chat[hidden]{display:none}
 .chat > *{width:min(100%,560px);margin-inline:auto}
@@ -127,7 +134,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .deck::-webkit-scrollbar{display:none}
 .slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:none}
 .slide::-webkit-scrollbar{display:none}
-.cap{display:flex;align-items:center;gap:10px;height:56px;flex:none;padding:0 106px 0 18px;position:sticky;top:0;z-index:2;background:var(--bg)}
+.cap{display:flex;align-items:center;gap:10px;height:56px;flex:none;padding:0 60px 0 18px;position:sticky;top:0;z-index:2;background:var(--bg)}
 .pair{font-size:26px;font-weight:700;letter-spacing:-.02em}
 .tag{font-size:13px;font-weight:700;border-radius:6px;padding:3px 9px}
 .tag.sell{color:var(--sell);background:rgba(255,92,97,.16)} .tag.buy{color:var(--buy);background:rgba(31,201,142,.16)}
@@ -203,10 +210,9 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 </head>
 <body>
 <div class="app" id="app">
-  <button class="ask" id="ask" aria-label="Ask Claude"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg></button>
   <button class="bell" id="bell" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><i></i></button>
   <div class="stage">
-    <main class="home" id="home"><h1 class="title" id="week">This week</h1><div class="rows" id="rows"><div class="none wait" role="status" aria-label="Loading this week's pairs"><div class="loader"><i></i><i></i><i></i></div></div></div></main>
+    <main class="home" id="home"><h1 class="title" id="week">This week</h1><div class="rows" id="rows"><div class="none wait" role="status" aria-label="Loading this week's pairs"><div class="loader"><i></i><i></i><i></i></div></div></div><button class="askbar" id="askHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg><span>Ask about your watchlist</span></button></main>
     <section class="detail" id="detail" aria-hidden="true">
       <div class="deck" id="deck"></div>
       <nav class="dots" id="dots" aria-hidden="true"></nav>
@@ -240,7 +246,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.13';
+const BUILD = '2026-11-11.14';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -257,7 +263,7 @@ const takenKey = pair => ((feed && feed.week && feed.week.label) || '') + '|' + 
 function markTaken(){
   const all = takenAll();
   document.querySelectorAll('.took').forEach(b => { const at = all[takenKey(b.dataset.took)]; b.classList.toggle('on', !!at); b.setAttribute('aria-pressed', at ? 'true' : 'false');
-    b.querySelector('span').textContent = at ? 'Trade taken, ' + new Date(at).toLocaleDateString([], {weekday:'short', day:'numeric', month:'short'}) : 'Mark trade as taken'; });
+    b.querySelector('span').textContent = at ? 'Taken ' + new Date(at).toLocaleDateString([], {day:'numeric', month:'short'}) : 'Mark as taken'; });
   document.querySelectorAll('.row[data-open]').forEach(r => { const k = r.querySelector('.tk'); if (k) k.hidden = !all[takenKey(r.dataset.open)]; });
 }
 function toggleTaken(pair){ const all = takenAll(), k = takenKey(pair); if (all[k]) delete all[k]; else all[k] = Date.now(); store.set('taken', JSON.stringify(all)); markTaken(); }
@@ -311,7 +317,7 @@ function slide(s){
     ${typeof s.score === 'number' ? `<div class="conf"><span>Confluence</span><b>${Math.round(s.score)}%</b><span class="meter" role="img" aria-label="Confluence ${Math.round(s.score)} percent; 70 is the minimum grade"><u style="--w:${Math.min(100, Math.max(0, s.score))}%"></u><em></em></span></div>` : ''}
     ${chips(s)}
     <div class="state"><span class="st ${st}">${STATUS[st]}</span>${dist ? `<span>${dist}</span>` : ''}<span class="when">${first[1] ? 'Chart from ' + esc(when(first[1])) : ''}</span></div>
-    <button class="took" data-took="${esc(s.pair)}" aria-pressed="false"><svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="1" d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mark trade as taken</span></button>
+    <div class="acts"><button class="took" data-took="${esc(s.pair)}" aria-pressed="false"><svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="1" d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mark as taken</span></button><button class="askp" data-ask="${esc(s.pair)}" aria-label="Ask Claude about ${esc(s.pair)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg>Ask Claude</button></div>
   </article>`;
 }
 function draw(){
@@ -468,8 +474,12 @@ How to answer:
 - Use the app data and any charts you are given. Prices in the data are refreshed about once an hour and the chart screenshots are older (their times are given). Say so when your answer depends on a price that may have moved, and ask for the current price or candle if you need it.
 - Say what the rules say: what the setup has, what is missing, where it fails. Do not tell the trader to buy or sell, do not give position or lot sizes, and do not predict prices. The trade decision is theirs.
 - When you assess a setup, end with: Rule-based analysis, not financial advice. The trade decision is yours.`;
-let chatLog = []; try { const c = JSON.parse(store.get('chat', '[]')); if (Array.isArray(c)) chatLog = c.filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.text === 'string'); } catch (e) {}
-let chatBusy = false, chatErr = '', chatKeyNote = '';
+/* One conversation for the watchlist ('home') and one for each pair. */
+const okMsgs = c => Array.isArray(c) ? c.filter(m => m && (m.role === 'user' || m.role === 'assistant') && typeof m.text === 'string') : [];
+let chats = {}; try { const c = JSON.parse(store.get('chats', '{}')); if (c && typeof c === 'object') for (const k of Object.keys(c)) chats[k] = okMsgs(c[k]); } catch (e) {}
+let chatId = 'home', chatLog = chats.home || (chats.home = []);
+let chatBusy = false, busyId = '', chatErr = '', chatKeyNote = '';
+const chatPair = () => chatId === 'home' ? null : chatId;
 const chatKey = () => store.get('ckey', '');
 function chatContext(){
   const f = feed || {};
@@ -480,7 +490,7 @@ function chatContext(){
     last_price:s.price, last_price_time:s.price_at, idea_fails_at:s.invalid_level, idea_fails_note:s.invalid_note, note:s.note,
     marked_as_taken:!!takenAll()[takenKey(s.pair)] });
   return JSON.stringify({ now_india_time:new Date().toLocaleString('en-IN', { timeZone:'Asia/Kolkata', dateStyle:'full', timeStyle:'short' }), week:f.week && f.week.label, data_updated:f.updated,
-    open_in_app:view ? { pair:view, timeframe:TFNAME[tfSel[view] || '4H'] } : null, setups, recent_alerts:(f.alerts || []).slice(0, 8) });
+    this_chat_is_about:chatPair() ? `the ${chatPair()} trade only (the other pairs are background)` : 'the whole watchlist', setups, recent_alerts:(f.alerts || []).slice(0, 8) });
 }
 const b64 = blob => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1] || ''); r.onerror = no; r.readAsDataURL(blob); });
 async function chartBlocks(pair){
@@ -496,32 +506,35 @@ const md = t => esc(t).replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>');
 function chatDraw(){
   const body = $('#cbody'), key = chatKey();
   $('#cform').hidden = !key; $('#chatNew').hidden = !key || !chatLog.length;
-  $('#cctx').textContent = view ? `${view} ${TFNAME[tfSel[view] || '4H']}` : '';
+  $('#cctx').textContent = chatPair() || 'Watchlist'; $('#cin').placeholder = chatPair() ? 'Ask about ' + chatPair() : 'Ask about your watchlist';
   if (!key){
     body.innerHTML = `<div class="ckey"><h3>Add your Claude API key</h3><p>To chat here, the app needs your own key from the Claude Console. Paste it below. It is saved only on this device and is sent only to Anthropic when you ask something. Usage is billed to your API account.</p><input type="password" id="ckeyIn" placeholder="API key" aria-label="Claude API key" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="btn" id="ckeySave">Save key on this device</button><div class="note" role="status">${esc(chatKeyNote)}</div></div>`;
     return;
   }
   let html = chatLog.map(m => `<div class="msg ${m.role === 'user' ? 'me' : 'ai'}">${md(m.text)}</div>`).join('');
-  if (chatBusy && (!chatLog.length || chatLog[chatLog.length - 1].role === 'user')) html += '<div class="msg ai" id="cwait" role="status" aria-label="Claude is thinking"><div class="loader"><i></i><i></i><i></i></div></div>';
+  if (chatBusy && busyId === chatId && (!chatLog.length || chatLog[chatLog.length - 1].role === 'user')) html += '<div class="msg ai" id="cwait" role="status" aria-label="Claude is thinking"><div class="loader"><i></i><i></i><i></i></div></div>';
   if (chatErr) html += `<div class="msg err" role="alert">${esc(chatErr)}</div>${/key/i.test(chatErr) && chatLog.length ? '<button class="linkbtn" id="ckeyDrop" style="align-self:flex-start;padding-top:0">Remove the key from this device</button>' : ''}`;
   if (!chatLog.length && !chatBusy){
-    const sug = view ? [`What is ${view} still missing?`, `How far is ${view} from its zone?`, `What would cancel the ${view} idea?`] : ['Which pair is closest to its zone?', 'What should I watch for today?', 'Explain this week\'s plan in short'];
-    html += `<div class="cstart"><p>${view ? 'Ask about ' + esc(view) + ', or anything on this week\'s list.' : 'Ask about any pair on this week\'s list.'}</p>${sug.map((t, i) => `<button class="sug" style="--i:${i}" data-sug="${esc(t)}">${esc(t)}</button>`).join('')}<button class="linkbtn" id="ckeyDrop">Remove the key from this device</button></div>`;
+    const pr = chatPair(), sug = pr ? [`What is ${pr} still missing?`, `How far is ${pr} from its zone?`, `What would cancel the ${pr} idea?`] : ['Which pair is closest to its zone?', 'What should I watch for today?', 'Explain this week\'s plan in short'];
+    html += `<div class="cstart"><p>${pr ? 'This chat is only about ' + esc(pr) + '. It can see its four charts.' : 'This chat is about your whole watchlist.'}</p>${sug.map((t, i) => `<button class="sug" style="--i:${i}" data-sug="${esc(t)}">${esc(t)}</button>`).join('')}<button class="linkbtn" id="ckeyDrop">Remove the key from this device</button></div>`;
   }
   body.innerHTML = html; body.scrollTop = body.scrollHeight;
 }
-function chatSave(){ store.set('chat', JSON.stringify(chatLog.slice(-40))); }
-function chatOpen(){ $('#chat').hidden = false; chatErr = ''; chatDraw(); chatFit(); }
+function chatSave(){ const keep = new Set(['home', ...((feed && feed.setups) || []).map(s => s.pair)]), out = {};
+  for (const k of Object.keys(chats)) if ((keep.has(k) || !feed) && chats[k].length) out[k] = chats[k].slice(-40);
+  store.set('chats', JSON.stringify(out)); }
+function chatOpen(id){ chatId = id || 'home'; chatLog = chats[chatId] || (chats[chatId] = []); $('#chat').hidden = false; chatErr = ''; chatDraw(); chatGrow(); chatFit(); }
 function chatFit(){ const vv = window.visualViewport, el = $('#chat'); if (!vv || el.hidden) return; el.style.setProperty('--vvh', vv.height + 'px'); el.style.top = vv.offsetTop + 'px'; const b = $('#cbody'); b.scrollTop = b.scrollHeight; }
 if (window.visualViewport){ visualViewport.addEventListener('resize', chatFit); visualViewport.addEventListener('scroll', chatFit); }
 async function chatSend(text){
   text = String(text || '').trim(); const key = chatKey(); if (!text || chatBusy || !key) return;
-  chatErr = ''; chatBusy = true; chatLog.push({ role:'user', text }); $('#cin').value = ''; chatGrow(); chatDraw();
+  const id = chatId, log = chatLog, pair = chatPair(); const here = () => chatId === id && !$('#chat').hidden;
+  chatErr = ''; chatBusy = true; busyId = id; log.push({ role:'user', text }); $('#cin').value = ''; chatGrow(); chatDraw();
   try {
-    const charts = view ? await chartBlocks(view) : [];
-    const hist = chatLog.slice(-24); while (hist.length && hist[0].role !== 'user') hist.shift();
+    const charts = pair ? await chartBlocks(pair) : [];
+    const hist = log.slice(-24); while (hist.length && hist[0].role !== 'user') hist.shift();
     const messages = hist.map(m => ({ role:m.role, content:[{ type:'text', text:m.text }] }));
-    if (charts.length) messages[0].content = [{ type:'text', text:`Charts for ${view}, the trade I have open in the app:` }, ...charts, ...messages[0].content];
+    if (charts.length) messages[0].content = [{ type:'text', text:`Charts for ${pair}, the trade this chat is about:` }, ...charts, ...messages[0].content];
     const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
       headers:{ 'content-type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
       body:JSON.stringify({ model:CHAT_MODEL, max_tokens:1024, stream:true, system:CHAT_RULES + '\n\nApp data right now (JSON):\n' + chatContext(), messages }) });
@@ -534,20 +547,20 @@ async function chatSend(text){
         if (!line.startsWith('data:')) continue; let ev; try { ev = JSON.parse(line.slice(5)); } catch (e) { continue; }
         if (ev.type === 'error') throw new Error((ev.error && ev.error.message) || 'Claude stopped with an error.');
         if (ev.type === 'content_block_delta' && ev.delta && ev.delta.type === 'text_delta'){ reply.text += ev.delta.text;
-          if (!started){ started = true; chatLog.push(reply); chatDraw(); }
-          else { const last = $('#cbody').querySelector('.msg.ai:last-of-type'); if (last){ last.innerHTML = md(reply.text); const b = $('#cbody'); b.scrollTop = b.scrollHeight; } } } } }
+          if (!started){ started = true; log.push(reply); if (here()) chatDraw(); }
+          else if (here()){ const last = $('#cbody').querySelector('.msg.ai:last-of-type'); if (last){ last.innerHTML = md(reply.text); const b = $('#cbody'); b.scrollTop = b.scrollHeight; } } } } }
     if (!started) throw new Error('Claude sent an empty reply. Try again.');
     chatSave();
   } catch (err) {
-    if (chatLog.length && chatLog[chatLog.length - 1].role === 'assistant' && chatLog[chatLog.length - 1].text) chatSave();
-    else { while (chatLog.length && chatLog[chatLog.length - 1].role !== 'user') chatLog.pop(); const u = chatLog.pop(); if (u && !$('#cin').value) $('#cin').value = u.text; }
+    if (log.length && log[log.length - 1].role === 'assistant' && log[log.length - 1].text) chatSave();
+    else { while (log.length && log[log.length - 1].role !== 'user') log.pop(); const u = log.pop(); if (u && here() && !$('#cin').value) $('#cin').value = u.text; }
     const m = String(err && err.message || '');
-    chatErr = err.status === 401 ? (/CORS/i.test(m) ? 'This key\'s organization does not allow use from an app. Create a key in a personal Console account and save it here.' : 'The key was not accepted. Remove it and save a valid one.')
+    const say = err.status === 401 ? (/CORS/i.test(m) ? 'This key\'s organization does not allow use from an app. Create a key in a personal Console account and save it here.' : 'The key was not accepted. Remove it and save a valid one.')
       : err.status === 429 || err.status === 529 ? 'Claude is busy or the key has hit its limit. Try again in a minute.'
       : err.status ? 'Claude could not answer: ' + (m || 'error ' + err.status) : 'Could not reach Claude. Check your connection and try again.';
-    if (err.status === 401 && !/CORS/i.test(m)) chatKeyNote = '';
+    if (here()) chatErr = say;
   }
-  chatBusy = false; chatDraw(); chatGrow();
+  chatBusy = false; busyId = ''; if (!$('#chat').hidden){ chatDraw(); chatGrow(); }
 }
 function chatGrow(){ const t = $('#cin'); t.style.height = 'auto'; t.style.height = Math.min(132, t.scrollHeight) + 'px'; $('#csend').disabled = chatBusy || !t.value.trim(); }
 $('#cin').addEventListener('input', chatGrow);
@@ -555,9 +568,10 @@ $('#cin').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKe
 $('#cform').addEventListener('submit', e => { e.preventDefault(); chatSend($('#cin').value); });
 document.addEventListener('click', e => {
   const t = e.target;
-  if (t.closest('#ask')){ chatOpen(); return; }
+  if (t.closest('#askHome')){ chatOpen('home'); return; }
+  const ap = t.closest('[data-ask]'); if (ap){ chatOpen(ap.dataset.ask); return; }
   if (t.id === 'chatClose'){ $('#chat').hidden = true; return; }
-  if (t.id === 'chatNew'){ if (chatBusy) return; chatLog = []; chatErr = ''; chatSave(); chatDraw(); return; }
+  if (t.id === 'chatNew'){ if (chatBusy) return; chatLog = chats[chatId] = []; chatErr = ''; chatSave(); chatDraw(); return; }
   if (t.id === 'ckeySave'){ const v = ($('#ckeyIn').value || '').trim(); if (v.length < 20 || /\s/.test(v)){ chatKeyNote = 'That does not look like an API key.'; chatDraw(); return; } chatKeyNote = ''; store.set('ckey', v); chatDraw(); $('#cin').focus(); return; }
   if (t.id === 'ckeyDrop'){ try { localStorage.removeItem('ckey'); } catch (err) {} chatErr = ''; chatDraw(); return; }
   const sg = t.closest('[data-sug]'); if (sg){ chatSend(sg.dataset.sug); return; }
