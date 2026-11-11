@@ -255,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.19';
+const BUILD = '2026-11-12.1';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -632,27 +632,36 @@ async function runTool(name, input){
 }
 const toolSay = (name, input) => name === 'scan_pairs' ? 'Scanning every pair on the watchlist' : name === 'get_candles' ? `Reading ${String(input && input.pair || '').toUpperCase()} ${TFNAME[input && input.timeframe] || ''} candles` : name === 'set_week_pick' ? 'Marking the pick of the week' : 'Working';
 /* One streamed call. Returns the content blocks and why Claude stopped. */
+/* Claude thinks before it answers, and that thinking counts toward the answer's length limit, so the limit is generous. */
+let chatEffort = true;      // ask for a lighter thinking effort; switched off if the service rejects the setting
 async function chatCall(key, messages, onText){
+  const body = { model:CHAT_MODEL, max_tokens:16000, stream:true, system:CHAT_RULES + '\n\nApp data right now (JSON):\n' + chatContext(), tools:CHAT_TOOLS, messages };
+  if (chatEffort) body.output_config = { effort:'medium' };
   const res = await fetch('https://api.anthropic.com/v1/messages', { method:'POST',
     headers:{ 'content-type':'application/json', 'x-api-key':key, 'anthropic-version':'2023-06-01', 'anthropic-dangerous-direct-browser-access':'true' },
-    body:JSON.stringify({ model:CHAT_MODEL, max_tokens:3000, stream:true, system:CHAT_RULES + '\n\nApp data right now (JSON):\n' + chatContext(), tools:CHAT_TOOLS, messages }) });
+    body:JSON.stringify(body) });
   if (!res.ok){ let msg = ''; try { msg = (await res.json()).error.message || ''; } catch (e) {}
+    if (res.status === 400 && chatEffort && /output_config|effort/i.test(msg)){ chatEffort = false; return chatCall(key, messages, onText); }
     throw Object.assign(new Error(msg || 'The request failed.'), { status:res.status }); }
-  const blocks = [], json = {}; let stop = '';
+  const blocks = [], json = {}, broken = new Set(); let stop = '';
   const reader = res.body.getReader(), dec = new TextDecoder(); let buf = '';
   for (;;){ const { done, value } = await reader.read(); if (done) break; buf += dec.decode(value, { stream:true });
     let nl; while ((nl = buf.indexOf('\n')) >= 0){ const line = buf.slice(0, nl).trim(); buf = buf.slice(nl + 1);
       if (!line.startsWith('data:')) continue; let ev; try { ev = JSON.parse(line.slice(5)); } catch (e) { continue; }
       if (ev.type === 'error') throw new Error((ev.error && ev.error.message) || 'Claude stopped with an error.');
       if (ev.type === 'content_block_start' && ev.content_block){ const c = ev.content_block;
-        if (c.type === 'tool_use'){ blocks[ev.index] = { type:'tool_use', id:c.id, name:c.name, input:{} }; json[ev.index] = ''; }
-        else if (c.type === 'text') blocks[ev.index] = { type:'text', text:c.text || '' }; }
-      else if (ev.type === 'content_block_delta' && ev.delta){ const bl = blocks[ev.index] || (blocks[ev.index] = { type:'text', text:'' });
-        if (ev.delta.type === 'text_delta' && bl.type === 'text'){ bl.text += ev.delta.text; onText(ev.delta.text); }
-        else if (ev.delta.type === 'input_json_delta') json[ev.index] = (json[ev.index] || '') + (ev.delta.partial_json || ''); }
-      else if (ev.type === 'content_block_stop'){ const bl = blocks[ev.index]; if (bl && bl.type === 'tool_use'){ try { bl.input = json[ev.index] ? JSON.parse(json[ev.index]) : {}; } catch (e) { bl.input = {}; } } }
+        if (c.type === 'tool_use'){ blocks[ev.index] = { type:'tool_use', id:c.id, name:c.name, input:{} }; json[ev.index] = ''; broken.add(ev.index); }
+        else if (c.type === 'text') blocks[ev.index] = { type:'text', text:c.text || '' };
+        else blocks[ev.index] = Object.assign({}, c); }        // thinking blocks and anything else: kept exactly as sent
+      else if (ev.type === 'content_block_delta' && ev.delta){ const bl = blocks[ev.index], d = ev.delta; if (!bl) continue;
+        if (d.type === 'text_delta' && bl.type === 'text'){ bl.text += d.text; onText(d.text); }
+        else if (d.type === 'input_json_delta') json[ev.index] = (json[ev.index] || '') + (d.partial_json || '');
+        else if (d.type === 'thinking_delta' && bl.type === 'thinking') bl.thinking = (bl.thinking || '') + (d.thinking || '');
+        else if (d.type === 'signature_delta' && bl.type === 'thinking') bl.signature = (bl.signature || '') + (d.signature || ''); }
+      else if (ev.type === 'content_block_stop'){ const bl = blocks[ev.index]; if (bl && bl.type === 'tool_use'){ try { bl.input = json[ev.index] ? JSON.parse(json[ev.index]) : {}; broken.delete(ev.index); } catch (e) {} } }
       else if (ev.type === 'message_delta' && ev.delta && ev.delta.stop_reason) stop = ev.delta.stop_reason; } }
-  return { blocks:blocks.filter(x => x && (x.type !== 'text' || x.text)), stop };
+  // drop empty text and any tool request that was cut off before it was complete
+  return { blocks:blocks.filter((x, k) => x && !(x.type === 'text' && !x.text) && !broken.has(k)), stop };
 }
 async function chatSend(text){
   text = String(text || '').trim(); const key = chatKey(); if (!text || chatBusy || !key) return;
@@ -667,9 +676,17 @@ async function chatSend(text){
     const hist = log.slice(-24); while (hist.length && hist[0].role !== 'user') hist.shift();
     const messages = hist.map(m => ({ role:m.role, content:[{ type:'text', text:m.text }] }));
     if (charts.length) messages[0].content = [{ type:'text', text:`Charts for ${pair}, the trade this chat is about:` }, ...charts, ...messages[0].content];
-    for (let round = 0; round < 14; round++){
+    let cuts = 0;
+    for (let round = 0; round < 16; round++){
       const r = await chatCall(key, messages, onText);
-      if (r.stop === 'max_tokens') onText('\n\n(The answer was cut short. Ask me to continue.)');
+      if (r.stop === 'max_tokens'){
+        // Cut off at the length limit: carry on by itself, twice at most, before saying so.
+        const said = r.blocks.filter(x => x.type === 'text').map(x => x.text).join('').trim();
+        if (++cuts > 2){ onText('\n\n(The answer was cut short. Ask me to continue.)'); break; }
+        if (said){ messages.push({ role:'assistant', content:[{ type:'text', text:said }] }); messages.push({ role:'user', content:[{ type:'text', text:'Continue from exactly where you stopped. Do not repeat anything and do not start over.' }] }); }
+        chatStat = 'Still writing'; if (here()) chatDraw();
+        continue;
+      }
       const uses = r.blocks.filter(x => x.type === 'tool_use'); if (r.stop !== 'tool_use' || !uses.length) break;
       messages.push({ role:'assistant', content:r.blocks });
       const results = [];
