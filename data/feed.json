@@ -33,25 +33,68 @@
    "rr": 3.8,
    "score": 25,
    "score_at": "2026-11-11T11:55:00Z",
-   "confluences": [
-    [
-     "Weekly trend",
-     10
-    ],
-    [
-     "Daily trend",
-     10
-    ],
-    [
-     "4H trend",
-     5
-    ]
+   "charts": [
+    {
+     "tf": "W",
+     "src": "charts/eurnzd-w.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    },
+    {
+     "tf": "D",
+     "src": "charts/eurnzd-d.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    },
+    {
+     "tf": "4H",
+     "src": "charts/eurnzd.jpg",
+     "at": "2026-11-10T20:52:00Z",
+     "plan": true
+    },
+    {
+     "tf": "1H",
+     "src": "charts/eurnzd-1h.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    }
    ],
-   "pending": [
-    "At the zone",
-    "Candle rejection",
-    "Shift of structure",
-    "Entry candle"
+   "conf": [
+    {
+     "tf": "W",
+     "name": "Trend",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "D",
+     "name": "Trend",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "D",
+     "name": "At the zone",
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Trend",
+     "pts": 5,
+     "ok": true
+    },
+    {
+     "tf": "4H",
+     "name": "Candle rejection",
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Shift of structure",
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Entry candle",
+     "ok": false
+    }
    ]
   },
   {
@@ -83,25 +126,68 @@
    "rr": 2.7,
    "score": 25,
    "score_at": "2026-11-11T11:55:00Z",
-   "confluences": [
-    [
-     "Weekly trend",
-     10
-    ],
-    [
-     "Daily trend",
-     10
-    ],
-    [
-     "4H trend",
-     5
-    ]
+   "charts": [
+    {
+     "tf": "W",
+     "src": "charts/cadjpy-w.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    },
+    {
+     "tf": "D",
+     "src": "charts/cadjpy-d.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    },
+    {
+     "tf": "4H",
+     "src": "charts/cadjpy.jpg",
+     "at": "2026-11-10T20:52:00Z",
+     "plan": true
+    },
+    {
+     "tf": "1H",
+     "src": "charts/cadjpy-1h.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    }
    ],
-   "pending": [
-    "At the zone",
-    "Candle rejection",
-    "Shift of structure",
-    "Entry candle"
+   "conf": [
+    {
+     "tf": "W",
+     "name": "Trend",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "D",
+     "name": "Trend",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "D",
+     "name": "At the zone",
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Trend",
+     "pts": 5,
+     "ok": true
+    },
+    {
+     "tf": "4H",
+     "name": "Candle rejection",
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Shift of structure",
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Entry candle",
+     "ok": false
+    }
    ]
   },
   {
@@ -133,25 +219,68 @@
    "rr": 2.1,
    "score": 25,
    "score_at": "2026-11-11T11:55:00Z",
-   "confluences": [
-    [
-     "Weekly trend",
-     10
-    ],
-    [
-     "Daily trend",
-     10
-    ],
-    [
-     "4H trend",
-     5
-    ]
+   "charts": [
+    {
+     "tf": "W",
+     "src": "charts/gbpjpy-w.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    },
+    {
+     "tf": "D",
+     "src": "charts/gbpjpy-d.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    },
+    {
+     "tf": "4H",
+     "src": "charts/gbpjpy.jpg",
+     "at": "2026-11-10T20:52:00Z",
+     "plan": true
+    },
+    {
+     "tf": "1H",
+     "src": "charts/gbpjpy-1h.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    }
    ],
-   "pending": [
-    "At the zone",
-    "Candle rejection",
-    "Shift of structure",
-    "Entry candle"
+   "conf": [
+    {
+     "tf": "W",
+     "name": "Trend",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "D",
+     "name": "Trend",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "D",
+     "name": "At the zone",
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Trend",
+     "pts": 5,
+     "ok": true
+    },
+    {
+     "tf": "4H",
+     "name": "Candle rejection",
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Shift of structure",
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Entry candle",
+     "ok": false
+    }
    ]
   },
   {
@@ -183,22 +312,68 @@
    "rr": 3.0,
    "score": 20,
    "score_at": "2026-11-11T11:55:00Z",
-   "confluences": [
-    [
-     "Weekly trend",
-     10
-    ],
-    [
-     "Daily trend",
-     10
-    ]
+   "charts": [
+    {
+     "tf": "W",
+     "src": "charts/gbpaud-w.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    },
+    {
+     "tf": "D",
+     "src": "charts/gbpaud-d.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    },
+    {
+     "tf": "4H",
+     "src": "charts/gbpaud.jpg",
+     "at": "2026-11-10T20:52:00Z",
+     "plan": true
+    },
+    {
+     "tf": "1H",
+     "src": "charts/gbpaud-1h.jpg",
+     "at": "2026-11-11T12:31:00Z"
+    }
    ],
-   "pending": [
-    "4H trend",
-    "At the zone",
-    "Candle rejection",
-    "Shift of structure",
-    "Entry candle"
+   "conf": [
+    {
+     "tf": "W",
+     "name": "Trend",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "D",
+     "name": "Trend",
+     "pts": 10,
+     "ok": true
+    },
+    {
+     "tf": "D",
+     "name": "At the zone",
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Trend",
+     "pts": 5,
+     "ok": false
+    },
+    {
+     "tf": "4H",
+     "name": "Candle rejection",
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Shift of structure",
+     "ok": false
+    },
+    {
+     "tf": "1H",
+     "name": "Entry candle",
+     "ok": false
+    }
    ]
   },
   {

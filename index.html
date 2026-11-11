@@ -95,6 +95,16 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .pair{font-size:26px;font-weight:700;letter-spacing:-.02em}
 .tag{font-size:13px;font-weight:700;border-radius:6px;padding:3px 9px}
 .tag.sell{color:var(--sell);background:rgba(255,92,97,.16)} .tag.buy{color:var(--buy);background:rgba(31,201,142,.16)}
+.tfs{position:relative;display:grid;grid-template-columns:repeat(4,1fr);flex:none;margin:0 10px 8px;padding:3px;border-radius:13px;background:var(--surf)}
+.tfs::before{content:"";position:absolute;top:3px;bottom:3px;left:3px;width:calc((100% - 6px)/4);border-radius:10px;background:#2B3140;transform:translateX(calc(var(--k,2)*100%));transition:transform .32s cubic-bezier(.3,.8,.3,1)}
+.tfs button{position:relative;height:34px;border:0;background:none;font:inherit;font-size:14px;font-weight:600;color:var(--mute);cursor:pointer;border-radius:10px;white-space:nowrap;transition:color .2s}
+.tfs button[aria-selected="true"]{color:var(--ink)}
+.tfs button small{font-size:12px;font-weight:600;color:var(--buy);margin-left:3px}
+.tfs button:focus-visible{outline:2px solid var(--link);outline-offset:-2px}
+.shot.swap{animation:settle .4s cubic-bezier(.2,.8,.2,1) both}
+.chips li[hidden]{display:none}
+.slide.quick .chips li{animation-delay:calc(var(--i)*.05s)}
+@media (max-width:380px){ .tfs button{font-size:13px} .tfs button small{font-size:11px;margin-left:2px} }
 .pic{flex:1 0 300px;min-height:300px;display:flex;margin:0 10px;border-radius:14px;overflow:hidden;background:#fff}
 .shot{width:100%;height:100%;object-fit:contain;object-position:center top;cursor:zoom-in;display:block}
 .levels{display:grid;grid-template-columns:1fr 1fr auto;padding:12px 18px 4px;gap:8px}
@@ -187,7 +197,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.11';
+const BUILD = '2026-11-11.12';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -208,11 +218,34 @@ function markTaken(){
   document.querySelectorAll('.row[data-open]').forEach(r => { const k = r.querySelector('.tk'); if (k) k.hidden = !all[takenKey(r.dataset.open)]; });
 }
 function toggleTaken(pair){ const all = takenAll(), k = takenKey(pair); if (all[k]) delete all[k]; else all[k] = Date.now(); store.set('taken', JSON.stringify(all)); markTaken(); }
+const TFS = ['W','D','4H','1H'], TFNAME = { W:'Weekly', D:'Daily', '4H':'4H', '1H':'1H' };
+const tfSel = {};
+function confOf(s){ return Array.isArray(s.conf) ? s.conf.filter(c => c && TFS.includes(c.tf)) : []; }
+function chartsOf(s){ const out = {}; (Array.isArray(s.charts) ? s.charts : []).forEach(c => { const src = c && safeChart(c.src); if (src && TFS.includes(c.tf)) out[c.tf] = [src, c.at || '']; });
+  if (!Object.keys(out).length && safeChart(s.chart)) out['4H'] = [safeChart(s.chart), s.shot_at || '']; return out; }
 function chips(s) {
-  const have = Array.isArray(s.confluences) ? s.confluences : [], need = Array.isArray(s.pending) ? s.pending : [];
-  if (!have.length && !need.length) return '';
+  const all = confOf(s); if (!all.length) return '';
   let i = 0;
-  return `<ul class="chips" aria-label="Confluences">${have.map(c => `<li class="ok" style="--i:${i++}">${TICK}<span class="sr">Have: </span>${esc(c[0])} <small>+${Number(c[1]) || 0}</small></li>`).join('')}${need.map(n => `<li class="no" style="--i:${i++}">${RING}<span class="sr">Still needed: </span>${esc(n)}</li>`).join('')}</ul>`;
+  return `<ul class="chips" aria-label="Confluences on this timeframe">${all.map(c => c.ok
+    ? `<li class="ok" data-tf="${esc(c.tf)}" style="--i:${i++}">${TICK}<span class="sr">Have: </span>${esc(c.name)} <small>+${Number(c.pts) || 0}</small></li>`
+    : `<li class="no" data-tf="${esc(c.tf)}" style="--i:${i++}">${RING}<span class="sr">Still needed: </span>${esc(c.name)}</li>`).join('')}</ul>`;
+}
+function tabs(s){
+  const ch = chartsOf(s), have = TFS.filter(t => ch[t]); if (have.length < 2) return '';
+  const pts = t => confOf(s).filter(c => c.tf === t && c.ok).reduce((a, c) => a + (Number(c.pts) || 0), 0);
+  return `<div class="tfs" role="tablist" aria-label="Timeframe">${TFS.map(t => `<button role="tab" data-tf="${t}" aria-selected="false"${ch[t] ? '' : ' disabled'}>${TFNAME[t]}${pts(t) ? `<small>+${pts(t)}</small>` : ''}</button>`).join('')}</div>`;
+}
+/* Show one timeframe in a trade: its chart and its confluences. */
+function setTF(el, tf, animate){
+  let ch = {}; try { ch = JSON.parse(el.dataset.charts || '{}'); } catch (e) {}
+  if (!ch[tf]) tf = ch['4H'] ? '4H' : Object.keys(ch)[0]; if (!tf) return;
+  tfSel[el.dataset.pair] = tf; el.dataset.tf = tf;
+  const bar = el.querySelector('.tfs'); if (bar){ bar.style.setProperty('--k', TFS.indexOf(tf)); bar.querySelectorAll('button').forEach(b => b.setAttribute('aria-selected', b.dataset.tf === tf ? 'true' : 'false')); }
+  const img = el.querySelector('.shot'), src = ch[tf][0] + (ch[tf][1] ? '?v=' + encodeURIComponent(ch[tf][1]) : '');
+  if (img && img.getAttribute('src') !== src){ img.classList.remove('swap'); img.src = src; img.alt = `${el.dataset.pair} ${TFNAME[tf]} TradingView chart`; if (animate){ void img.offsetWidth; img.classList.add('swap'); } }
+  let n = 0; if (animate) el.classList.add('quick');
+  el.querySelectorAll('.chips li').forEach(li => { li.hidden = li.dataset.tf !== tf; if (!li.hidden) li.style.setProperty('--i', n++); });
+  const w = el.querySelector('.when'); if (w) w.textContent = ch[tf][1] ? 'Chart from ' + when(ch[tf][1]) : '';
 }
 function slide(s){
   const side = s.side === 'buy' ? 'buy' : 'sell';
@@ -221,10 +254,12 @@ function slide(s){
     if (s.price >= s.zone_lo && s.price <= s.zone_hi){ if (st === 'waiting') st = 'at_zone'; }
     else if (st === 'waiting') dist = Math.round(Math.min(Math.abs(s.price - s.zone_lo), Math.abs(s.price - s.zone_hi)) / (isJPY(s.pair) ? .01 : .0001)) + ' pips to zone';
   }
-  const v = s.shot_at ? '?v=' + encodeURIComponent(s.shot_at) : '';
-  return `<article class="slide" data-pair="${esc(s.pair)}">
+  const ch = chartsOf(s), first = ch['4H'] || Object.values(ch)[0] || ['', ''];
+  const v = first[1] ? '?v=' + encodeURIComponent(first[1]) : '';
+  return `<article class="slide" data-pair="${esc(s.pair)}" data-charts="${esc(JSON.stringify(ch))}">
     <header class="cap"><button class="back" data-back aria-label="Back to the list of pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span></header>
-    <div class="pic"><img class="shot" src="${safeChart(s.chart)}${v}" alt="${esc(s.pair)} TradingView chart with entry, stop and target" tabindex="0"></div>
+    ${tabs(s)}
+    <div class="pic"><img class="shot" src="${first[0]}${v}" alt="${esc(s.pair)} TradingView chart with entry, stop and target" tabindex="0"></div>
     <div class="levels">
       <div class="lv stop"><span>Stop</span><b>${px(s.pair, s.stop)}</b></div>
       <div class="lv"><span>Entry</span><b>${px(s.pair, s.entry)}</b></div>
@@ -232,7 +267,7 @@ function slide(s){
     </div>
     ${typeof s.score === 'number' ? `<div class="conf"><span>Confluence</span><b>${Math.round(s.score)}%</b><span class="meter" role="img" aria-label="Confluence ${Math.round(s.score)} percent; 70 is the minimum grade"><u style="--w:${Math.min(100, Math.max(0, s.score))}%"></u><em></em></span></div>` : ''}
     ${chips(s)}
-    <div class="state"><span class="st ${st}">${STATUS[st]}</span>${dist ? `<span>${dist}</span>` : ''}${s.shot_at ? `<span class="when">Chart from ${esc(when(s.shot_at))}</span>` : ''}</div>
+    <div class="state"><span class="st ${st}">${STATUS[st]}</span>${dist ? `<span>${dist}</span>` : ''}<span class="when">${first[1] ? 'Chart from ' + esc(when(first[1])) : ''}</span></div>
     <button class="took" data-took="${esc(s.pair)}" aria-pressed="false"><svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="1" d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mark trade as taken</span></button>
   </article>`;
 }
@@ -246,6 +281,7 @@ function draw(){
   $('#week').textContent = (feed.week && feed.week.label) || 'This week';
   const html = trades.map(slide).join('');
   if (html !== shown){ const deck = $('#deck'), x = deck.scrollLeft; deck.innerHTML = shown = html; deck.scrollLeft = x; if (view) deck.querySelectorAll('.slide').forEach(el => el.classList.toggle('cur', el.dataset.pair === view)); }
+  document.querySelectorAll('#deck .slide').forEach(el => setTF(el, tfSel[el.dataset.pair] || '4H', false));
   markTaken();
   if (view && !trades.some(s => s.pair === view)) show(null);
   $('#dots').innerHTML = trades.length > 1 ? trades.map(() => '<i></i>').join('') : ''; dots();
@@ -300,6 +336,7 @@ document.addEventListener('click', e => {
   if (t.id === 'viewClose'){ $('#view').hidden = true; return; }
   const open = t.closest('[data-open]'); if (open){ show(open.dataset.open); return; }
   if (t.closest('[data-back]')){ show(null); return; }
+  const tf = t.closest('.tfs [data-tf]'); if (tf && !tf.disabled){ setTF(tf.closest('.slide'), tf.dataset.tf, true); return; }
   const tk = t.closest('[data-took]'); if (tk){ toggleTaken(tk.dataset.took); return; }
   const row = t.closest('.a'); if (row){ row.classList.toggle('open'); return; }
   if (t.closest('#bell')){ $('#sheet').hidden = false; const a = feed?.alerts?.[0]; if (a) store.set('seen', Date.parse(a.at)); $('#bell').classList.remove('new'); return; }
