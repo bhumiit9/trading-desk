@@ -255,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.16';
+const BUILD = '2026-11-11.17';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -280,7 +280,12 @@ function toggleTaken(pair){ const all = takenAll(), k = takenKey(pair); if (all[
 const TFS = ['W','D','4H','1H'], TFNAME = { W:'Weekly', D:'Daily', '4H':'4H', '1H':'1H' };
 const tfSel = {};
 function confOf(s){ return Array.isArray(s.conf) ? s.conf.filter(c => c && TFS.includes(c.tf)) : []; }
+/* Fresh TradingView screenshots are published to the `shots` branch; shots.json there lists them. */
+const SHOTS = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/shots/';
+let shots = null;
 function chartsOf(s){ const out = {}; (Array.isArray(s.charts) ? s.charts : []).forEach(c => { const src = c && safeChart(c.src); if (src && TFS.includes(c.tf)) out[c.tf] = [src, c.at || '']; });
+  const live = shots && shots.shots && shots.shots[s.pair];
+  if (live) TFS.forEach(tf => { const c = live[tf]; if (c && /^[a-z0-9_-]+\.(png|jpg)$/.test(c.file || '') && (!out[tf] || !(Date.parse(c.at) < Date.parse(out[tf][1])))) out[tf] = [SHOTS + c.file, c.at || '']; });
   if (!Object.keys(out).length && safeChart(s.chart)) out['4H'] = [safeChart(s.chart), s.shot_at || '']; return out; }
 function chips(s) {
   const all = confOf(s); if (!all.length) return '';
@@ -382,9 +387,11 @@ async function update(force){
 async function load(){
   if (document.hidden) return;
   update(false);
-  const got = await Promise.allSettled([getJSON('data/feed.json'), getJSON(RAW + 'data/feed.json')]);
+  const got = await Promise.allSettled([getJSON('data/feed.json'), getJSON(RAW + 'data/feed.json'), getJSON(SHOTS + 'shots.json')]);
+  const sh = got.pop(), fresh = sh.status === 'fulfilled' && sh.value && sh.value.shots && (!shots || sh.value.updated !== shots.updated);
+  if (fresh) shots = sh.value;
   const ok = got.filter(g => g.status === 'fulfilled' && g.value && g.value.updated).map(g => g.value).sort((a,b) => Date.parse(b.updated) - Date.parse(a.updated));
-  if (ok.length){ if (!feed || Date.parse(ok[0].updated) > Date.parse(feed.updated)){ feed = ok[0]; draw(); } }
+  if (ok.length){ if (!feed || Date.parse(ok[0].updated) > Date.parse(feed.updated)){ feed = ok[0]; draw(); } else if (fresh) draw(); }
   else if (!feed) $('#deck').innerHTML = '<div class="none">The charts could not be loaded. Check the connection; the app retries by itself.</div>';
 }
 load(); setInterval(load, 5 * 60000); document.addEventListener('visibilitychange', load);
