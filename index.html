@@ -47,10 +47,10 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .loader i{width:9px;border-radius:2px;background:var(--link);animation:candle .9s ease-in-out infinite alternate}
 .loader i:nth-child(2){background:var(--sell);animation-delay:.18s} .loader i:nth-child(3){animation-delay:.36s}
 .none.wait{display:flex;height:60%}
-.row{display:flex;align-items:center;gap:14px;width:100%;text-align:left;height:78px;padding:0 16px 0 14px;border-radius:20px;background:var(--surf);font-size:24px;font-weight:700;letter-spacing:-.02em;
+.row{display:flex;align-items:center;gap:12px;width:100%;text-align:left;height:78px;padding:0 16px 0 14px;border-radius:20px;background:var(--surf);font-size:24px;font-weight:700;letter-spacing:-.02em;
   animation:rise .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i,0) * 75ms + 90ms);transition:transform .15s,background .15s}
 .row:active{transform:scale(.98);background:#1D2129}
-.row .nm{flex:1}
+.row .nm{flex:1;min-width:0}
 /* the icon is the pair's own last 60 hours, drawn as a small chart */
 .ico{flex:none;width:50px;height:50px;border-radius:15px;background:#000;display:grid;place-items:center;box-shadow:inset 0 0 0 1px var(--line);color:#5E6878}
 .ico.up{color:#6C9BFF} .ico.down{color:#FF5C61}
@@ -60,7 +60,16 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .ico circle{opacity:0;animation:fade .3s ease 1s forwards}
 @keyframes drawline{to{stroke-dashoffset:0}}
 @keyframes fadeTo{to{opacity:.2}}
-.row .pct{font-size:17px;font-weight:700;color:var(--mute);letter-spacing:0}
+.row .pct{font-size:17px;font-weight:700;color:var(--mute);letter-spacing:0;text-align:right}
+.row .tk{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 9px 0 6px;margin-right:-2px;border-radius:12px;font-size:12.5px;font-weight:700;letter-spacing:0;flex:none;color:#00140C;background:var(--buy);animation:pop .4s cubic-bezier(.2,.9,.3,1.2) both}
+.row .tk[hidden]{display:none} .row .tk svg{width:13px;height:13px}
+@media (max-width:359px){ .row .tk b{display:none} .row .tk{padding:0 6px} }
+.took{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 18px 10px;height:46px;flex:none;border-radius:14px;font:inherit;font-size:15px;font-weight:600;color:var(--ink);background:var(--surf);border:0;box-shadow:inset 0 0 0 1px var(--line);cursor:pointer;transition:background .25s,color .25s,transform .12s}
+.took:active{transform:scale(.98)} .took svg{width:18px;height:18px}
+.took .tick path{stroke-dasharray:1;stroke-dashoffset:1}
+.took.on{background:var(--buy);color:#00140C;box-shadow:none} .took.on .tick path{stroke-dashoffset:0;transition:stroke-dashoffset .35s ease-out .05s}
+.took:focus-visible{outline:2px solid var(--link);outline-offset:2px}
+.slide.cur .took{animation:rise .5s cubic-bezier(.2,.8,.2,1) .5s both}
 .row .live{width:10px;height:10px;border-radius:50%;background:#F5A300;animation:pulse 1.6s ease-out infinite}
 .row > svg{width:20px;height:20px;color:#5E6878;flex:none;transition:transform .2s}
 .row:active > svg{transform:translateX(5px)}
@@ -80,19 +89,21 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .bell.new i{display:block}
 .deck{flex:1;min-height:0;display:flex;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .deck::-webkit-scrollbar{display:none}
-.slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column}
-.cap{display:flex;align-items:center;gap:10px;height:56px;padding:0 60px 0 18px}
+.slide{flex:0 0 100%;min-width:0;scroll-snap-align:start;scroll-snap-stop:always;display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:none}
+.slide::-webkit-scrollbar{display:none}
+.cap{display:flex;align-items:center;gap:10px;height:56px;flex:none;padding:0 60px 0 18px;position:sticky;top:0;z-index:2;background:var(--bg)}
 .pair{font-size:26px;font-weight:700;letter-spacing:-.02em}
 .tag{font-size:13px;font-weight:700;border-radius:6px;padding:3px 9px}
 .tag.sell{color:var(--sell);background:rgba(255,92,97,.16)} .tag.buy{color:var(--buy);background:rgba(31,201,142,.16)}
-.pic{flex:1;min-height:0;display:flex;margin:0 10px;border-radius:14px;overflow:hidden;background:#fff}
+.pic{flex:1 0 300px;min-height:300px;display:flex;margin:0 10px;border-radius:14px;overflow:hidden;background:#fff}
 .shot{width:100%;height:100%;object-fit:contain;object-position:center top;cursor:zoom-in;display:block}
-.levels{display:grid;grid-template-columns:repeat(3,1fr);padding:12px 18px 4px;gap:8px}
+.levels{display:grid;grid-template-columns:1fr 1fr auto;padding:12px 18px 4px;gap:8px}
 .lv span{display:block;font-size:13px;color:var(--mute)}
-.lv b{display:block;font-size:22px;font-weight:700;letter-spacing:-.01em;line-height:1.2}
+.lv b{display:block;font-size:clamp(17px,5.4vw,22px);font-weight:700;letter-spacing:-.01em;line-height:1.2;white-space:nowrap}
 .lv.stop b{color:var(--sell)} .lv.target b{color:var(--buy)}
-.lv small{font-size:13px;font-weight:600;color:var(--buy);margin-left:5px}
-.state{display:flex;align-items:center;gap:8px;padding:6px 18px 10px;font-size:14px;color:var(--mute)}
+.lv small{font-size:12.5px;font-weight:600;color:var(--buy);margin-left:4px}
+.state{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:6px 18px 10px;font-size:14px;color:var(--mute)}
+.state span{white-space:nowrap}
 .st{font-weight:600;color:var(--ink);background:var(--surf);border-radius:999px;padding:3px 11px}
 .st.at_zone{color:var(--amber-ink);background:var(--amber-bg)} .st.triggered{color:#00140C;background:var(--buy)} .st.invalid{color:var(--sell)}
 .state .when{margin-left:auto;font-size:12.5px;white-space:nowrap}
@@ -103,6 +114,14 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .slide.cur .meter u{width:var(--w)}
 .meter em{position:absolute;top:-4px;bottom:-4px;left:70%;width:2px;border-radius:1px;background:#4A5261}
 .slide.cur .conf{animation:rise .5s cubic-bezier(.2,.8,.2,1) .46s both}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 10px;margin:0;list-style:none}
+.chips li{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 8px;border-radius:14px;font-size:13px;font-weight:600;white-space:nowrap}
+.chips li svg{width:14px;height:14px;flex:none}
+.chips .ok{background:rgba(31,201,142,.15);color:var(--ink)} .chips .ok svg{color:var(--buy)} .chips .ok small{font-size:12px;font-weight:600;color:var(--buy)}
+.chips .no{box-shadow:inset 0 0 0 1px var(--line);color:var(--mute);font-weight:500}
+.slide.cur .chips li{animation:pop .42s cubic-bezier(.2,.9,.3,1.2) calc(.55s + var(--i)*.06s) both}
+@keyframes pop{from{opacity:0;transform:scale(.8) translateY(6px)}to{opacity:1;transform:none}}
 .dots{display:flex;justify-content:center;gap:7px;padding:2px 0 12px}
 .dots i{width:7px;height:7px;border-radius:50%;background:#353B46} .dots i.on{background:var(--ink)}
 .none{margin:auto;padding:40px 28px;text-align:center;color:var(--mute)}
@@ -168,7 +187,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-11.9';
+const BUILD = '2026-11-11.11';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -176,6 +195,25 @@ const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocale
 const safeChart = c => (typeof c === 'string' && /^charts\/[a-z0-9_-]+\.(png|jpg)$/.test(c)) ? c : null;
 async function getJSON(url){ const r = await fetch(url + '?t=' + Date.now(), {cache:'no-store'}); if (!r.ok) throw new Error(r.status); return r.json(); }
 
+const TICK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+const RING = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="2.6 2.6"/></svg>';
+/* Trades the owner marked as taken. Kept on this device only, never sent anywhere. */
+let takenMem = null;
+function takenAll(){ if (!takenMem){ try { takenMem = JSON.parse(store.get('taken', '{}')) || {}; } catch (e) { takenMem = {}; } } return takenMem; }
+const takenKey = pair => ((feed && feed.week && feed.week.label) || '') + '|' + pair;
+function markTaken(){
+  const all = takenAll();
+  document.querySelectorAll('.took').forEach(b => { const at = all[takenKey(b.dataset.took)]; b.classList.toggle('on', !!at); b.setAttribute('aria-pressed', at ? 'true' : 'false');
+    b.querySelector('span').textContent = at ? 'Trade taken, ' + new Date(at).toLocaleDateString([], {weekday:'short', day:'numeric', month:'short'}) : 'Mark trade as taken'; });
+  document.querySelectorAll('.row[data-open]').forEach(r => { const k = r.querySelector('.tk'); if (k) k.hidden = !all[takenKey(r.dataset.open)]; });
+}
+function toggleTaken(pair){ const all = takenAll(), k = takenKey(pair); if (all[k]) delete all[k]; else all[k] = Date.now(); store.set('taken', JSON.stringify(all)); markTaken(); }
+function chips(s) {
+  const have = Array.isArray(s.confluences) ? s.confluences : [], need = Array.isArray(s.pending) ? s.pending : [];
+  if (!have.length && !need.length) return '';
+  let i = 0;
+  return `<ul class="chips" aria-label="Confluences">${have.map(c => `<li class="ok" style="--i:${i++}">${TICK}<span class="sr">Have: </span>${esc(c[0])} <small>+${Number(c[1]) || 0}</small></li>`).join('')}${need.map(n => `<li class="no" style="--i:${i++}">${RING}<span class="sr">Still needed: </span>${esc(n)}</li>`).join('')}</ul>`;
+}
 function slide(s){
   const side = s.side === 'buy' ? 'buy' : 'sell';
   let st = STATUS[s.status] ? s.status : 'waiting', dist = '';
@@ -192,8 +230,10 @@ function slide(s){
       <div class="lv"><span>Entry</span><b>${px(s.pair, s.entry)}</b></div>
       <div class="lv target"><span>Target</span><b>${px(s.pair, s.target)}${s.rr ? `<small>1:${esc(s.rr)}</small>` : ''}</b></div>
     </div>
-    ${typeof s.score === 'number' ? `<div class="conf" title="${esc((s.score_parts || []).join(', '))}"><span>Confluence</span><b>${Math.round(s.score)}%</b><span class="meter" role="img" aria-label="Confluence ${Math.round(s.score)} percent; 70 is the minimum grade"><u style="--w:${Math.min(100, Math.max(0, s.score))}%"></u><em></em></span></div>` : ''}
+    ${typeof s.score === 'number' ? `<div class="conf"><span>Confluence</span><b>${Math.round(s.score)}%</b><span class="meter" role="img" aria-label="Confluence ${Math.round(s.score)} percent; 70 is the minimum grade"><u style="--w:${Math.min(100, Math.max(0, s.score))}%"></u><em></em></span></div>` : ''}
+    ${chips(s)}
     <div class="state"><span class="st ${st}">${STATUS[st]}</span>${dist ? `<span>${dist}</span>` : ''}${s.shot_at ? `<span class="when">Chart from ${esc(when(s.shot_at))}</span>` : ''}</div>
+    <button class="took" data-took="${esc(s.pair)}" aria-pressed="false"><svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="1" d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mark trade as taken</span></button>
   </article>`;
 }
 function draw(){
@@ -201,11 +241,12 @@ function draw(){
     .sort((a,b) => (RANK[a.status] ?? 2) - (RANK[b.status] ?? 2) || (a.order ?? 99) - (b.order ?? 99));
   const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
   const list = trades.length ? trades.map((s, i) => { const hot = s.status === 'triggered' || s.status === 'at_zone' || (typeof s.price === 'number' && typeof s.zone_lo === 'number' && s.price >= s.zone_lo && s.price <= s.zone_hi);
-      return `<button class="row" style="--i:${i}" data-open="${esc(s.pair)}"><span class="ico" data-pair="${esc(s.pair)}"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M9 8v20M18 5v24M27 10v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="6" y="13" width="6" height="10" rx="1.5" fill="currentColor"/><rect x="15" y="10" width="6" height="12" rx="1.5" fill="currentColor"/><rect x="24" y="14" width="6" height="9" rx="1.5" fill="currentColor"/></svg></span><span class="nm">${esc(s.pair)}</span>${typeof s.score === 'number' ? `<span class="pct">${Math.round(s.score)}%</span>` : ''}${hot ? '<i class="live" title="Price is at the zone"></i>' : ''}${chev}</button>`; }).join('') : `<div class="none">No pairs this week yet. They appear here after the weekly analysis.</div>`;
+      return `<button class="row" style="--i:${i}" data-open="${esc(s.pair)}"><span class="ico" data-pair="${esc(s.pair)}"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M9 8v20M18 5v24M27 10v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="6" y="13" width="6" height="10" rx="1.5" fill="currentColor"/><rect x="15" y="10" width="6" height="12" rx="1.5" fill="currentColor"/><rect x="24" y="14" width="6" height="9" rx="1.5" fill="currentColor"/></svg></span><span class="nm">${esc(s.pair)}</span><span class="tk" hidden>${TICK}<b>Taken</b></span>${typeof s.score === 'number' ? `<span class="pct">${Math.round(s.score)}%</span>` : ''}${hot ? '<i class="live" title="Price is at the zone"></i>' : ''}${chev}</button>`; }).join('') : `<div class="none">No pairs this week yet. They appear here after the weekly analysis.</div>`;
   if (list !== shownHome){ $('#rows').innerHTML = shownHome = list; sparks(); }
   $('#week').textContent = (feed.week && feed.week.label) || 'This week';
   const html = trades.map(slide).join('');
-  if (html !== shown){ const deck = $('#deck'), x = deck.scrollLeft; deck.innerHTML = shown = html; deck.scrollLeft = x; }
+  if (html !== shown){ const deck = $('#deck'), x = deck.scrollLeft; deck.innerHTML = shown = html; deck.scrollLeft = x; if (view) deck.querySelectorAll('.slide').forEach(el => el.classList.toggle('cur', el.dataset.pair === view)); }
+  markTaken();
   if (view && !trades.some(s => s.pair === view)) show(null);
   $('#dots').innerHTML = trades.length > 1 ? trades.map(() => '<i></i>').join('') : ''; dots();
   const al = (feed.alerts || []).slice(0, 25);
@@ -235,7 +276,8 @@ function show(pair){
   $('#app').classList.toggle('open', !!view);
   $('#detail').setAttribute('aria-hidden', view ? 'false' : 'true');
 }
-function dots(){ const deck = $('#deck'), i = Math.round(deck.scrollLeft / Math.max(1, deck.clientWidth)); document.querySelectorAll('#dots i').forEach((d, k) => d.classList.toggle('on', k === i)); }
+function dots(){ const deck = $('#deck'), i = Math.round(deck.scrollLeft / Math.max(1, deck.clientWidth)); document.querySelectorAll('#dots i').forEach((d, k) => d.classList.toggle('on', k === i));
+  const el = deck.children[i]; if (view && el && el.dataset.pair !== view){ view = el.dataset.pair; [...deck.children].forEach(x => x.classList.toggle('cur', x === el)); } }
 $('#deck').addEventListener('scroll', () => requestAnimationFrame(dots), {passive:true});
 async function update(force){
   try { const v = await getJSON('version.json'); if (force || (v && v.build && v.build !== BUILD)) location.replace('./?v=' + encodeURIComponent((v && v.build) || Date.now())); }
@@ -258,6 +300,7 @@ document.addEventListener('click', e => {
   if (t.id === 'viewClose'){ $('#view').hidden = true; return; }
   const open = t.closest('[data-open]'); if (open){ show(open.dataset.open); return; }
   if (t.closest('[data-back]')){ show(null); return; }
+  const tk = t.closest('[data-took]'); if (tk){ toggleTaken(tk.dataset.took); return; }
   const row = t.closest('.a'); if (row){ row.classList.toggle('open'); return; }
   if (t.closest('#bell')){ $('#sheet').hidden = false; const a = feed?.alerts?.[0]; if (a) store.set('seen', Date.parse(a.at)); $('#bell').classList.remove('new'); return; }
   if (t.id === 'refresh'){ t.textContent = 'Refreshing'; update(true); return; }
