@@ -183,32 +183,32 @@
   {
    "pair": "CADJPY",
    "side": "sell",
-   "status": "at_zone",
+   "status": "triggered",
    "order": 2,
    "weekly": "bearish",
    "daily": "bearish",
    "h4": "bearish",
    "zone_lo": 112.2,
    "zone_hi": 112.58,
-   "zone_note": "3 daily touches",
+   "zone_note": "3 daily touches; reached 112.33 on 12 Nov",
    "targets": [
-    111.4,
-    110.85
+    111.89,
+    110.71
    ],
    "invalid_level": 113.34,
    "invalid_note": "4H close above",
    "price": 112.08663,
    "price_at": "2026-11-12T12:34:25Z",
-   "step": 1,
+   "step": 3,
    "chart": "charts/cadjpy.jpg",
-   "note": "At the daily zone. On bodies: weekly lower highs 116.58, 116.26, 115.49; the daily turned down on Monday's close below 111.92; the 4H lower high is the 112.25 close. Still needs the 1H shift of structure and an entry candle.",
+   "note": "Re-checked on bodies 12 Nov, 11:10 PM. The 1H turned down at the zone on 6 Nov (close 112.31 below 112.33) and is still down: no 1H or 30m body has closed above the 112.25 lower high. Entry candles: 1H evening star on 11 Nov and a 1H bearish engulfing at 10:30 PM on 12 Nov from 112.25 (30m engulfed 5 bodies). Price 112.06 has already dropped below the zone and is near the daily low 111.86, so selling here is under 1:2. 1:2 needs a pullback to about 112.53 with the stop 15 pips above the 6 Nov swing wick 112.66. A 1H body close above 112.25 cancels the entry signals.",
    "shot_at": "2026-11-10T20:52:00Z",
-   "entry": 112.35,
-   "stop": 112.7,
-   "target": 111.4,
-   "rr": 2.7,
-   "score": 75,
-   "score_at": "2026-11-11T19:26:08Z",
+   "entry": 112.53,
+   "stop": 112.81,
+   "target": 111.89,
+   "rr": 2.3,
+   "score": 90,
+   "score_at": "2026-11-12T17:38:48Z",
    "charts": [
     {
      "tf": "W",
@@ -261,7 +261,7 @@
      "tf": "W",
      "name": "Previous structure rejection",
      "pts": 10,
-     "ok": true
+     "ok": false
     },
     {
      "tf": "W",
@@ -316,7 +316,7 @@
      "tf": "4H",
      "name": "Touching EMA",
      "pts": 5,
-     "ok": false
+     "ok": true
     },
     {
      "tf": "4H",
@@ -346,13 +346,13 @@
      "tf": "1H",
      "name": "Shift of structure",
      "pts": 10,
-     "ok": false
+     "ok": true
     },
     {
      "tf": "1H",
-     "name": "Engulfing",
+     "name": "Engulfing / evening star",
      "pts": 10,
-     "ok": false
+     "ok": true
     }
    ]
   },

@@ -255,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-12.5';
+const BUILD = '2026-11-12.6';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -480,7 +480,7 @@ How the strategy scores a setup (percent). These are the boxes of the "Set & For
 - Weekly: in favor 10; at or rejected an area of interest (AOI) 10; touching the 50 EMA 5; candlestick rejection 10; rejection from a previous structure point 10; pattern 10.
 - Daily: the same six boxes with the same points.
 - 4H: in favor 10; touching the EMA 5; candlestick rejection 10; rejection from a previous structure point 10; pattern 10. There is no 4H AOI box.
-- Entry timeframes (2H, 1H, 30m): round psychological level 5; shift of structure 10, and it is a must; engulfing pattern 10. A morning star or evening star after the shift of structure also counts as the entry candle.
+- Entry timeframes (2H, 1H, 30m): round psychological level 5; shift of structure 10, and it is a must; engulfing pattern 10. A closed evening star (sell) or morning star (buy) counts as the entry candle, the same as an engulfing.
 - The trader's shift rule: the shift of structure box is unticked ONLY while the entry timeframe trend is opposite to the trade. If the entry timeframe already shifted into the trade direction at the AOI earlier and has not shifted back since (no body close beyond its lower high for a sell, or its higher low for a buy), the shift counts: tick it and say where and when it happened. After that, a closed engulfing, evening star or morning star at the AOI is the entry signal.
 - The total is a plain sum and can pass 100. 70 is the minimum grade; 80, 90 and 100 or more are better. A grade is not a win rate.
 - Nothing beyond the "in favor" boxes counts until price is at a Weekly or Daily AOI. A rejection needs a closed candle with a clear wick into the level and the body closing away from it; look at the last one or two closed candles, and an ordinary candle is not a rejection. Count only what is true now.
