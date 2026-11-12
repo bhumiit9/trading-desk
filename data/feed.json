@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-12T12:34:25Z",
+ "updated": "2026-11-12T20:24:51Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -21,8 +21,8 @@
    ],
    "invalid_level": 2.0155,
    "invalid_note": "4H close above",
-   "price": 1.99393,
-   "price_at": "2026-11-12T12:34:25Z",
+   "price": 1.99372,
+   "price_at": "2026-11-12T20:24:51Z",
    "step": 0,
    "chart": "charts/eurnzd.jpg",
    "note": "Best of the four. Monday's daily candle was a bearish engulfing from the zone and the 4H turned bearish on 10 Nov. Needs a pullback into the zone first.",
@@ -197,8 +197,8 @@
    ],
    "invalid_level": 113.34,
    "invalid_note": "4H close above",
-   "price": 112.08663,
-   "price_at": "2026-11-12T12:34:25Z",
+   "price": 112.10755,
+   "price_at": "2026-11-12T20:24:51Z",
    "step": 3,
    "chart": "charts/cadjpy.jpg",
    "note": "Re-checked on bodies 12 Nov, 11:10 PM. The 1H turned down at the zone on 6 Nov (close 112.31 below 112.33) and is still down: no 1H or 30m body has closed above the 112.25 lower high. Entry candles: 1H evening star on 11 Nov and a 1H bearish engulfing at 10:30 PM on 12 Nov from 112.25 (30m engulfed 5 bodies). Price 112.06 has already dropped below the zone and is near the daily low 111.86, so selling here is under 1:2. 1:2 needs a pullback to about 112.53 with the stop 15 pips above the 6 Nov swing wick 112.66. A 1H body close above 112.25 cancels the entry signals.",
@@ -373,8 +373,8 @@
    ],
    "invalid_level": 213.7,
    "invalid_note": "4H close above",
-   "price": 211.81808,
-   "price_at": "2026-11-12T12:34:25Z",
+   "price": 211.55729,
+   "price_at": "2026-11-12T20:24:51Z",
    "step": 0,
    "chart": "charts/gbpjpy.jpg",
    "note": "Support at 211.15-211.80 sits just below, so the first target is the top of that zone.",
@@ -549,8 +549,8 @@
    ],
    "invalid_level": 1.9229,
    "invalid_note": "4H close below",
-   "price": 1.94287,
-   "price_at": "2026-11-12T12:34:25Z",
+   "price": 1.94489,
+   "price_at": "2026-11-12T20:24:51Z",
    "step": 0,
    "chart": "charts/gbpaud.jpg",
    "note": "Weekly and daily bullish. The 4H is pulling back toward the buy zone, so the 4H trend points are not counted yet.",
@@ -789,8 +789,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.99393,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.99372,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "CADJPY",
@@ -859,8 +859,8 @@
    "alerted": {
     "z6": "2026-11-11"
    },
-   "price": 112.08663,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 112.10755,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "GBPJPY",
@@ -908,12 +908,14 @@
      "hi": 217.637
     }
    ],
-   "inside": [],
+   "inside": [
+    "z5"
+   ],
    "alerted": {
-    "z5": "2026-11-12"
+    "z5": "2026-11-13"
    },
-   "price": 211.81808,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 211.55729,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "GBPAUD",
@@ -988,8 +990,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.94287,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.94489,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "EURUSD",
@@ -1044,8 +1046,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.1086,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.10568,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "NZDUSD",
@@ -1110,8 +1112,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 0.55603,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 0.55465,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "GBPUSD",
@@ -1163,8 +1165,8 @@
    "alerted": {
     "z2": "2026-11-12"
    },
-   "price": 1.3265,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.32364,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "AUDNZD",
@@ -1229,8 +1231,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.22772,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.22706,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "EURCAD",
@@ -1285,8 +1287,8 @@
    ],
    "inside": [],
    "alerted": {},
-   "price": 1.57977,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.57637,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "GBPCHF",
@@ -1360,15 +1362,14 @@
     }
    ],
    "inside": [
-    "z11",
     "z12"
    ],
    "alerted": {
     "z11": "2026-11-12",
     "z12": "2026-11-11"
    },
-   "price": 1.10416,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.10557,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "EURGBP",
@@ -1377,8 +1378,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 0.83597,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 0.83528,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "EURAUD",
@@ -1387,8 +1388,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 1.62399,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.62467,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "GBPNZD",
@@ -1397,8 +1398,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 2.38529,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 2.38632,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "NZDCAD",
@@ -1407,8 +1408,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 0.79224,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 0.79082,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "GBPCAD",
@@ -1417,8 +1418,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 1.88987,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.88719,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "AUDCHF",
@@ -1427,8 +1428,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 0.5683,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 0.56838,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "AUDUSD",
@@ -1437,8 +1438,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 0.6826,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 0.6806,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "NZDJPY",
@@ -1447,8 +1448,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 88.7944,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 88.65289,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "USDCHF",
@@ -1457,8 +1458,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 0.83263,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 0.83522,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "EURJPY",
@@ -1467,8 +1468,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 177.02959,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 176.72322,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "AUDCAD",
@@ -1477,8 +1478,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 0.97266,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 0.97031,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "USDCAD",
@@ -1487,8 +1488,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 1.42494,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 1.4256,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "USDJPY",
@@ -1497,8 +1498,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 159.70814,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 159.83057,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "AUDJPY",
@@ -1507,8 +1508,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 109.01816,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 108.78002,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "CHFJPY",
@@ -1517,8 +1518,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 191.81064,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 191.37012,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "NZDCHF",
@@ -1527,8 +1528,8 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 0.46288,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 0.46327,
+   "checked_at": "2026-11-12T20:24:51Z"
   },
   {
    "pair": "EURCHF",
@@ -1537,11 +1538,16 @@
    "zones": [],
    "inside": [],
    "alerted": {},
-   "price": 0.92295,
-   "checked_at": "2026-11-12T12:34:25Z"
+   "price": 0.92347,
+   "checked_at": "2026-11-12T20:24:51Z"
   }
  ],
  "alerts": [
+  {
+   "at": "2026-11-12T20:24:51Z",
+   "pair": "GBPJPY",
+   "text": "Price came down into your AOI 211.145-211.802 (now 211.557). On the plan as a sell, but this is not the plan's zone (212.700-213.200). Entry window is closed now."
+  },
   {
    "at": "2026-11-12T12:34:25Z",
    "pair": "GBPCHF",
