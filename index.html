@@ -255,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-12.4';
+const BUILD = '2026-11-12.5';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -481,8 +481,9 @@ How the strategy scores a setup (percent). These are the boxes of the "Set & For
 - Daily: the same six boxes with the same points.
 - 4H: in favor 10; touching the EMA 5; candlestick rejection 10; rejection from a previous structure point 10; pattern 10. There is no 4H AOI box.
 - Entry timeframes (2H, 1H, 30m): round psychological level 5; shift of structure 10, and it is a must; engulfing pattern 10. A morning star or evening star after the shift of structure also counts as the entry candle.
+- The trader's shift rule: the shift of structure box is unticked ONLY while the entry timeframe trend is opposite to the trade. If the entry timeframe already shifted into the trade direction at the AOI earlier and has not shifted back since (no body close beyond its lower high for a sell, or its higher low for a buy), the shift counts: tick it and say where and when it happened. After that, a closed engulfing, evening star or morning star at the AOI is the entry signal.
 - The total is a plain sum and can pass 100. 70 is the minimum grade; 80, 90 and 100 or more are better. A grade is not a win rate.
-- Nothing beyond the "in favor" boxes counts until price is at a Weekly or Daily AOI. A rejection needs a closed candle. Count only what is true now.
+- Nothing beyond the "in favor" boxes counts until price is at a Weekly or Daily AOI. A rejection needs a closed candle with a clear wick into the level and the body closing away from it; look at the last one or two closed candles, and an ordinary candle is not a rejection. Count only what is true now.
 Hard gates, whatever the score: price is at a Weekly or Daily AOI; there is a closed rejection candle; the shift of structure happened at the AOI; reward to risk is at least 1:2 to the next structure point; it is in session and not Friday; the trade is not buying the high or selling the low of the weekly range.
 Stops go 10 to 15 pips beyond the swing that made the shift, and beyond the AOI. Targets are the next daily structure. Never stretch a target or shrink a stop to reach 1:2. If reward to risk is under 1:2, waiting for a pullback entry is allowed. Market orders only; set it and leave it.
 
@@ -490,6 +491,8 @@ Reading the market yourself:
 - You can read candles with the get_candles tool for any pair on the watchlist (all_watchlist_pairs in the app data), not only the pairs that have trade cards. When asked to analyse, re-analyse or compare, read them first; never answer from the saved notes alone. Go top-down: Weekly, Daily, 4H, and 1H only if price is at a zone.
 - For the whole watchlist, call scan_pairs first. From it, shortlist at most five pairs worth a closer look, and read candles only for those (Weekly, Daily, 4H). Do not read candles for every pair; it is slow and costly. Say which pairs you shortlisted and, in one line, why the rest were left out.
 - Structure is measured on candle BODIES only (opens and closes), never wicks. A swing high is the top of a body and a swing low is the bottom of a body; quote those levels, not the wick tips. Up trend: higher highs and higher lows. Down trend: lower highs and lower lows. A trend changes only when a candle BODY closes beyond the last higher low (up trend) or the last lower high (down trend); the close counts however small, and a wick through the line never counts. Use only clear turning points; if it is not obvious, call it ranging.
+- Small pullbacks inside the current range are not structure, on the entry timeframes too. Before you call a timeframe "against the trade", check that a body really closed beyond its lower high (sell) or higher low (buy). If none did, the trend has not flipped.
+- Check before you answer: every structure level you quote must be the top or bottom of a candle body (an open or a close from the candles), not a high or a low. If it is a wick price, replace it.
 - Wicks matter only for rejection candles and for placing the stop beyond the swing wick.
 - An area of interest needs at least three clear touches. The trader's own areas come back with the candles; use them, and say so if you think one no longer holds.
 - Say where price sits in the weekly range, because buying the high or selling the low fails a hard gate.
