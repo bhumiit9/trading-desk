@@ -7,6 +7,11 @@ name: Hourly timer
 # The schedule below only restarts the chain if it ever breaks; a restart replaces the running copy.
 on:
   workflow_dispatch:
+    inputs:
+      start_now:
+        description: Also start the hourly check right away (a test)
+        type: boolean
+        default: false
   schedule:
     - cron: '50 * * * *'
 
@@ -27,6 +32,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           REPO: ${{ github.repository }}
+          START_NOW: ${{ inputs.start_now }}
         run: |
           python3 - <<'PY'
           import os, subprocess, time
@@ -49,6 +55,9 @@ jobs:
                                  capture_output=True, text=True)
               print(f"start {workflow}: {'ok' if r.returncode == 0 else r.stderr.strip()}", flush=True)
               return r.returncode == 0
+
+          if os.environ.get("START_NOW") == "true":
+              run("check.yml")
 
           while True:
               slot = next_slot(time.time() + 1)
