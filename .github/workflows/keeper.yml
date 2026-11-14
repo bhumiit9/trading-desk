@@ -1,0 +1,70 @@
+name: Hourly timer
+
+# GitHub's own schedule skips most slots on this repo, so this workflow keeps time itself.
+# Each run waits for the next slot (2 minutes after each 1H candle close: :32 past the hour,
+# 9:32 AM to 9:32 PM India time, Monday to Friday) and starts the "Hourly check" then.
+# A job can run for at most 6 hours, so before that it starts a fresh copy of itself.
+# The schedule below only restarts the chain if it ever breaks; a restart replaces the running copy.
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '50 * * * *'
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: hourly-timer
+  cancel-in-progress: true
+
+jobs:
+  keep-time:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    steps:
+      - name: Start the hourly check at each slot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, time
+          from datetime import datetime, timedelta
+          from zoneinfo import ZoneInfo
+
+          IST = ZoneInfo("Asia/Kolkata")
+          START = time.time()
+          HAND_OVER = START + 340 * 60          # start a fresh copy well before the 6-hour limit
+
+          def next_slot(after):
+              t = datetime.fromtimestamp(after, IST).replace(second=0, microsecond=0)
+              t = t.replace(minute=32) if t.minute < 32 else (t + timedelta(hours=1)).replace(minute=32)
+              while not (t.weekday() < 5 and 9 <= t.hour <= 21):
+                  t += timedelta(hours=1)
+              return t.timestamp()
+
+          def run(workflow):
+              r = subprocess.run(["gh", "workflow", "run", workflow, "--ref", "main", "--repo", os.environ["REPO"]],
+                                 capture_output=True, text=True)
+              print(f"start {workflow}: {'ok' if r.returncode == 0 else r.stderr.strip()}", flush=True)
+              return r.returncode == 0
+
+          while True:
+              slot = next_slot(time.time() + 1)
+              if slot > HAND_OVER:
+                  break
+              wait = slot - time.time()
+              print(f"next check {datetime.fromtimestamp(slot, IST):%a %d %b %H:%M} IST, in {int(wait / 60)} min", flush=True)
+              time.sleep(max(0, wait))
+              for attempt in range(3):
+                  if run("check.yml"):
+                      break
+                  time.sleep(20)
+
+          time.sleep(max(0, HAND_OVER - time.time()))
+          for attempt in range(5):
+              if run("keeper.yml"):
+                  break
+              time.sleep(30)
+          PY
