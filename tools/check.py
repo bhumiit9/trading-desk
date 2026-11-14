@@ -7,10 +7,11 @@ also written to data/outbox/ as one small JSON file; pushing a new outbox file
 to GitHub makes the "Send notifications" workflow deliver it to the phones.
 
   python3 tools/check.py need                which price bars to fetch now (symbol, interval, count)
-  python3 tools/check.py run                 zone arrivals + prices from the 1h bars in data/bars
+  python3 tools/check.py run [--now ISO]     watch the week's final list (data/week.json) on the 1h bars in data/bars:
+                                             AOI arrival and entry candle notifications (--now replays a past moment)
   python3 tools/check.py setup PAIR ...      change a watched setup (status/step/note) and notify
   python3 tools/check.py alert PAIR TEXT     log + notify a free-text note
-  python3 tools/check.py status              print where price is against every zone
+  python3 tools/check.py status              print where each final-list pair stands
 
 Bars: data/bars/OANDA_<PAIR>_<1h|4h|D>.json as written by
       python3 tools/cache_ohlcv.py --out data/bars --hours 1
@@ -20,15 +21,18 @@ Bars: data/bars/OANDA_<PAIR>_<1h|4h|D>.json as written by
 This script never places trades. It only reads prices and writes notes.
 """
 import argparse, json, os, sys, time
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone, timedelta, time as dtime
 from zoneinfo import ZoneInfo
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FEED = os.path.join(ROOT, "data", "feed.json")
 OUTBOX = os.path.join(ROOT, "data", "outbox")
 BARS = os.path.join(ROOT, "data", "bars")
+WEEK = os.path.join(ROOT, "data", "week.json")
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import entry                                    # noqa: E402  the 1H shift and entry-candle checks
 PERIOD = {"1h": 3600}
-KEEP_BARS = {"1h": 240, "4h": 200, "1d": 220, "1w": 80}   # the last three are built by fetch_prices.py for the in-app chat
+KEEP_BARS = {"1h": 500, "4h": 200, "1d": 220, "1w": 80}   # the last three are built by fetch_prices.py for the in-app chat
 SEED = {"1h": 150}
 IST = ZoneInfo("Asia/Kolkata")
 NY = ZoneInfo("America/New_York")
@@ -79,9 +83,11 @@ def entry_window_open(now):
     return h >= 23 or h < 11
 
 
-def add_alert(feed, now, pair, title, text, seq):
-    """Log to the app's notification list and queue a push."""
+def add_alert(feed, now, pair, title, text, seq, push=True):
+    """Log to the app's notification list and, unless push is False, queue a push to the phones."""
     feed.setdefault("alerts", []).insert(0, {"at": iso(now), "pair": pair, "text": text})
+    if not push:
+        return None
     os.makedirs(OUTBOX, exist_ok=True)
     name = f"{now.astimezone(timezone.utc).strftime('%Y%m%d-%H%M%S')}-{pair or 'DESK'}-{seq}.json"
     json.dump({"at": iso(now), "title": title, "body": text, "tag": f"{pair}-{seq}-{int(now.timestamp())}", "url": "./"},
@@ -183,139 +189,183 @@ def tidy_bars():
             open(fn, "w").write(txt)
 
 
+def week_start(week_of):
+    """Sunday 5 PM New York before the week's Monday: when the week's first candle opens."""
+    mon = datetime.fromisoformat(week_of).date()
+    return datetime.combine(mon - timedelta(days=1), dtime(17, 0), NY).timestamp()
+
+
+def load_week():
+    try:
+        w = json.load(open(WEEK))
+        return w if w.get("week_of") else None
+    except Exception:
+        return None
+
+
+def pip_of(pair):
+    return 0.01 if pair.endswith("JPY") else 0.0001
+
+
+def aoi_text(pair, z):
+    return f"{fp(pair, z['lo'])}-{fp(pair, z['hi'])}"
+
+
+def at_ist(ts):
+    return datetime.fromtimestamp(ts, IST).strftime("%a %H:%M") + " IST"
+
+
+def aoi_dist(pair, aois, price):
+    """Pips from price to the nearest AOI (0 inside one)."""
+    best = None
+    for z in aois:
+        d = 0 if z["lo"] <= price <= z["hi"] else min(abs(price - z["lo"]), abs(price - z["hi"]))
+        best = d if best is None else min(best, d)
+    return round((best or 0) / pip_of(pair))
+
+
+STATUS_WORDS = {"watching": "watching", "at_aoi": "at its AOI", "shift": "1H shift seen at the AOI",
+                "entry": "entry candle closed"}
+
+
 def cmd_run(a):
+    """Watch only the pairs on the week's final list (data/week.json): tell the phone when price reaches
+    one of their AOIs and when the entry shows up (a 1H shift of structure at the AOI, then a closed
+    engulfing or morning / evening star). The state the app shows is saved in feed.json under "watch"."""
     now = parse_iso(a.now) if a.now else datetime.now(timezone.utc)
+    nts = now.timestamp()
     feed = load()
     tidy_bars()
-    setups = {s["pair"]: s for s in feed.get("setups", [])}
     today = now.astimezone(IST).strftime("%Y-%m-%d")
+    week = load_week()
+    report, problems, seq = [], [], 0
     window = entry_window_open(now)
-    report, deep, problems, seq = [], [], [], 0
+    watch = feed.get("watch")
+    if not week:
+        problems.append("data/week.json has no week yet, so nothing is watched.")
+        week = {"week_of": None, "final": []}
+    if not isinstance(watch, dict) or watch.get("week_of") != week.get("week_of"):
+        watch = {"week_of": week.get("week_of"), "pairs": {}}
+    states = watch.setdefault("pairs", {})
+    ws = week_start(week["week_of"]) if week.get("week_of") else None
+    live = ws is not None and ws - 12 * 3600 <= nts < ws + 6 * 86400
+    if ws is not None and not live:
+        problems.append(f"The final list is for {week.get('label')}; it is watched only during that week.")
+    final = week.get("final", []) if live else []
 
-    for doc in feed.get("zones", []):
-        pair = doc["pair"]
-        fn = bars_file(doc["symbol"], "1h", a.bars)
-        if not os.path.exists(fn):
-            problems.append(f"{pair}: no 1h bars file ({os.path.basename(fn)})")
+    for item in final:
+        pair, side, aois = item["pair"], item["side"], item.get("aois") or []
+        key = json.dumps([side, aois], sort_keys=True)
+        s = states.get(pair)
+        if not isinstance(s, dict) or s.get("key") != key:            # new pair, or its side or AOIs changed
+            s = states[pair] = {"key": key, "sent": [], "inside": False}
+        s["side"] = side
+        fn = bars_file("OANDA:" + pair, "1h", a.bars)
+        if not os.path.exists(fn) or not aois:
+            problems.append(f"{pair}: {'no AOIs on the final list' if not aois else 'no 1h candles yet (' + os.path.basename(fn) + ')'}")
             continue
-        b = json.load(open(fn))
-        if not b.get("t"):
-            problems.append(f"{pair}: empty bars")
+        b = entry.trading_bars(json.load(open(fn)))
+        if a.now:                                                    # replay: only candles that had opened by then
+            keep = [i for i, t in enumerate(b["t"]) if t <= nts]
+            b = {k: [b[k][i] for i in keep] for k in "tohlc"}
+        if not b.get("t") or nts - b["t"][-1] > STALE_SEC:
+            problems.append(f"{pair}: the newest candle is too old, skipped")
             continue
-        if now.timestamp() - b["t"][-1] > STALE_SEC:
-            problems.append(f"{pair}: newest bar is {int((now.timestamp() - b['t'][-1]) / 3600)}h old, skipped")
-            continue
-        pip = doc["pip"]
-        checked = parse_iso(doc["checked_at"]).timestamp()
-        prev_price = doc.get("price")
-        price = b["c"][-1]
-        # bars that were still open at, or opened after, the last check
-        idx = [i for i, t in enumerate(b["t"]) if t + 3600 > checked]
-        if not idx:
-            idx = [len(b["t"]) - 1]
-        lo_seen = min(b["l"][i] for i in idx)
-        hi_seen = max(b["h"][i] for i in idx)
-        # last closed bar (the newest bar counts as closed only once its hour has passed)
-        last_closed = len(b["t"]) - 1 if b["t"][-1] + 3600 <= now.timestamp() else len(b["t"]) - 2
-        prev_inside = set(doc.get("inside", []))
-        alerted = doc.setdefault("alerted", {})
-
-        reached = [z for z in doc["zones"] if lo_seen <= z["hi"] and hi_seen >= z["lo"]]
-        new = [z for z in reached if z["id"] not in prev_inside and alerted.get(z["id"]) != today]
-
-        inside = []
-        for z in doc["zones"]:
-            contains = z["lo"] <= price <= z["hi"]
-            touched_last = last_closed >= 0 and b["l"][last_closed] <= z["hi"] and b["h"][last_closed] >= z["lo"]
-            near = (z["lo"] - KEEP_PIPS * pip) <= price <= (z["hi"] + KEEP_PIPS * pip)
-            if contains or touched_last or (z["id"] in prev_inside and near):
-                inside.append(z["id"])
-
-        s = setups.get(pair)
-        watched = s and s.get("status") in ("waiting", "at_zone", "triggered")
-        plan_reached = False
-        if watched and isinstance(s.get("zone_lo"), (int, float)):
-            plan_reached = lo_seen <= s["zone_hi"] and hi_seen >= s["zone_lo"]
-            s["price"], s["price_at"] = price, iso(now)
-
-        covered_plan = False
-        for lo, hi, ids in merge_ranges(new):
+        pip = pip_of(pair)
+        r = entry.assess(b, side, aois, pip, nts, ws,
+                         lambda t: entry_window_open(datetime.fromtimestamp(t, timezone.utc)))
+        price = r["price"]
+        checked = parse_iso(s["checked_at"]).timestamp() if s.get("checked_at") else ws
+        # did any candle since the last check reach an AOI?
+        reached = None
+        for i, t in enumerate(b["t"]):
+            if t < ws or t + 3600 <= checked:
+                continue
+            lo = min(b["l"][i], b["c"][i - 1] if i else b["l"][i])
+            hi = max(b["h"][i], b["c"][i - 1] if i else b["h"][i])
+            reached = next((z for z in aois if lo <= z["hi"] and hi >= z["lo"]), None)
+            if reached:
+                break
+        sent = s.setdefault("sent", [])
+        told = False
+        if r["early"] and r["shift"] and f"early:{r['early']['t']}" not in sent:
+            e, sh = r["early"], r["shift"]
+            cw = datetime.fromtimestamp(e["t"] + 3600, timezone.utc)
+            why = ("on Friday, when the rules take no new entries" if cw.astimezone(NY).weekday() == 4
+                   else "outside the entry window (about 11 PM to 11 AM New York)")
+            text = (f"{pair} {side}: a 1H {e['kind']} closed at {at_ist(e['t'] + 3600)} at your AOI {aoi_text(pair, e['aoi'])}, "
+                    f"after the 1H shift, but {why}, so it doesn't count as an entry. Still waiting for one inside the window.")
             seq += 1
-            if prev_price is None:
-                how = "reached"
-            elif prev_price < lo:
-                how = "came up into"
-            elif prev_price > hi:
-                how = "came down into"
-            else:
-                how = "is back in"
-            where = "" if lo <= price <= hi else " and has moved out again"
-            text = f"Price {how} your AOI {fp(pair, lo)}-{fp(pair, hi)}{where} (now {fp(pair, price)})."
-            if watched:
-                overlaps = s["zone_lo"] <= hi and s["zone_hi"] >= lo
-                if overlaps:
-                    covered_plan = True
-                    text += (f" On the plan as a {s['side']}: next it needs a 1H shift of structure at the zone, "
-                             f"then a closed engulfing.")
+            add_alert(feed, now, pair, f"{pair}: candle outside the entry window", text, seq, push=False)
+            sent.append(f"early:{e['t']}")
+            report.append(f"EARLY {pair} (in the app only): {text}")
+        if r["entry"]:
+            e, sh = r["entry"], r["shift"]
+            k = f"entry:{e['t']}"
+            if k not in sent:
+                text = (f"{pair} {side}: a 1H {e['kind']} closed at {at_ist(e['t'] + 3600)} at your AOI {aoi_text(pair, e['aoi'])}, "
+                        f"after the 1H shift (a body closed {'above' if side == 'buy' else 'below'} {fp(pair, sh['level'])} "
+                        f"at {at_ist(sh['t'] + 3600)}). The checklist's entry conditions are there; the rest of the "
+                        f"checklist and the decision are yours.")
+                seq += 1
+                add_alert(feed, now, pair, f"{pair}: entry candle closed", text, seq)
+                sent += [k, f"shift:{sh['t']}"]
+                told = True
+                report.append(f"ENTRY {pair}: {text}")
+        if r["shift"]:
+            sh = r["shift"]
+            k = f"shift:{sh['t']}"
+            if k not in sent:
+                text = (f"{pair} {side}: 1H shift of structure at your AOI {aoi_text(pair, sh['aoi'])}: a body closed "
+                        f"{'above' if side == 'buy' else 'below'} {fp(pair, sh['level'])} at {at_ist(sh['t'] + 3600)}. "
+                        f"Waiting for a closed entry candle.")
+                seq += 1
+                add_alert(feed, now, pair, f"{pair}: 1H shift at the AOI", text, seq, push=False)
+                sent.append(k)
+                report.append(f"SHIFT {pair}: {text}")
+        if reached and not s.get("inside") and f"arrive:{today}" not in sent:
+            if not told:
+                text = f"{pair} {side}: price reached your AOI {aoi_text(pair, reached)} (now {fp(pair, price)})."
+                if r["entry"]:
+                    text += f" A 1H {r['entry']['kind']} already closed there at {at_ist(r['entry']['t'] + 3600)}."
+                elif r["shift"]:
+                    text += f" The 1H shift from {at_ist(r['shift']['t'] + 3600)} is still in effect; next is a closed entry candle."
                 else:
-                    text += (f" On the plan as a {s['side']}, but this is not the plan's zone "
-                             f"({fp(pair, s['zone_lo'])}-{fp(pair, s['zone_hi'])}).")
-            elif s and s.get("note"):
-                text += f" Not on this week's plan: {s['note']} Information only."
-            else:
-                text += " Not on this week's plan. Information only."
-            if not window:
-                text += " Entry window is closed now."
-            add_alert(feed, now, pair, f"{pair} reached your AOI", text, seq)
-            for i in ids:
-                alerted[i] = today
-            report.append(f"NEW  {pair}: {text}")
+                    text += " Next on the checklist: a 1H shift of structure at the AOI, then a closed entry candle."
+                if not window:
+                    text += " The entry window is closed now (it runs about 11 PM to 11 AM New York, Sunday night to Thursday night)."
+                seq += 1
+                add_alert(feed, now, pair, f"{pair} reached your AOI", text, seq)
+                report.append(f"AOI   {pair}: {text}")
+            sent.append(f"arrive:{today}")
+        status = "entry" if r["entry"] else "shift" if r["shift"] else "at_aoi" if r["at_aoi"] else "watching"
+        s.update(status=status, price=price, price_at=iso(now), checked_at=iso(now), trend_1h=r["trend"],
+                 inside=bool(r["at_aoi"] or (reached and lo_hi_now(b, reached))), dist_pips=aoi_dist(pair, aois, price))
+        s["arrived_at"] = iso(datetime.fromtimestamp(r["arrived"]["t"], timezone.utc)) if r["arrived"] else None
+        s["shift"] = ({"at": iso(datetime.fromtimestamp(r["shift"]["t"] + 3600, timezone.utc)), "level": r["shift"]["level"]}
+                      if r["shift"] else None)
+        s["entry"] = ({"at": iso(datetime.fromtimestamp(r["entry"]["t"] + 3600, timezone.utc)), "kind": r["entry"]["kind"]}
+                      if r["entry"] else None)
+        s["sent"] = sent[-40:]
 
-        if watched and plan_reached:
-            if s.get("status") == "waiting":
-                s["status"], s["step"] = "at_zone", max(1, int(s.get("step") or 0))
-                zone_confluence(s, True, now)
-                if not covered_plan:
-                    seq += 1
-                    text = (f"Price reached the plan's {s['side']} zone {fp(pair, s['zone_lo'])}-{fp(pair, s['zone_hi'])} "
-                            f"(now {fp(pair, price)}). Next: a 1H shift of structure, then a closed engulfing.")
-                    if not window:
-                        text += " Entry window is closed now."
-                    add_alert(feed, now, pair, f"{pair} at the {s['side']} zone", text, seq)
-                    report.append(f"NEW  {pair}: {text}")
-            deep.append(f"{pair} ({s['side']}, status {s['status']}, step {s.get('step', 0)}): price is at the plan zone "
-                        f"{fp(pair, s['zone_lo'])}-{fp(pair, s['zone_hi'])}. Check the 1H/30m shift of structure and a closed "
-                        f"engulfing, then record it with: tools/check.py setup {pair} --step N [--status triggered] --alert \"...\"")
-        elif watched and s.get("status") == "at_zone" and int(s.get("step") or 0) <= 1 and not (
-                s["zone_lo"] - KEEP_PIPS * pip <= price <= s["zone_hi"] + KEEP_PIPS * pip):
-            s["status"], s["step"] = "waiting", 0
-            zone_confluence(s, False, now)
-            report.append(f"INFO {pair}: left the plan zone without a shift; back to waiting.")
-        if watched and isinstance(s.get("invalid_level"), (int, float)):
-            above = "above" in (s.get("invalid_note") or "")
-            beyond = any((b["c"][i] > s["invalid_level"]) if above else (b["c"][i] < s["invalid_level"]) for i in idx)
-            if beyond:
-                deep.append(f"{pair}: a 1H candle closed {'above' if above else 'below'} the idea-fails level "
-                            f"{fp(pair, s['invalid_level'])}. Confirm on the 4H ({s.get('invalid_note')}); if confirmed: "
-                            f"tools/check.py setup {pair} --status invalid --alert \"...\"")
+    for p in list(states):                                           # pairs taken off the final list
+        if p not in {x["pair"] for x in final}:
+            del states[p]
+    watch["checked_at"] = iso(now)
+    feed["watch"] = watch
 
-        doc["inside"], doc["price"], doc["checked_at"] = inside, price, iso(now)
-
-    # morning update: first run between 09:00 and 10:15 IST, once a day
+    # morning update: the first run between 09:00 and 10:15 IST, once a day, when the final list is watched
     t_ist = now.astimezone(IST)
     mins = t_ist.hour * 60 + t_ist.minute
-    morning = (a.morning or (9 * 60 <= mins <= 10 * 60 + 15)) and feed.get("morning_sent") != today
-    if morning:
-        ins = [d["pair"] for d in feed["zones"] if d.get("inside")]
+    if final and (a.morning or 9 * 60 <= mins <= 10 * 60 + 15) and feed.get("morning_sent") != today:
         parts = []
-        for s in sorted(setups.values(), key=lambda s: s.get("order", 99)):
-            if s.get("status") in ("waiting", "at_zone", "triggered") and isinstance(s.get("price"), (int, float)):
-                pip = 0.01 if s["pair"].endswith("JPY") else 0.0001
-                p = s["price"]
-                dist = 0 if s["zone_lo"] <= p <= s["zone_hi"] else min(abs(p - s["zone_lo"]), abs(p - s["zone_hi"])) / pip
-                parts.append(f"{s['pair']} {s['side']} " + ("at zone" if dist == 0 else f"{dist:.0f} pips from zone"))
-        text = "Plan: " + ("; ".join(parts) if parts else "no watched setups") + ". "
-        text += ("Inside your AOIs now: " + ", ".join(ins) + "." if ins else "No pair is inside one of your AOIs right now.")
+        for item in final:
+            s = states.get(item["pair"]) or {}
+            if s.get("status") in ("at_aoi", "shift", "entry"):
+                parts.append(f"{item['pair']} {item['side']} {STATUS_WORDS[s['status']]}")
+            elif isinstance(s.get("dist_pips"), (int, float)):
+                parts.append(f"{item['pair']} {item['side']} {s['dist_pips']} pips from its AOI")
+        text = "Final list: " + "; ".join(parts) + "." if parts else "Final list: no prices yet."
         seq += 1
         add_alert(feed, now, "", "Morning update", text, seq)
         feed["morning_sent"] = today
@@ -331,15 +381,12 @@ def cmd_run(a):
             except Exception:
                 pass
     save(feed, now)
-    print(f"checked {iso(now)}  entry window {'OPEN' if window else 'CLOSED'}")
+    print(f"checked {iso(now)}  entry window {'OPEN' if window else 'CLOSED'}  final list: "
+          + (", ".join(x["pair"] for x in final) or "nothing watched"))
     for line in report:
         print(line)
     if not report:
         print("NOTHING NEW")
-    if deep:
-        print("\nDEEP CHECK NEEDED:")
-        for line in deep:
-            print(" -", line)
     if problems:
         print("\nPROBLEMS:")
         for line in problems:
@@ -348,21 +395,25 @@ def cmd_run(a):
     cmd_status(a, feed)
 
 
+def lo_hi_now(b, z):
+    """Is the newest candle still touching the AOI?"""
+    return b["l"][-1] <= z["hi"] and b["h"][-1] >= z["lo"]
+
+
 def cmd_status(a, feed=None):
     feed = feed or load()
-    print("pair     price       state")
-    for doc in feed["zones"]:
-        pair, price = doc["pair"], doc.get("price")
-        if price is None:
-            continue
-        ins = [z for z in doc["zones"] if z["id"] in doc.get("inside", [])]
-        if ins:
-            st = "INSIDE " + ", ".join(f"{fp(pair, z['lo'])}-{fp(pair, z['hi'])}" for z in ins)
-        else:
-            n = nearest(doc, price)
-            st = "-" if not n else (f"{n[0]:.0f} pips {'below' if price < n[1]['lo'] else 'above'} "
-                                    f"{fp(pair, n[1]['lo'])}-{fp(pair, n[1]['hi'])}")
-        print(f"{pair:8} {fp(pair, price):>10}  {st}")
+    w = load_week() or {}
+    states = (feed.get("watch") or {}).get("pairs", {})
+    print(f"{w.get('label', 'No week')}: final list")
+    if not w.get("final"):
+        print("  (empty)")
+    for item in w.get("final", []):
+        s = states.get(item["pair"], {})
+        z = ", ".join(aoi_text(item["pair"], z) for z in item.get("aois", []))
+        p = s.get("price")
+        print(f"  {item['pair']:7} {item['side']:4} AOI {z:28} price {fp(item['pair'], p) if p else '-':>10}  "
+              f"{STATUS_WORDS.get(s.get('status'), 'not checked yet')}"
+              + (f", {s['dist_pips']} pips away" if s.get("status") == "watching" and s.get("dist_pips") is not None else ""))
 
 
 def cmd_setup(a):

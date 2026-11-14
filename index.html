@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Set & Forget Desk</title>
-<meta name="description" content="This week's trades: TradingView charts per pair, plus notifications.">
+<meta name="description" content="This week's pairs: your picks, Claude's picks and the final list, with charts and notifications.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="icons/icon-192.png">
@@ -215,13 +215,34 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .quiet{color:var(--mute);font-size:14.5px;padding:6px 0}
 .foot{font-size:12.5px;color:var(--mute);line-height:1.45}
 :focus-visible{outline:2px solid var(--link);outline-offset:2px}
+/* the week's lists */
+.seg{position:relative;display:grid;grid-template-columns:repeat(3,1fr);flex:none;margin:0 0 12px;padding:3px;border-radius:13px;background:var(--surf);animation:rise .5s cubic-bezier(.2,.8,.2,1) .05s both}
+.seg button{height:36px;border-radius:10px;font-size:14.5px;font-weight:600;color:var(--mute);white-space:nowrap;transition:background .2s,color .2s}
+.seg button[aria-selected="true"]{background:#2B3140;color:var(--ink)}
+.seg button small{font-size:12px;font-weight:600;margin-left:6px;color:var(--mute)}
+.row .nm{display:flex;flex-direction:column;gap:2px}
+.row .nl{display:flex;align-items:center;gap:8px}
+.row .nl .tag{font-size:12px;padding:2px 7px}
+.row .nm small{font-size:13.5px;font-weight:500;letter-spacing:0;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.row .nm small.hot{color:var(--amber-ink)}
+.lname{font-size:13px;font-weight:600;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tfs.four{grid-template-columns:repeat(4,1fr)}
+.aois{list-style:none;margin:0;padding:10px 18px 4px;display:flex;flex-direction:column;gap:6px}
+.aois li{display:flex;align-items:center;gap:9px;font-size:15px}
+.aois i{width:14px;height:10px;flex:none;border-radius:2px;background:rgba(0,172,193,.18);box-shadow:inset 0 1.5px 0 #2962FF,inset 0 -1.5px 0 #2962FF}
+.aois b{font-weight:700;letter-spacing:-.01em} .aois span{color:var(--mute);font-size:13.5px}
+.st.at_aoi,.st.shift{color:var(--amber-ink);background:var(--amber-bg)} .st.entry{color:#00140C;background:var(--buy)}
+.evs{list-style:none;margin:0;padding:0 18px 10px;display:flex;flex-direction:column;gap:5px;font-size:14px}
+.evs li{display:flex;justify-content:space-between;gap:10px} .evs time{color:var(--mute);white-space:nowrap}
+.wnote{margin:0 18px 12px;font-size:14px;line-height:1.4;color:var(--mute)}
+.pic{position:relative} .shot:not([src]){visibility:hidden}
 </style>
 </head>
 <body>
 <div class="app" id="app">
   <button class="bell" id="bell" aria-label="Notifications"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 0 1 12 0v5l2 2H4z"/><path d="M10 21h4"/></svg><i></i></button>
   <div class="stage">
-    <main class="home" id="home"><h1 class="title" id="week">This week</h1><button class="pickrow" id="pickrow" hidden><span class="pk" id="pickstar"></span><span class="pt"><b></b><small></small></span></button><div class="rows" id="rows"><div class="none wait" role="status" aria-label="Loading this week's pairs"><div class="loader"><i></i><i></i><i></i></div></div></div><button class="askbar" id="askHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg><span>Ask about your watchlist</span></button></main>
+    <main class="home" id="home"><h1 class="title" id="week">This week</h1><div class="seg" id="seg" role="tablist" aria-label="List" hidden></div><button class="pickrow" id="pickrow" hidden><span class="pk" id="pickstar"></span><span class="pt"><b></b><small></small></span></button><div class="rows" id="rows"><div class="none wait" role="status" aria-label="Loading this week's pairs"><div class="loader"><i></i><i></i><i></i></div></div></div><button class="askbar" id="askHome"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg><span>Ask about your watchlist</span></button></main>
     <section class="detail" id="detail" aria-hidden="true">
       <div class="deck" id="deck"></div>
       <nav class="dots" id="dots" aria-hidden="true"></nav>
@@ -255,12 +276,11 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-14.1';
+const BUILD = '2026-11-14.2';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
 const when = iso => { const d = new Date(iso); return isNaN(d) ? '' : d.toLocaleString([], {weekday:'short', hour:'numeric', minute:'2-digit'}); };
-const safeChart = c => (typeof c === 'string' && /^charts\/[a-z0-9_-]+\.(png|jpg)$/.test(c)) ? c : null;
 async function getJSON(url){ const r = await fetch(url + '?t=' + Date.now(), {cache:'no-store'}); if (!r.ok) throw new Error(r.status); return r.json(); }
 
 const TICK = '<svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
@@ -269,7 +289,7 @@ const RING = '<svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" 
 /* Trades the owner marked as taken. Kept on this device only, never sent anywhere. */
 let takenMem = null;
 function takenAll(){ if (!takenMem){ try { takenMem = JSON.parse(store.get('taken', '{}')) || {}; } catch (e) { takenMem = {}; } } return takenMem; }
-const takenKey = pair => ((feed && feed.week && feed.week.label) || '') + '|' + pair;
+const takenKey = pair => weekLabel() + '|' + pair;
 function markTaken(){
   const all = takenAll();
   document.querySelectorAll('.took').forEach(b => { const at = all[takenKey(b.dataset.took)]; b.classList.toggle('on', !!at); b.setAttribute('aria-pressed', at ? 'true' : 'false');
@@ -277,77 +297,145 @@ function markTaken(){
   document.querySelectorAll('.row[data-open]').forEach(r => { const k = r.querySelector('.tk'); if (k) k.hidden = !all[takenKey(r.dataset.open)]; });
 }
 function toggleTaken(pair){ const all = takenAll(), k = takenKey(pair); if (all[k]) delete all[k]; else all[k] = Date.now(); store.set('taken', JSON.stringify(all)); markTaken(); }
-const TFS = ['W','D','4H','1H','30m'], TFNAME = { W:'Weekly', D:'Daily', '4H':'4H', '1H':'1H', '30m':'30m' };
-const ENTRY_TFS = ['1H','30m'];   // the checklist's entry boxes (2H, 1H, 30m) show on both of these tabs
+const TFS = ['W','D','4H','1H'], TFNAME = { W:'Weekly', D:'Daily', '4H':'4H', '1H':'1H' };
 const tfSel = {};
-function confOf(s){ return Array.isArray(s.conf) ? s.conf.filter(c => c && TFS.includes(c.tf)) : []; }
-/* Fresh TradingView screenshots are published to the `shots` branch; shots.json there lists them. */
-const SHOTS = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/shots/';
-let shots = null;
-function chartsOf(s){ const out = {}; (Array.isArray(s.charts) ? s.charts : []).forEach(c => { const src = c && safeChart(c.src); if (src && TFS.includes(c.tf)) out[c.tf] = [src, c.at || '']; });
-  const live = shots && shots.shots && shots.shots[s.pair];
-  if (live) TFS.forEach(tf => { const c = live[tf]; if (c && /^[a-z0-9_-]+\.(png|jpg)$/.test(c.file || '') && (!out[tf] || !(Date.parse(c.at) < Date.parse(out[tf][1])))) out[tf] = [SHOTS + c.file, c.at || '']; });
-  if (!Object.keys(out).length && safeChart(s.chart)) out['4H'] = [safeChart(s.chart), s.shot_at || '']; return out; }
-function chips(s) {
-  const all = confOf(s); if (!all.length) return '';
-  let i = 0;
-  return `<ul class="chips" aria-label="Confluences on this timeframe">${all.map(c => c.ok
-    ? `<li class="ok" data-tf="${esc(c.tf)}" style="--i:${i++}">${TICK}<span class="sr">Have: </span>${esc(c.name)} <small>+${Number(c.pts) || 0}</small></li>`
-    : `<li class="no" data-tf="${esc(c.tf)}" style="--i:${i++}">${RING}<span class="sr">Not yet: </span>${esc(c.name)}${Number(c.pts) ? ` <small>${Number(c.pts)}</small>` : ''}</li>`).join('')}</ul>`;
+/* ---------- the week's lists: your picks, Claude's picks and the final list (data/week.json) ----------
+   Only the final list is watched by the hourly check; its state comes from feed.json ("watch"). */
+let week = null, list = store.get('list', '');
+const LISTS = [['final', 'Final'], ['yours', 'Yours'], ['claude', 'Claude’s']];
+const LISTNAME = { final:'Final list', yours:'Your pick', claude:'Claude’s pick' };
+const WSTATUS = { watching:'Watching', at_aoi:'At the AOI', shift:'1H shift seen', entry:'Entry candle closed' };
+const weekLabel = () => (week && week.label) || (feed && feed.week && feed.week.label) || '';
+const fx = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 5) : '–';
+const aoiTxt = (p, z) => fx(p, z.lo) + '–' + fx(p, z.hi);
+const AOITF = { W:'Weekly AOI', D:'Daily AOI', 'W+D':'Weekly and daily AOI' };
+function items(k){ return week && Array.isArray(week[k]) ? week[k].filter(x => x && /^[A-Z]{6}$/.test(x.pair) && Array.isArray(x.aois) && x.aois.every(z => typeof z.lo === 'number' && typeof z.hi === 'number')) : []; }
+function curList(){ if (LISTS.some(([k]) => k === list) && (items(list).length || !LISTS.some(([k]) => items(k).length))) return list;
+  return items('final').length ? 'final' : items('claude').length ? 'claude' : items('yours').length ? 'yours' : 'final'; }
+function wstate(pair){ const w = feed && feed.watch; return (w && week && w.week_of === week.week_of && w.pairs && w.pairs[pair]) || null; }
+function itemOf(el){ return items(el.dataset.list).find(x => x.pair === el.dataset.pair); }
+function wrow(x, i, k){
+  const st = k === 'final' ? wstate(x.pair) : null, s = st && st.status, side = x.side === 'buy' ? 'buy' : 'sell';
+  const hot = s === 'at_aoi' || s === 'shift' || s === 'entry';
+  const sub = st && WSTATUS[s] ? WSTATUS[s] + (s === 'watching' && typeof st.dist_pips === 'number' ? `, ${st.dist_pips} pips from the AOI` : '') : 'AOI ' + x.aois.map(z => aoiTxt(x.pair, z)).join(', ');
+  const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
+  return `<button class="row" style="--i:${i}" data-open="${esc(x.pair)}"><span class="ico" data-pair="${esc(x.pair)}"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M9 8v20M18 5v24M27 10v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="6" y="13" width="6" height="10" rx="1.5" fill="currentColor"/><rect x="15" y="10" width="6" height="12" rx="1.5" fill="currentColor"/><rect x="24" y="14" width="6" height="9" rx="1.5" fill="currentColor"/></svg></span><span class="nm"><span class="nl">${esc(x.pair)}<span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span></span><small class="${hot ? 'hot' : ''}">${esc(sub)}</small></span><span class="pk" hidden role="img" aria-label="Pick of the week">${STAR}</span><span class="tk" hidden>${TICK}<b>Taken</b></span>${hot ? '<i class="live" title="Price is at the AOI"></i>' : ''}${chev}</button>`;
 }
-function tabs(s){
-  const ch = chartsOf(s), have = TFS.filter(t => ch[t]); if (have.length < 2) return '';
-  const pts = t => confOf(s).filter(c => c.tf === t && c.ok).reduce((a, c) => a + (Number(c.pts) || 0), 0);
-  return `<div class="tfs" role="tablist" aria-label="Timeframe">${TFS.map(t => `<button role="tab" data-tf="${t}" aria-selected="false"${ch[t] ? '' : ' disabled'}>${TFNAME[t]}${pts(t) ? `<small>+${pts(t)}</small>` : ''}</button>`).join('')}</div>`;
-}
-/* Show one timeframe in a trade: its chart and its confluences. */
-function setTF(el, tf, animate){
-  let ch = {}; try { ch = JSON.parse(el.dataset.charts || '{}'); } catch (e) {}
-  if (!ch[tf]) tf = ch['4H'] ? '4H' : Object.keys(ch)[0]; if (!tf) return;
-  tfSel[el.dataset.pair] = tf; el.dataset.tf = tf;
-  const bar = el.querySelector('.tfs'); if (bar){ bar.querySelectorAll('button').forEach(b => { const on = b.dataset.tf === tf; b.setAttribute('aria-selected', on ? 'true' : 'false'); if (on){ bar.style.setProperty('--x', b.offsetLeft + 'px'); bar.style.setProperty('--w', b.offsetWidth + 'px'); } }); }
-  const img = el.querySelector('.shot'), src = ch[tf][0] + (ch[tf][1] ? '?v=' + encodeURIComponent(ch[tf][1]) : '');
-  if (img && img.getAttribute('src') !== src){ img.classList.remove('swap'); img.src = src; img.alt = `${el.dataset.pair} ${TFNAME[tf]} TradingView chart`; if (animate){ void img.offsetWidth; img.classList.add('swap'); } }
-  let n = 0; if (animate) el.classList.add('quick');
-  el.querySelectorAll('.chips li').forEach(li => { li.hidden = !(li.dataset.tf === tf || (ENTRY_TFS.includes(tf) && ENTRY_TFS.includes(li.dataset.tf))); if (!li.hidden) li.style.setProperty('--i', n++); });
-  const w = el.querySelector('.when'); if (w) w.textContent = ch[tf][1] ? 'Chart from ' + when(ch[tf][1]) : '';
-}
-function slide(s){
-  const side = s.side === 'buy' ? 'buy' : 'sell';
-  let st = STATUS[s.status] ? s.status : 'waiting', dist = '';
-  if (typeof s.price === 'number' && typeof s.zone_lo === 'number'){
-    if (s.price >= s.zone_lo && s.price <= s.zone_hi){ if (st === 'waiting') st = 'at_zone'; }
-    else if (st === 'waiting') dist = Math.round(Math.min(Math.abs(s.price - s.zone_lo), Math.abs(s.price - s.zone_hi)) / (isJPY(s.pair) ? .01 : .0001)) + ' pips to zone';
-  }
-  const ch = chartsOf(s), first = ch['4H'] || Object.values(ch)[0] || ['', ''];
-  const v = first[1] ? '?v=' + encodeURIComponent(first[1]) : '';
-  return `<article class="slide" data-pair="${esc(s.pair)}" data-charts="${esc(JSON.stringify(ch))}">
-    <header class="cap"><button class="back" data-back aria-label="Back to the list of pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span><span class="pk" hidden>${STAR}Pick</span></header>
-    ${tabs(s)}
-    <div class="pic"><img class="shot" src="${first[0]}${v}" alt="${esc(s.pair)} TradingView chart" tabindex="0"></div>
-    ${typeof s.score === 'number' ? `<div class="conf"><span>Confluence</span><b>${Math.round(s.score)}%</b><span class="meter" role="img" aria-label="Confluence ${Math.round(s.score)} percent; 70 is the minimum grade"><u style="--w:${Math.min(100, Math.max(0, s.score))}%"></u><em></em></span></div>` : ''}
-    ${chips(s)}
-    <p class="pickline" hidden>${STAR}<span></span></p>
-    <div class="state"><span class="st ${st}">${STATUS[st]}</span>${dist ? `<span>${dist}</span>` : ''}<span class="when">${first[1] ? 'Chart from ' + esc(when(first[1])) : ''}</span></div>
-    <div class="acts"><button class="took" data-took="${esc(s.pair)}" aria-pressed="false"><svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="1" d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mark as taken</span></button><button class="askp" data-ask="${esc(s.pair)}" aria-label="Ask Claude about ${esc(s.pair)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg>Ask Claude</button></div>
+function wslide(x, k){
+  const st = k === 'final' ? wstate(x.pair) : null, side = x.side === 'buy' ? 'buy' : 'sell', s = st && WSTATUS[st.status] ? st.status : '';
+  const ev = [];
+  if (st && st.arrived_at) ev.push(['Price reached the AOI', st.arrived_at]);
+  if (st && st.shift) ev.push([`1H shift: a body closed ${side === 'buy' ? 'above' : 'below'} ${fx(x.pair, st.shift.level)}`, st.shift.at]);
+  if (st && st.entry) ev.push([`Entry candle: 1H ${st.entry.kind} closed`, st.entry.at]);
+  const from = k === 'final' && Array.isArray(x.from) && x.from.length ? 'Picked by ' + x.from.map(f => f === 'yours' ? 'you' : 'Claude').join(' and ') + '.' : '';
+  return `<article class="slide" data-pair="${esc(x.pair)}" data-list="${k}">
+    <header class="cap"><button class="back" data-back aria-label="Back to the list of pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pair">${esc(x.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span><span class="lname">${LISTNAME[k]}</span><span class="pk" hidden>${STAR}Pick</span></header>
+    <div class="tfs four" role="tablist" aria-label="Timeframe">${TFS.map(t => `<button role="tab" data-tf="${t}" aria-selected="false">${TFNAME[t]}</button>`).join('')}</div>
+    <div class="pic"><img class="shot" alt="${esc(x.pair)} chart" tabindex="0"></div>
+    <ul class="aois">${x.aois.map(z => `<li><i></i><b>${aoiTxt(x.pair, z)}</b><span>${esc(AOITF[z.tf] || 'AOI')}</span></li>`).join('')}</ul>
+    ${s ? `<div class="state"><span class="st ${s}">${WSTATUS[s]}</span>${s === 'watching' && typeof st.dist_pips === 'number' ? `<span>${st.dist_pips} pips from the AOI</span>` : ''}<span class="when">${st.checked_at ? 'Checked ' + esc(when(st.checked_at)) : ''}</span></div>` : ''}
+    ${ev.length ? `<ul class="evs">${ev.map(([t, at]) => `<li><span>${esc(t)}</span><time>${esc(when(at))}</time></li>`).join('')}</ul>` : ''}
+    ${x.note || from ? `<p class="wnote">${esc([x.note, from].filter(Boolean).join(' '))}</p>` : ''}
+    <div class="acts">${k === 'final' ? `<button class="took" data-took="${esc(x.pair)}" aria-pressed="false"><svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="1" d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mark as taken</span></button>` : ''}<button class="askp" data-ask="${esc(x.pair)}" aria-label="Ask Claude about ${esc(x.pair)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg>Ask Claude</button></div>
   </article>`;
 }
+/* Show one timeframe in a pair: its chart, drawn from the hourly prices with the AOIs marked. */
+async function setTF(el, tf, animate){
+  if (!TFS.includes(tf)) tf = '4H';
+  tfSel[el.dataset.pair] = tf; el.dataset.tf = tf;
+  const bar = el.querySelector('.tfs'); if (bar){ bar.querySelectorAll('button').forEach(b => { const on = b.dataset.tf === tf; b.setAttribute('aria-selected', on ? 'true' : 'false'); if (on){ bar.style.setProperty('--x', b.offsetLeft + 'px'); bar.style.setProperty('--w', b.offsetWidth + 'px'); } }); }
+  const x = itemOf(el), img = el.querySelector('.shot'); if (!x || !img) return;
+  let url; try { url = await chartURL(x.pair, tf, x.aois); } catch (e) { url = ''; }
+  if (el.dataset.tf !== tf) return;
+  if (!url){ img.removeAttribute('src'); img.alt = `The ${TFNAME[tf]} prices for ${x.pair} are not ready yet. They come with the next hourly check.`; return; }
+  if (img.getAttribute('src') !== url){ img.classList.remove('swap'); img.src = url; img.alt = `${x.pair} ${TFNAME[tf]} chart with the AOIs marked`; if (animate){ void img.offsetWidth; img.classList.add('swap'); } }
+}
+/* ---------- charts drawn in the app ----------
+   No gaps candles like the trader's TradingView layout: each candle opens at the previous close, blue up, red down,
+   black outlines. The AOIs are the light boxes with blue edges. No stop, entry or target lines. */
+const CH = { W:['1w', 70], D:['1d', 110], '4H':['4h', 110], '1H':['1h', 110] };
+const barsCache = {}, chartCache = {};
+function bars(pair, tf){
+  const k = pair + '|' + tf, c = barsCache[k]; if (c && Date.now() - c.at < 4 * 60000) return c.p;
+  const f = `data/bars/OANDA_${pair}_${CH[tf][0]}.json`, p = getJSON(f).catch(() => getJSON(RAW + f));
+  barsCache[k] = { at:Date.now(), p }; p.catch(() => { delete barsCache[k]; }); return p;
+}
+const nyDay = new Intl.DateTimeFormat('en-US', { timeZone:'America/New_York', weekday:'short' });
+const weekendQuote = t => /Sat|Sun/.test(nyDay.format(new Date((t + 7 * 3600) * 1000)));
+async function chartURL(pair, tf, aois){
+  const b = await bars(pair, tf); if (!b || !b.t || b.t.length < 5) return '';
+  const key = [pair, tf, b.fetched_at, b.t.length, JSON.stringify(aois)].join('|');
+  if (!chartCache[key]){ const keys = Object.keys(chartCache); if (keys.length > 40) delete chartCache[keys[0]]; chartCache[key] = drawChart(pair, tf, b, aois); }
+  return chartCache[key];
+}
+function niceStep(raw){ const p = Math.pow(10, Math.floor(Math.log10(raw))), m = raw / p; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * p; }
+function drawChart(pair, tf, b, aois){
+  const W = 900, H = 1080, R = 132, B = 50, T = 64, L = 6, dp = isJPY(pair) ? 3 : 5;
+  const cv = document.createElement('canvas'); cv.width = W; cv.height = H; const g = cv.getContext('2d');
+  let idx = b.t.map((t, i) => i); if (tf === '1H') idx = idx.filter(i => !weekendQuote(b.t[i]));
+  const t = [], o = [], h = [], l = [], c = [];
+  idx.forEach((i, j) => { const op = j ? b.c[idx[j - 1]] : b.o[i]; t.push(b.t[i]); o.push(op); c.push(b.c[i]); h.push(Math.max(b.h[i], op)); l.push(Math.min(b.l[i], op)); });
+  const from = Math.max(0, t.length - CH[tf][1]), n = t.length - from;
+  let lo = Math.min(...l.slice(from)), hi = Math.max(...h.slice(from)); const span = (hi - lo) || 1e-9;
+  const near = aois.filter(z => z.hi >= lo - span * .6 && z.lo <= hi + span * .6), far = aois.filter(z => !near.includes(z));
+  near.forEach(z => { lo = Math.min(lo, z.lo); hi = Math.max(hi, z.hi); });
+  const pad = (hi - lo) * .06; lo -= pad; hi += pad;
+  const X0 = L, X1 = W - R, Y0 = T, Y1 = H - B, slots = n + 5, cw = (X1 - X0) / slots;
+  const X = j => X0 + (j + .5) * cw, Y = v => Y0 + (hi - v) / (hi - lo) * (Y1 - Y0);
+  const font = (w, s) => `${w} ${s}px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif`;
+  g.fillStyle = '#FFFFFF'; g.fillRect(0, 0, W, H);
+  const step = niceStep((hi - lo) / 7), ticks = [];
+  for (let v = Math.ceil(lo / step) * step; v <= hi; v += step) ticks.push(v);
+  g.strokeStyle = '#F0F3FA'; g.lineWidth = 1.5; ticks.forEach(v => { g.beginPath(); g.moveTo(X0, Y(v)); g.lineTo(X1, Y(v)); g.stroke(); });
+  near.forEach(z => { const a = Y(z.hi), bb = Y(z.lo); g.fillStyle = 'rgba(0,172,193,.09)'; g.fillRect(X0, a, X1 - X0, bb - a);
+    g.strokeStyle = '#2962FF'; g.lineWidth = 2.4; [a, bb].forEach(y => { g.beginPath(); g.moveTo(X0, y); g.lineTo(X1, y); g.stroke(); }); });
+  const bw = Math.max(2, cw * .64);
+  for (let j = 0; j < n; j++){ const k = from + j, x = X(j), up = c[k] >= o[k];
+    g.strokeStyle = '#000'; g.lineWidth = Math.min(2, Math.max(1, cw * .16)); g.beginPath(); g.moveTo(x, Y(h[k])); g.lineTo(x, Y(l[k])); g.stroke();
+    const yt = Y(Math.max(o[k], c[k])), yb = Y(Math.min(o[k], c[k])), bh = Math.max(1.6, yb - yt);
+    g.fillStyle = up ? '#2962FF' : '#F23645'; g.fillRect(x - bw / 2, yt, bw, bh);
+    if (bw >= 4){ g.lineWidth = 1.4; g.strokeRect(x - bw / 2, yt, bw, bh); } }
+  const last = c[c.length - 1], lastUp = c[c.length - 1] >= o[o.length - 1], lc = lastUp ? '#2962FF' : '#F23645', yl = Y(last);
+  g.setLineDash([3, 5]); g.strokeStyle = lc; g.lineWidth = 2; g.beginPath(); g.moveTo(X0, yl); g.lineTo(X1, yl); g.stroke(); g.setLineDash([]);
+  g.fillStyle = '#FFFFFF'; g.fillRect(X1, 0, W - X1, H); g.strokeStyle = '#E0E3EB'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(X1 + .5, 0); g.lineTo(X1 + .5, H - B); g.stroke();
+  g.font = font(500, 22); g.textBaseline = 'middle'; g.fillStyle = '#131722';
+  const tags = [[yl, lc, last]]; near.forEach(z => { tags.push([Y(z.hi), '#2962FF', z.hi]); tags.push([Y(z.lo), '#2962FF', z.lo]); });
+  ticks.forEach(v => { const y = Y(v); if (y > Y0 - 10 && y < Y1 + 10 && !tags.some(tg => Math.abs(tg[0] - y) < 24)) g.fillText(v.toFixed(dp), X1 + 12, y); });
+  const tag = (y, col, v) => { g.fillStyle = col; g.fillRect(X1 + 2, y - 15, R - 4, 30); g.fillStyle = '#FFFFFF'; g.font = font(600, 21); g.fillText(v.toFixed(dp), X1 + 12, y + 1); };
+  near.forEach(z => { tag(Y(z.hi), '#2962FF', z.hi); tag(Y(z.lo), '#2962FF', z.lo); }); tag(yl, lc, last);
+  g.font = font(600, 24); g.fillStyle = '#2962FF';
+  far.forEach((z, i) => { const up = z.lo > hi, s = `AOI ${aoiTxt(pair, z)} ${up ? 'above' : 'below'} the chart ${up ? '↑' : '↓'}`; g.fillText(s, X0 + 14, up ? Y0 + 22 + i * 30 : Y1 - 22 - i * 30); });
+  const big = tf === 'W' || tf === 'D', MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const parts = tt => { const d = new Date((tt + (big ? 7 * 3600 : 19800)) * 1000); return [d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()]; };   // trading day (ends 5 PM New York) or India date
+  g.fillStyle = '#131722'; g.font = font(500, 22); g.textBaseline = 'alphabetic'; g.textAlign = 'center';
+  let prevKey = null, lastX = -999;
+  for (let j = 0; j < n; j++){ const tt = t[from + j];
+    let key, label;
+    if (big){ const [y, m] = parts(tt); key = y * 12 + m; label = m === 0 ? String(y) : MON[m]; }
+    else { const [y, m, d] = parts(tt); key = y * 400 + m * 31 + d; label = d === 1 ? MON[m] : String(d); }
+    if (prevKey !== null && key !== prevKey && X(j) - lastX > (big ? 70 : 60) && X(j) < X1 - 20){ g.fillText(label, X(j), H - 16); lastX = X(j); }
+    prevKey = key; }
+  g.textAlign = 'left'; g.fillStyle = '#131722'; g.font = font(700, 27); g.fillText(`${pair} · ${TFNAME[tf]}`, 18, 38);
+  const tw = g.measureText(`${pair} · ${TFNAME[tf]}`).width; g.font = font(500, 21); g.fillStyle = '#787B86'; g.fillText('No gaps candles, drawn from prices', 30 + tw, 38);
+  return cv.toDataURL('image/png');
+}
 function draw(){
-  const trades = (feed.setups || []).filter(s => s.status !== 'no_trade' && safeChart(s.chart))
-    .sort((a,b) => (RANK[a.status] ?? 2) - (RANK[b.status] ?? 2) || (a.order ?? 99) - (b.order ?? 99));
-  const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
-  const list = trades.length ? trades.map((s, i) => { const hot = s.status === 'triggered' || s.status === 'at_zone' || (typeof s.price === 'number' && typeof s.zone_lo === 'number' && s.price >= s.zone_lo && s.price <= s.zone_hi);
-      return `<button class="row" style="--i:${i}" data-open="${esc(s.pair)}"><span class="ico" data-pair="${esc(s.pair)}"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M9 8v20M18 5v24M27 10v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="6" y="13" width="6" height="10" rx="1.5" fill="currentColor"/><rect x="15" y="10" width="6" height="12" rx="1.5" fill="currentColor"/><rect x="24" y="14" width="6" height="9" rx="1.5" fill="currentColor"/></svg></span><span class="nm">${esc(s.pair)}</span><span class="pk" hidden role="img" aria-label="Pick of the week">${STAR}</span><span class="tk" hidden>${TICK}<b>Taken</b></span>${typeof s.score === 'number' ? `<span class="pct">${Math.round(s.score)}%</span>` : ''}${hot ? '<i class="live" title="Price is at the zone"></i>' : ''}${chev}</button>`; }).join('') : `<div class="none">No pairs this week yet. They appear here after the weekly analysis.</div>`;
-  if (list !== shownHome){ $('#rows').innerHTML = shownHome = list; sparks(); }
-  $('#week').textContent = (feed.week && feed.week.label) || 'This week';
-  const html = trades.map(slide).join('');
-  if (html !== shown){ const deck = $('#deck'), x = deck.scrollLeft; deck.innerHTML = shown = html; deck.scrollLeft = x; if (view) deck.querySelectorAll('.slide').forEach(el => el.classList.toggle('cur', el.dataset.pair === view)); }
+  const k = curList(), its = items(k), any = LISTS.some(([q]) => items(q).length);
+  $('#week').textContent = weekLabel() || 'This week';
+  const seg = any ? LISTS.map(([q, name]) => `<button role="tab" data-list="${q}" aria-selected="${q === k}">${name}<small>${items(q).length}</small></button>`).join('') : '';
+  if ($('#seg').innerHTML !== seg){ $('#seg').innerHTML = seg; } $('#seg').hidden = !any;
+  const empty = !any ? `<div class="none">No pairs for ${esc(weekLabel() || 'this week')} yet. On Sunday you and Claude each pick pairs and AOIs. They show here, and the final list is the one that gets watched.</div>`
+    : `<div class="none">${k === 'final' ? 'No final list yet. Once you and Claude agree the pairs, they show here and get watched every hour.' : 'Nothing here yet.'}</div>`;
+  const rows = its.length ? its.map((x, i) => wrow(x, i, k)).join('') : empty;
+  if (rows !== shownHome){ $('#rows').innerHTML = shownHome = rows; sparks(); }
+  const html = its.map(x => wslide(x, k)).join('');
+  if (html !== shown){ const deck = $('#deck'), sx = deck.scrollLeft; deck.innerHTML = shown = html; deck.scrollLeft = sx; if (view) deck.querySelectorAll('.slide').forEach(el => el.classList.toggle('cur', el.dataset.pair === view)); }
   document.querySelectorAll('#deck .slide').forEach(el => setTF(el, tfSel[el.dataset.pair] || '4H', false));
   markTaken(); markPick();
-  if (view && !trades.some(s => s.pair === view)) show(null);
-  $('#dots').innerHTML = trades.length > 1 ? trades.map(() => '<i></i>').join('') : ''; dots();
+  if (view && !its.some(x => x.pair === view)) show(null);
+  $('#dots').innerHTML = its.length > 1 ? its.map(() => '<i></i>').join('') : ''; dots();
   const al = (feed.alerts || []).slice(0, 25);
-  $('#alerts').innerHTML = al.length ? al.map(a => `<button class="a"><span class="h"><span>${esc(a.pair || 'Desk')}</span><time>${esc(when(a.at))}</time></span><p>${esc(a.text || '')}</p></button>`).join('') : '<div class="quiet">Nothing yet. A note appears here each time price reaches one of your zones.</div>';
+  $('#alerts').innerHTML = al.length ? al.map(a => `<button class="a"><span class="h"><span>${esc(a.pair || 'Desk')}</span><time>${esc(when(a.at))}</time></span><p>${esc(a.text || '')}</p></button>`).join('') : '<div class="quiet">Nothing yet. A note appears here when a pair on the final list reaches its AOI.</div>';
   $('#bell').classList.toggle('new', (al[0] ? Date.parse(al[0].at) : 0) > Number(store.get('seen', 0)));
 }
 /* each row's icon: that pair's last 60 hourly closes as a small line chart, blue when it rose, red when it fell */
@@ -384,12 +472,14 @@ async function update(force){
 async function load(){
   if (document.hidden) return;
   update(false);
-  const got = await Promise.allSettled([getJSON('data/feed.json'), getJSON(RAW + 'data/feed.json'), getJSON(SHOTS + 'shots.json')]);
-  const sh = got.pop(), fresh = sh.status === 'fulfilled' && sh.value && sh.value.shots && (!shots || sh.value.updated !== shots.updated);
-  if (fresh) shots = sh.value;
-  const ok = got.filter(g => g.status === 'fulfilled' && g.value && g.value.updated).map(g => g.value).sort((a,b) => Date.parse(b.updated) - Date.parse(a.updated));
-  if (ok.length){ if (!feed || Date.parse(ok[0].updated) > Date.parse(feed.updated)){ feed = ok[0]; draw(); } else if (fresh) draw(); }
-  else if (!feed) $('#deck').innerHTML = '<div class="none">The charts could not be loaded. Check the connection; the app retries by itself.</div>';
+  const got = await Promise.allSettled([getJSON('data/feed.json'), getJSON(RAW + 'data/feed.json'), getJSON('data/week.json'), getJSON(RAW + 'data/week.json')]);
+  const newest = gs => gs.filter(g => g.status === 'fulfilled' && g.value && g.value.updated).map(g => g.value).sort((a,b) => Date.parse(b.updated) - Date.parse(a.updated))[0];
+  const f = newest(got.slice(0, 2)), w = newest(got.slice(2));
+  let changed = false;
+  if (w && (!week || Date.parse(w.updated) > Date.parse(week.updated))){ week = w; changed = true; }
+  if (f && (!feed || Date.parse(f.updated) > Date.parse(feed.updated))){ feed = f; changed = true; for (const k in barsCache) delete barsCache[k]; }
+  if (feed){ if (changed) draw(); }
+  else $('#rows').innerHTML = '<div class="none">The week could not be loaded. Check the connection; the app retries by itself.</div>';
 }
 $('#ver').textContent = 'App version ' + BUILD;
 load(); setInterval(load, 5 * 60000); document.addEventListener('visibilitychange', load);
@@ -399,6 +489,7 @@ document.addEventListener('click', e => {
   if (t.classList.contains('shot')){ $('#viewImg').src = t.src; $('#view').classList.remove('big'); $('#view').hidden = false; return; }
   if (t.id === 'viewImg'){ const v = $('#view'), big = v.classList.toggle('big'); if (big){ const r = t.getBoundingClientRect(); v.scrollLeft = (v.scrollWidth - v.clientWidth) * Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)); v.scrollTop = (v.scrollHeight - v.clientHeight) * Math.min(1, Math.max(0, (e.clientY - r.top) / r.height)); } return; }
   if (t.id === 'viewClose'){ $('#view').hidden = true; return; }
+  const sg = t.closest('#seg [data-list]'); if (sg){ list = sg.dataset.list; store.set('list', list); show(null); draw(); return; }
   const open = t.closest('[data-open]'); if (open){ show(open.dataset.open); return; }
   if (t.closest('[data-back]')){ show(null); return; }
   const tf = t.closest('.tfs [data-tf]'); if (tf && !tf.disabled){ setTF(tf.closest('.slide'), tf.dataset.tf, true); return; }
@@ -492,11 +583,11 @@ Reading the market yourself:
 - An area of interest needs at least three clear touches. The trader's own areas come back with the candles; use them, and say so if you think one no longer holds.
 - Say where price sits in the weekly range, because buying the high or selling the low fails a hard gate.
 - To choose the pair of the week, compare the pairs on: trends in line (Weekly, Daily, 4H), a clean Weekly or Daily area that price can reach this week, room to the next daily structure for at least 1:2, and weekly placement. Pick one, say why in two or three lines, name the runner-up, and say what would change your mind. Then call set_week_pick. If nothing qualifies, say so and clear the pick.
-- You cannot change the trade cards, levels or percentages in the app, and you cannot take new chart screenshots. If your reading differs from a card, say exactly what differs so the trader can get it updated.
+- You cannot change the week's lists or their AOIs in the app. If your reading differs from them, say exactly what differs so the trader can get the list updated in their Claude chat.
 
 How to answer:
 - Short, plain words, written for a phone. Lead with the answer. No tables and no headings.
-- Use the app data and any charts you are given. Prices in the data are refreshed about once an hour and the chart screenshots are older (their times are given). Say so when your answer depends on a price that may have moved, and ask for the current price or candle if you need it.
+- Use the app data and any charts you are given. Prices in the data are refreshed about once an hour, and the charts are drawn from those same prices. Say so when your answer depends on a price that may have moved, and ask for the current price or candle if you need it.
 - Say what the rules say: what the setup has, what is missing, where it fails. Do not tell the trader to buy or sell, do not give position or lot sizes, and do not predict prices. The trade decision is theirs.
 - When you assess a setup, end with: Rule-based analysis, not financial advice. The trade decision is yours.`;
 /* One conversation for the watchlist ('home') and one for each pair. */
@@ -507,26 +598,26 @@ let chatBusy = false, busyId = '', chatErr = '', chatKeyNote = '', chatStat = ''
 const chatPair = () => chatId === 'home' ? null : chatId;
 const chatKey = () => store.get('ckey', '');
 function chatContext(){
-  const f = feed || {};
-  const setups = (f.setups || []).map(s => s.status === 'no_trade' ? { pair:s.pair, status:'no trade this week', note:s.note } : {
-    pair:s.pair, side:s.side, status:s.status, weekly:s.weekly, daily:s.daily, h4:s.h4, zone:[s.zone_lo, s.zone_hi], zone_note:s.zone_note,
-    planned_entry:s.entry, stop:s.stop, target:s.target, reward_to_risk:s.rr, confluence_percent:s.score,
-    confluences:confOf(s).map(c => `${TFNAME[c.tf]} ${c.name}: ${c.ok ? 'have, +' + (Number(c.pts) || 0) : 'still needed'}`),
-    last_price:s.price, last_price_time:s.price_at, idea_fails_at:s.invalid_level, idea_fails_note:s.invalid_note, note:s.note,
-    marked_as_taken:!!takenAll()[takenKey(s.pair)] });
-  return JSON.stringify({ now_india_time:new Date().toLocaleString('en-IN', { timeZone:'Asia/Kolkata', dateStyle:'full', timeStyle:'short' }), week:f.week && f.week.label, data_updated:f.updated,
+  const f = feed || {}, lists = {};
+  LISTS.forEach(([k]) => { lists[LISTNAME[k]] = items(k).map(x => { const st = k === 'final' ? wstate(x.pair) : null;
+    return { pair:x.pair, side:x.side, areas_of_interest:x.aois.map(z => `${aoiTxt(x.pair, z)}${z.tf ? ' (' + (AOITF[z.tf] || z.tf) + ')' : ''}`), note:x.note || undefined,
+      watch_status:st ? WSTATUS[st.status] : undefined, pips_from_aoi:st ? st.dist_pips : undefined, last_price:st ? st.price : undefined, last_price_time:st ? st.price_at : undefined,
+      reached_aoi_at:st ? st.arrived_at || undefined : undefined, shift_1h:st && st.shift ? st.shift : undefined, entry_candle:st && st.entry ? st.entry : undefined,
+      marked_as_taken:k === 'final' ? !!takenAll()[takenKey(x.pair)] : undefined }; }); });
+  return JSON.stringify({ now_india_time:new Date().toLocaleString('en-IN', { timeZone:'Asia/Kolkata', dateStyle:'full', timeStyle:'short' }), week:weekLabel(), data_updated:f.updated,
     pick_of_the_week:(pickGet() || {}).pair || null,
     all_watchlist_pairs:(f.zones || []).map(z => z.pair), pairs_with_saved_areas:(f.zones || []).filter(z => (z.zones || []).length).map(z => z.pair),
-    this_chat_is_about:chatPair() ? `the ${chatPair()} trade only (the other pairs are background)` : 'the whole watchlist', setups, recent_alerts:(f.alerts || []).slice(0, 8) });
+    this_chat_is_about:chatPair() ? `${chatPair()} only (the other pairs are background)` : 'the whole watchlist',
+    week_lists:lists, how_the_lists_work:'On Sunday the trader and Claude each pick pairs and AOIs; the agreed final list is watched every hour from Monday to Friday (price reaching an AOI, a 1H shift of structure at it, then a closed engulfing or star).',
+    recent_alerts:(f.alerts || []).slice(0, 8) });
 }
-const b64 = blob => new Promise((ok, no) => { const r = new FileReader(); r.onload = () => ok(String(r.result).split(',')[1] || ''); r.onerror = no; r.readAsDataURL(blob); });
 async function chartBlocks(pair){
-  const s = (feed && feed.setups || []).find(x => x.pair === pair); if (!s) return [];
-  const ch = chartsOf(s), out = [];
-  for (const tf of TFS){ if (!ch[tf]) continue;
-    try { const r = await fetch(ch[tf][0]); if (!r.ok) continue; const blob = await r.blob(); if (blob.size > 3500000) continue;
-      out.push({ type:'text', text:`${pair} ${TFNAME[tf]} chart, TradingView screenshot${ch[tf][1] ? ' taken ' + ch[tf][1] : ''}:` });
-      out.push({ type:'image', source:{ type:'base64', media_type:/png$/.test(ch[tf][0]) ? 'image/png' : 'image/jpeg', data:await b64(blob) } }); } catch (e) {} }
+  const k = ['final', 'claude', 'yours'].find(q => items(q).some(x => x.pair === pair)); if (!k) return [];
+  const x = items(k).find(y => y.pair === pair), out = [];
+  for (const tf of TFS){
+    try { const url = await chartURL(pair, tf, x.aois); if (!url) continue;
+      out.push({ type:'text', text:`${pair} ${TFNAME[tf]} chart, drawn in the app from the hourly prices (No gaps candles), with the AOIs as boxes:` });
+      out.push({ type:'image', source:{ type:'base64', media_type:'image/png', data:url.split(',')[1] } }); } catch (e) {} }
   return out;
 }
 const md = t => esc(t).replace(/\*\*([^*\n]+)\*\*/g, '<b>$1</b>');
@@ -548,7 +639,7 @@ function chatDraw(){
   }
   body.innerHTML = html; body.scrollTop = body.scrollHeight;
 }
-function chatSave(){ const keep = new Set(['home', ...((feed && feed.setups) || []).map(s => s.pair)]), out = {};
+function chatSave(){ const keep = new Set(['home', ...LISTS.flatMap(([k]) => items(k).map(x => x.pair))]), out = {};
   for (const k of Object.keys(chats)) if ((keep.has(k) || !feed) && chats[k].length) out[k] = chats[k].slice(-40);
   store.set('chats', JSON.stringify(out)); }
 function chatOpen(id){ chatId = id || 'home'; chatLog = chats[chatId] || (chats[chatId] = []); $('#chat').hidden = false; chatErr = ''; chatDraw(); chatGrow(); chatFit(); }
@@ -564,7 +655,7 @@ const CHAT_TOOLS = [
     input_schema:{ type:'object', properties:{ pair:{ type:'string', description:'The pair to star, for example CADJPY, or "none" to clear the pick.' }, reason:{ type:'string', description:'One short plain sentence shown in the app under the pair.' } }, required:['pair'] } }
 ];
 const TF_FILE = { W:'1w', D:'1d', '4H':'4h', '1H':'1h' }, TF_SECS = { W:432000, D:86400, '4H':14400, '1H':3600 }, TF_COUNT = { W:30, D:70, '4H':60, '1H':48 };
-const pickGet = () => { try { const p = JSON.parse(store.get('pick', 'null')); return p && p.week === ((feed && feed.week && feed.week.label) || '') ? p : null; } catch (e) { return null; } };
+const pickGet = () => { try { const p = JSON.parse(store.get('pick', 'null')); return p && p.week === weekLabel() ? p : null; } catch (e) { return null; } };
 function markPick(){
   const p = pickGet();
   const pr = $('#pickrow'), carded = !!(p && document.querySelector(`.row[data-open="${p.pair}"]`));
@@ -583,7 +674,7 @@ function swings(b, k, from){ const hi = [], lo = [], n = b.t.length;
 function roughTrend(b, k){ if (!b || b.t.length < 12) return 'n/a'; const s = swings(b, k, b.t.length - 70), h = s.hi.slice(-2), l = s.lo.slice(-2);
   if (h.length < 2 || l.length < 2) return 'unclear'; const up = h[1] > h[0] && l[1] > l[0], dn = h[1] < h[0] && l[1] < l[0]; return up ? 'up' : dn ? 'down' : 'mixed'; }
 async function scanPairs(){
-  const docs = (feed && feed.zones) || [], cards = {}; ((feed && feed.setups) || []).forEach(s => { cards[s.pair] = s; });
+  const docs = (feed && feed.zones) || [], cards = {}; LISTS.slice().reverse().forEach(([k]) => items(k).forEach(x => { cards[x.pair] = { k, x }; }));
   const lines = await Promise.all(docs.map(async d => {
     const base = `data/bars/${d.symbol.replace(':', '_')}_`, get = tf => getJSON(base + tf + '.json').catch(() => null);
     const [w, dd, h4] = await Promise.all([get('1w'), get('1d'), get('4h')]);
@@ -595,7 +686,7 @@ async function scanPairs(){
     let near = 'no saved areas'; const zs = d.zones || [];
     if (zs.length){ let best = null; for (const z of zs){ const dist = px > z.hi ? px - z.hi : px < z.lo ? z.lo - px : 0; if (!best || dist < best.dist) best = { z, dist, side:px > z.hi ? 'below price' : px < z.lo ? 'above price' : 'price is inside it' }; }
       near = `${best.z.lo} to ${best.z.hi}, ${best.side}${best.dist ? ', ' + Math.round(best.dist / d.pip) + ' pips away' : ''}`; }
-    const c = cards[d.pair], card = c ? (c.status === 'no_trade' ? 'looked at this week, no trade' : `has a ${c.side} card, ${c.status}, ${c.score}%`) : 'no card';
+    const c = cards[d.pair], card = c ? `on ${LISTNAME[c.k].toLowerCase()} as a ${c.x.side}` : 'not on this week\'s lists';
     return `${d.pair} | W ${roughTrend(w, 2)}, D ${roughTrend(dd, 3)}, 4H ${roughTrend(h4, 3)} | 10-week change ${chg} | range ${pos} | D 50 EMA: price ${ema} | nearest area: ${near} | last ${px.toFixed(dp)} | ${card}`; }));
   return [`All ${docs.length} pairs on the watchlist. Trends are a rough machine read from swing highs and lows on candle bodies (up, down, mixed, unclear); confirm with get_candles before you rely on one. "10-week change" is the move in price over the last ten weekly candles. "range" is where price sits between the low (0%) and high (100%) of the last 30 weeks. Pairs with "no saved areas" have no areas of interest in the app yet, so judge their levels from the candles and say so.`, ...lines].join('\n');
 }
@@ -606,8 +697,8 @@ async function runTool(name, input){
   if (name === 'set_week_pick'){
     if (!pair || pair === 'NONE'){ try { localStorage.removeItem('pick'); } catch (e) {} markPick(); return 'The pick of the week was cleared.'; }
     if (!doc) return `${pair} is not on the watchlist in the app, so nothing was marked.`;
-    store.set('pick', JSON.stringify({ week:(feed.week && feed.week.label) || '', pair, reason:String(input.reason || '').slice(0, 220), at:Date.now() })); markPick();
-    return `${pair} is now marked as the pick of the week on this device.` + ((feed.setups || []).some(s => s.pair === pair && s.status !== 'no_trade') ? '' : ' It has no trade card in the app yet (no chart, entry, stop or target there). Tell the trader that, and that the card has to be built in their main Claude chat.');
+    store.set('pick', JSON.stringify({ week:weekLabel(), pair, reason:String(input.reason || '').slice(0, 220), at:Date.now() })); markPick();
+    return `${pair} is now marked as the pick of the week on this device.` + (items('final').some(x => x.pair === pair) ? '' : ' It is not on this week\'s final list, so the hourly check does not watch it. Tell the trader that; the lists are changed in their Claude chat.');
   }
   if (name === 'scan_pairs') return scanPairs();
   if (name !== 'get_candles') return 'Unknown tool.';
@@ -629,7 +720,8 @@ async function runTool(name, input){
     forming ? 'The last candle was still forming when the data was read. Do not count it as closed.' : 'The last candle is closed.',
     ema ? `50 EMA now: ${ema.toFixed(dp)}. Last close: ${b.c[len - 1].toFixed(dp)}.` : `Last close: ${b.c[len - 1].toFixed(dp)}. Too few candles for a 50 EMA.`,
     `Swing points on candle bodies (a rough machine pick, judge the obvious ones yourself): ${sw.slice(-14).join('; ') || 'none found'}.`,
-    `The trader's areas of interest for ${pair}: ${(doc.zones || []).map(z => `${z.lo} to ${z.hi}`).join('; ') || 'none saved'}.`,
+    `The trader's saved areas of interest for ${pair}: ${(doc.zones || []).map(z => `${z.lo} to ${z.hi}`).join('; ') || 'none saved'}.`,
+    `This week's lists for ${pair}: ${LISTS.map(([k]) => { const x = items(k).find(y => y.pair === pair); return x ? `${LISTNAME[k]} ${x.side} at ${x.aois.map(z => aoiTxt(pair, z)).join(', ')}` : ''; }).filter(Boolean).join('; ') || 'not on them'}.`,
     'date,open,high,low,close', ...rows].join('\n');
 }
 const toolSay = (name, input) => name === 'scan_pairs' ? 'Scanning every pair on the watchlist' : name === 'get_candles' ? `Reading ${String(input && input.pair || '').toUpperCase()} ${TFNAME[input && input.timeframe] || ''} candles` : name === 'set_week_pick' ? 'Marking the pick of the week' : 'Working';

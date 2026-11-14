@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 """
-Fetch the latest hourly candles for every pair in data/feed.json and merge them into
+Fetch the latest hourly candles for every pair in data/feed.json ("zones") and every pair on the
+week's lists in data/week.json, and merge them into
 data/bars/OANDA_<PAIR>_1h.json. Runs inside GitHub Actions before tools/check.py.
 
 Source: Twelve Data (free plan: 8 requests a minute, 800 a day). The API key comes from the
 repository secret TWELVEDATA_KEY. Its prices can differ from OANDA's by a pip or two.
-With 27 pairs that is four requests a minute apart, so a run lasts about four minutes.
+With 27 to 32 pairs that is four requests a minute apart, so a run lasts about four minutes.
 The second scheduled slot of each hour is a backup: it does nothing when the first one ran.
 
 The hourly candles are also rolled up into 4H, daily and weekly candles
@@ -23,6 +24,15 @@ BATCH = 8            # symbols per request; the free plan allows 8 a minute, so 
 NY = ZoneInfo("America/New_York")
 KEEP = {"4h": 200, "1d": 220, "1w": 80}      # candles kept in each rolled-up file
 HISTORY = 5000       # hourly candles asked for once, when a pair has no rolled-up files yet
+KEEP_1H = 500        # hourly candles kept (the entry checks walk the 1H structure over these)
+
+
+def n1h(d):
+    """How many hourly candles are stored for a pair."""
+    try:
+        return len(json.load(open(os.path.join(BARS, f"{d['symbol'].replace(':', '_')}_1h.json")))["t"])
+    except Exception:                           # noqa: BLE001
+        return 0
 
 
 def bucket(t, tf):
@@ -95,7 +105,15 @@ def main():
         ready(False)
         return
     feed = json.load(open(os.path.join(ROOT, "data", "feed.json")))
-    docs = feed.get("zones", [])
+    docs = [{"pair": d["pair"], "symbol": d["symbol"]} for d in feed.get("zones", [])]
+    try:                                        # the week's pairs, so a pair that is new this week gets candles too
+        week = json.load(open(os.path.join(ROOT, "data", "week.json")))
+        for k in ("final", "claude", "yours"):
+            for x in week.get(k, []):
+                if x.get("pair") and not any(d["pair"] == x["pair"] for d in docs):
+                    docs.append({"pair": x["pair"], "symbol": "OANDA:" + x["pair"]})
+    except Exception:                           # noqa: BLE001
+        pass
     if os.environ.get("GITHUB_EVENT_NAME") == "schedule":
         try:
             age = time.time() - calendar.timegm(time.strptime(feed.get("updated", ""), "%Y-%m-%dT%H:%M:%SZ"))
@@ -113,8 +131,9 @@ def main():
             time.sleep(62)
         syms = [f"{d['pair'][:3]}/{d['pair'][3:]}" for d in part]
         new = any(not os.path.exists(os.path.join(BARS, f"{d['symbol'].replace(':', '_')}_1d.json")) for d in part)
+        short = any(n1h(d) < 400 for d in part)       # the entry checks read up to 500 hourly candles
         try:
-            res = fetch(syms, key, HISTORY if new else 48)
+            res = fetch(syms, key, HISTORY if new else 600 if short else 48)
         except Exception as e:                      # noqa: BLE001
             bad += [f"{d['pair']}: {str(e)[:120]}" for d in part]
             continue
@@ -147,7 +166,7 @@ def main():
                 roll_up(d["symbol"], m, now)
             except Exception as e:              # noqa: BLE001
                 print(f"{d['pair']}: could not build the 4H, daily and weekly candles ({str(e)[:120]})")
-            ts = sorted(m)[-240:]
+            ts = sorted(m)[-KEEP_1H:]
             out = {"symbol": d["symbol"], "tf": "1h", "fetched_at": now, "source": "twelvedata",
                    "t": ts, "o": [m[t][0] for t in ts], "h": [m[t][1] for t in ts], "l": [m[t][2] for t in ts], "c": [m[t][3] for t in ts]}
             open(fn, "w").write(json.dumps(out, separators=(",", ":")))
