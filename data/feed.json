@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-14T15:34:48Z",
+ "updated": "2026-11-14T16:34:33Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1633,5 +1633,10 @@
    "text": "Price 1.33436 is inside your AOI 1.33179-1.33563. Not on the plan: structure is unclear."
   }
  ],
- "morning_sent": "2026-11-11"
+ "morning_sent": "2026-11-11",
+ "watch": {
+  "week_of": "2026-11-16",
+  "pairs": {},
+  "checked_at": "2026-11-14T16:34:33Z"
+ }
 }
