@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Set & Forget Desk</title>
-<meta name="description" content="This week's trades: one TradingView chart per trade with entry, stop and target, plus notifications.">
+<meta name="description" content="This week's trades: TradingView charts per pair, plus notifications.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="icon" href="icons/icon-192.png">
@@ -14,7 +14,7 @@
 <meta name="theme-color" content="#000000">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
-/* The app opens on a plain list of this week's pairs. Tapping a pair opens its chart with stop, entry and target;
+/* The app opens on a plain list of this week's pairs. Tapping a pair opens its charts;
    swipe sideways there for the next pair. The notification log and device setup sit behind the bell. */
 :root{
   --bg:#000000; --surf:#14171C; --ink:#F3F5F9; --mute:#8E98AC; --line:#23272F;
@@ -243,7 +243,7 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
     <div class="pbody">
       <div id="dev"></div>
       <div id="alerts"></div>
-      <div class="foot">Entries on the charts are plans. They count only after the 1H shift of structure and a closed entry candle at the zone. Rule-based analysis, not financial advice. The trade decision is yours.<br><span id="ver"></span></div>
+      <div class="foot">Rule-based analysis, not financial advice. The trade decision is yours.<br><span id="ver"></span></div>
     </div>
   </div>
 </div>
@@ -255,7 +255,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-12.6';
+const BUILD = '2026-11-14.1';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -324,12 +324,7 @@ function slide(s){
   return `<article class="slide" data-pair="${esc(s.pair)}" data-charts="${esc(JSON.stringify(ch))}">
     <header class="cap"><button class="back" data-back aria-label="Back to the list of pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pair">${esc(s.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span><span class="pk" hidden>${STAR}Pick</span></header>
     ${tabs(s)}
-    <div class="pic"><img class="shot" src="${first[0]}${v}" alt="${esc(s.pair)} TradingView chart with entry, stop and target" tabindex="0"></div>
-    <div class="levels">
-      <div class="lv stop"><span>Stop</span><b>${px(s.pair, s.stop)}</b></div>
-      <div class="lv"><span>Entry</span><b>${px(s.pair, s.entry)}</b></div>
-      <div class="lv target"><span>Target</span><b>${px(s.pair, s.target)}${s.rr ? `<small>1:${esc(s.rr)}</small>` : ''}</b></div>
-    </div>
+    <div class="pic"><img class="shot" src="${first[0]}${v}" alt="${esc(s.pair)} TradingView chart" tabindex="0"></div>
     ${typeof s.score === 'number' ? `<div class="conf"><span>Confluence</span><b>${Math.round(s.score)}%</b><span class="meter" role="img" aria-label="Confluence ${Math.round(s.score)} percent; 70 is the minimum grade"><u style="--w:${Math.min(100, Math.max(0, s.score))}%"></u><em></em></span></div>` : ''}
     ${chips(s)}
     <p class="pickline" hidden>${STAR}<span></span></p>
@@ -530,7 +525,7 @@ async function chartBlocks(pair){
   const ch = chartsOf(s), out = [];
   for (const tf of TFS){ if (!ch[tf]) continue;
     try { const r = await fetch(ch[tf][0]); if (!r.ok) continue; const blob = await r.blob(); if (blob.size > 3500000) continue;
-      out.push({ type:'text', text:`${pair} ${TFNAME[tf]} chart, TradingView screenshot${ch[tf][1] ? ' taken ' + ch[tf][1] : ''}${tf === '4H' ? ' (the stop, entry and target tags are the plan)' : ''}:` });
+      out.push({ type:'text', text:`${pair} ${TFNAME[tf]} chart, TradingView screenshot${ch[tf][1] ? ' taken ' + ch[tf][1] : ''}:` });
       out.push({ type:'image', source:{ type:'base64', media_type:/png$/.test(ch[tf][0]) ? 'image/png' : 'image/jpeg', data:await b64(blob) } }); } catch (e) {} }
   return out;
 }
