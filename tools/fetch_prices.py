@@ -13,6 +13,10 @@ The hourly candles are also rolled up into 4H, daily and weekly candles
 (data/bars/OANDA_<PAIR>_4h.json, _1d.json, _1w.json) for the chat inside the app. The roll-up
 uses the New York 5 PM day boundary, the same one OANDA charts use. The first run for a pair
 asks for a long hourly history once, so those files start with months of candles.
+
+For the pairs on the week's lists it also keeps a longer weekly history (up to 300 weekly candles,
+data/bars/OANDA_<PAIR>_1wx.json), read at most once a week per pair, because the hourly history
+reaches back only about 30 weeks: too few for the weekly structure in the confluence score.
 """
 import calendar, json, os, sys, time, urllib.parse, urllib.request
 from datetime import datetime, timedelta
@@ -24,6 +28,8 @@ BATCH = 8            # symbols per request; the free plan allows 8 a minute, so 
 NY = ZoneInfo("America/New_York")
 KEEP = {"4h": 200, "1d": 220, "1w": 80}      # candles kept in each rolled-up file
 HISTORY = 5000       # hourly candles asked for once, when a pair has no rolled-up files yet
+WEEKS = 300          # weekly candles in the longer weekly file
+WEEKS_EVERY = 6 * 86400   # how often that file is read again
 KEEP_1H = 500        # hourly candles kept (the entry checks walk the 1H structure over these)
 
 
@@ -87,8 +93,8 @@ def ready(flag):
         open(out, "a").write(f"ready={'true' if flag else 'false'}\n")
 
 
-def fetch(symbols, key, size=48):
-    q = urllib.parse.urlencode({"symbol": ",".join(symbols), "interval": "1h", "outputsize": size,
+def fetch(symbols, key, size=48, interval="1h"):
+    q = urllib.parse.urlencode({"symbol": ",".join(symbols), "interval": interval, "outputsize": size,
                                 "timezone": "UTC", "order": "desc", "apikey": key})
     req = urllib.request.Request("https://api.twelvedata.com/time_series?" + q, headers={"Accept": "application/json"})
     with urllib.request.urlopen(req, timeout=90) as r:
@@ -96,6 +102,45 @@ def fetch(symbols, key, size=48):
     if len(symbols) == 1 or "values" in d or "code" in d:
         d = {symbols[0]: d} if len(symbols) == 1 else {s: d for s in symbols}
     return d
+
+
+def weekly(pairs, key, now, sleep_first=True):
+    """The longer weekly history for the week's pairs, when a pair's file is missing or a week old."""
+    due = []
+    for p in pairs:
+        try:
+            b = json.load(open(os.path.join(BARS, f"OANDA_{p}_1wx.json")))
+            if now - b.get("fetched_at", 0) < WEEKS_EVERY and len(b.get("t", [])) > 30:
+                continue
+        except Exception:                       # noqa: BLE001
+            pass
+        due.append(p)
+    for i in range(0, len(due), BATCH):
+        part = due[i:i + BATCH]
+        if i or sleep_first:
+            time.sleep(62)
+        syms = [f"{p[:3]}/{p[3:]}" for p in part]
+        try:
+            res = fetch(syms, key, WEEKS, "1week")
+        except Exception as e:                  # noqa: BLE001
+            print(f"weekly history not read for {', '.join(part)}: {str(e)[:120]}")
+            continue
+        for p, s in zip(part, syms):
+            rows = {}
+            for v in (res.get(s) or {}).get("values") or []:
+                try:
+                    t = calendar.timegm(time.strptime(v["datetime"][:10], "%Y-%m-%d"))
+                    rows[t] = tuple(float(v[k]) for k in ("open", "high", "low", "close"))
+                except Exception:               # noqa: BLE001
+                    continue
+            if len(rows) < 30:
+                print(f"{p}: weekly history not read ({len(rows)} candles)")
+                continue
+            ts = sorted(rows)
+            out = {"symbol": "OANDA:" + p, "tf": "1wx", "fetched_at": now, "source": "twelvedata",
+                   "t": ts, **{k: [rows[t][j] for t in ts] for j, k in enumerate("ohlc")}}
+            open(os.path.join(BARS, f"OANDA_{p}_1wx.json"), "w").write(json.dumps(out, separators=(",", ":")))
+            print(f"{p}: {len(ts)} weekly candles for the longer weekly history")
 
 
 def main():
@@ -106,10 +151,13 @@ def main():
         return
     feed = json.load(open(os.path.join(ROOT, "data", "feed.json")))
     docs = [{"pair": d["pair"], "symbol": d["symbol"]} for d in feed.get("zones", [])]
+    week_pairs = []
     try:                                        # the week's pairs, so a pair that is new this week gets candles too
         week = json.load(open(os.path.join(ROOT, "data", "week.json")))
         for k in ("final", "claude", "yours"):
             for x in week.get(k, []):
+                if x.get("pair") and x["pair"] not in week_pairs:
+                    week_pairs.append(x["pair"])
                 if x.get("pair") and not any(d["pair"] == x["pair"] for d in docs):
                     docs.append({"pair": x["pair"], "symbol": "OANDA:" + x["pair"]})
     except Exception:                           # noqa: BLE001
@@ -173,6 +221,7 @@ def main():
             last = max(rows)
             print(f"{d['pair']}: {len(rows)} bars, newest {time.strftime('%d %b %H:%M UTC', time.gmtime(last))} close {rows[last][3]}")
             ok += 1
+    weekly(week_pairs, key, now, sleep_first=bool(docs))
     for b in bad:
         print("FAILED", b)
     if ok == 0:
