@@ -31,8 +31,10 @@ BARS = os.path.join(ROOT, "data", "bars")
 WEEK = os.path.join(ROOT, "data", "week.json")
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import entry                                    # noqa: E402  the 1H shift and entry-candle checks
+import confluence                               # noqa: E402  the checklist score shown next to each pair
 PERIOD = {"1h": 3600}
-KEEP_BARS = {"1h": 500, "4h": 200, "1d": 220, "1w": 80}   # the last three are built by fetch_prices.py for the in-app chat
+KEEP_BARS = {"1h": 500, "4h": 200, "1d": 220, "1w": 80,    # 4h, 1d and 1w are built by fetch_prices.py for the in-app chat
+             "1wx": 300}                                     # longer weekly history for the confluence score
 SEED = {"1h": 150}
 IST = ZoneInfo("Asia/Kolkata")
 NY = ZoneInfo("America/New_York")
@@ -353,6 +355,14 @@ def cmd_run(a):
             del states[p]
     watch["checked_at"] = iso(now)
     feed["watch"] = watch
+
+    # the checklist score for every pair on the week's lists (final, yours and Claude's), shown in the app
+    if week.get("week_of"):
+        try:
+            conf = confluence.update_feed(feed, week, a.bars, nts if a.now else None)
+            report.append("CONF  " + ", ".join(f"{k} {v['score']}%" for k, v in conf["items"].items()))
+        except Exception as e:                                   # noqa: BLE001
+            problems.append(f"confluence score: {str(e)[:160]}")
 
     # morning update: the first run between 09:00 and 10:15 IST, once a day, when the final list is watched
     t_ist = now.astimezone(IST)

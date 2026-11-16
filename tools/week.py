@@ -63,6 +63,11 @@ def save(w):
     tmp = WEEK + ".tmp"
     json.dump(w, open(tmp, "w"), indent=1)
     os.replace(tmp, WEEK)
+    try:                                        # refresh the checklist scores the app shows next to each pair
+        import confluence
+        confluence.save_feed()
+    except Exception as e:                      # noqa: BLE001
+        print(f"(the confluence scores were not refreshed: {str(e)[:120]})")
 
 
 def next_monday(today=None):

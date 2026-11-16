@@ -176,6 +176,12 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
 .slide.cur .meter u{width:var(--w)}
 .meter em{position:absolute;top:-4px;bottom:-4px;left:70%;width:2px;border-radius:1px;background:#4A5261}
 .slide.cur .conf{animation:rise .5s cubic-bezier(.2,.8,.2,1) .46s both}
+.conf small{font-size:12.5px;font-weight:700;color:var(--mute);margin-left:4px} .conf small.ok{color:var(--buy)}
+.cnote{margin:-4px 18px 8px;font-size:13px;line-height:1.4;color:var(--mute)}
+.chips .no.eye small{color:var(--mute)}
+.chips li{max-width:100%} .chips li span.cw{overflow:hidden;text-overflow:ellipsis}
+.why{margin:0 18px 10px;padding:0;list-style:none;font-size:13px;line-height:1.4;color:var(--mute)} .why li[hidden]{display:none} .why b{color:var(--ink);font-weight:600}
+.row .cs{flex:none;font-size:13px;font-weight:700;color:var(--mute);margin-left:6px} .row .cs.ok{color:var(--buy)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
 .chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 18px 10px;margin:0;list-style:none}
 .chips li{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 10px 0 8px;border-radius:14px;font-size:13px;font-weight:600;white-space:nowrap}
@@ -276,7 +282,7 @@ const RAW = 'https://raw.githubusercontent.com/bhumiit9/trading-desk/main/';
 const store = { get(k, d){ try { return localStorage.getItem(k) ?? d; } catch (e) { return d; } }, set(k, v){ try { localStorage.setItem(k, v); } catch (e) {} } };
 const STATUS = { waiting:'Waiting', at_zone:'At the zone', triggered:'Trigger seen', invalid:'Idea failed' };
 const RANK = { triggered:0, at_zone:1, waiting:2, invalid:3 };
-const BUILD = '2026-11-14.2';
+const BUILD = '2026-11-17.1';
 let feed = null, shown = '', shownHome = '', view = null;
 const isJPY = p => /JPY/.test(p);
 const px = (p, v) => typeof v === 'number' ? v.toFixed(isJPY(p) ? 3 : 4) : '–';
@@ -314,12 +320,29 @@ function curList(){ if (LISTS.some(([k]) => k === list) && (items(list).length |
   return items('final').length ? 'final' : items('claude').length ? 'claude' : items('yours').length ? 'yours' : 'final'; }
 function wstate(pair){ const w = feed && feed.watch; return (w && week && w.week_of === week.week_of && w.pairs && w.pairs[pair]) || null; }
 function itemOf(el){ return items(el.dataset.list).find(x => x.pair === el.dataset.pair); }
+/* The Set & Forget checklist score for each pair and side (feed.json "conf", worked out by the hourly check):
+   20 boxes, the points add up to the percentage, 70 is the lowest grade (D+). */
+const CTF = { W:'W', D:'D', '4H':'4H', Entry:'1H' }, CGRADE = s => s >= 100 ? 'A+' : s >= 90 ? 'B+' : s >= 80 ? 'C+' : s >= 70 ? 'D+' : 'below D+';
+function confOf(x){ const c = feed && feed.conf, r = c && week && c.week_of === week.week_of && c.items && c.items[x.pair + ' ' + x.side];
+  return r && typeof r.score === 'number' && Array.isArray(r.boxes) ? r : null; }
+function confBlock(x){
+  const c = confOf(x); if (!c) return '';
+  const sc = Math.round(c.score), note = c.where === 'away' ? `Price is ${c.dist_pips} pips from the AOI, so only the trend and EMA boxes can count until it gets there.` : '';
+  let i = 0;
+  const chips = c.boxes.map(b => { const tf = CTF[b.tf] || '1H', name = b.name;
+    return b.ok ? `<li class="ok" data-tf="${tf}" style="--i:${i++}">${TICK}<span class="sr">Ticked: </span><span class="cw">${esc(name)}</span> <small>+${b.pts}</small></li>`
+      : `<li class="no${b.name === 'Pattern' ? ' eye' : ''}" data-tf="${tf}" style="--i:${i++}">${RING}<span class="sr">Not ticked: </span><span class="cw">${esc(name)}</span> <small>${b.name === 'Pattern' ? 'check the chart' : b.pts}</small></li>`; }).join('');
+  const why = c.boxes.filter(b => b.ok && b.why).map(b => `<li data-tf="${CTF[b.tf] || '1H'}"><b>${esc(b.name)}:</b> ${esc(b.why)}</li>`).join('');
+  return `<div class="conf"><span>Confluence</span><b>${sc}%<small class="${sc >= 70 ? 'ok' : ''}">${CGRADE(sc)}</small></b><span class="meter" role="img" aria-label="Confluence ${sc} percent; 70 is the lowest grade"><u style="--w:${Math.min(100, Math.max(0, sc))}%"></u><em></em></span></div>
+    ${note ? `<p class="cnote">${esc(note)}</p>` : ''}<ul class="chips" aria-label="Checklist boxes on this timeframe">${chips}</ul>${why ? `<ul class="why">${why}</ul>` : ''}`;
+}
+function confPts(x, tf){ const c = confOf(x); return c ? c.boxes.filter(b => b.ok && (CTF[b.tf] || '1H') === tf).reduce((a, b) => a + b.pts, 0) : 0; }
 function wrow(x, i, k){
   const st = k === 'final' ? wstate(x.pair) : null, s = st && st.status, side = x.side === 'buy' ? 'buy' : 'sell';
   const hot = s === 'at_aoi' || s === 'shift' || s === 'entry';
   const sub = st && WSTATUS[s] ? WSTATUS[s] + (s === 'watching' && typeof st.dist_pips === 'number' ? `, ${st.dist_pips} pips from the AOI` : '') : 'AOI ' + x.aois.map(z => aoiTxt(x.pair, z)).join(', ');
   const chev = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
-  return `<button class="row" style="--i:${i}" data-open="${esc(x.pair)}"><span class="ico" data-pair="${esc(x.pair)}"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M9 8v20M18 5v24M27 10v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="6" y="13" width="6" height="10" rx="1.5" fill="currentColor"/><rect x="15" y="10" width="6" height="12" rx="1.5" fill="currentColor"/><rect x="24" y="14" width="6" height="9" rx="1.5" fill="currentColor"/></svg></span><span class="nm"><span class="nl">${esc(x.pair)}<span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span></span><small class="${hot ? 'hot' : ''}">${esc(sub)}</small></span><span class="pk" hidden role="img" aria-label="Pick of the week">${STAR}</span><span class="tk" hidden>${TICK}<b>Taken</b></span>${hot ? '<i class="live" title="Price is at the AOI"></i>' : ''}${chev}</button>`;
+  return `<button class="row" style="--i:${i}" data-open="${esc(x.pair)}"><span class="ico" data-pair="${esc(x.pair)}"><svg viewBox="0 0 36 36" aria-hidden="true"><path d="M9 8v20M18 5v24M27 10v18" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><rect x="6" y="13" width="6" height="10" rx="1.5" fill="currentColor"/><rect x="15" y="10" width="6" height="12" rx="1.5" fill="currentColor"/><rect x="24" y="14" width="6" height="9" rx="1.5" fill="currentColor"/></svg></span><span class="nm"><span class="nl">${esc(x.pair)}<span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span></span><small class="${hot ? 'hot' : ''}">${esc(sub)}</small></span><span class="pk" hidden role="img" aria-label="Pick of the week">${STAR}</span><span class="tk" hidden>${TICK}<b>Taken</b></span>${hot ? '<i class="live" title="Price is at the AOI"></i>' : ''}${(c => c ? `<span class="cs${c.score >= 70 ? ' ok' : ''}" aria-label="Confluence ${Math.round(c.score)} percent">${Math.round(c.score)}%</span>` : '')(confOf(x))}${chev}</button>`;
 }
 function wslide(x, k){
   const st = k === 'final' ? wstate(x.pair) : null, side = x.side === 'buy' ? 'buy' : 'sell', s = st && WSTATUS[st.status] ? st.status : '';
@@ -330,10 +353,11 @@ function wslide(x, k){
   const from = k === 'final' && Array.isArray(x.from) && x.from.length ? 'Picked by ' + x.from.map(f => f === 'yours' ? 'you' : 'Claude').join(' and ') + '.' : '';
   return `<article class="slide" data-pair="${esc(x.pair)}" data-list="${k}">
     <header class="cap"><button class="back" data-back aria-label="Back to the list of pairs"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button><span class="pair">${esc(x.pair)}</span><span class="tag ${side}">${side === 'buy' ? 'Buy' : 'Sell'}</span><span class="lname">${LISTNAME[k]}</span><span class="pk" hidden>${STAR}Pick</span></header>
-    <div class="tfs four" role="tablist" aria-label="Timeframe">${TFS.map(t => `<button role="tab" data-tf="${t}" aria-selected="false">${TFNAME[t]}</button>`).join('')}</div>
+    <div class="tfs four" role="tablist" aria-label="Timeframe">${TFS.map(t => `<button role="tab" data-tf="${t}" aria-selected="false">${TFNAME[t]}${confPts(x, t) ? `<small>+${confPts(x, t)}</small>` : ''}</button>`).join('')}</div>
     <div class="pic"><img class="shot" alt="${esc(x.pair)} chart" tabindex="0"></div>
     <ul class="aois">${x.aois.map(z => `<li><i></i><b>${aoiTxt(x.pair, z)}</b><span>${esc(AOITF[z.tf] || 'AOI')}</span></li>`).join('')}</ul>
     ${s ? `<div class="state"><span class="st ${s}">${WSTATUS[s]}</span>${s === 'watching' && typeof st.dist_pips === 'number' ? `<span>${st.dist_pips} pips from the AOI</span>` : ''}<span class="when">${st.checked_at ? 'Checked ' + esc(when(st.checked_at)) : ''}</span></div>` : ''}
+    ${confBlock(x)}
     ${ev.length ? `<ul class="evs">${ev.map(([t, at]) => `<li><span>${esc(t)}</span><time>${esc(when(at))}</time></li>`).join('')}</ul>` : ''}
     ${x.note || from ? `<p class="wnote">${esc([x.note, from].filter(Boolean).join(' '))}</p>` : ''}
     <div class="acts">${k === 'final' ? `<button class="took" data-took="${esc(x.pair)}" aria-pressed="false"><svg class="tick" viewBox="0 0 16 16" aria-hidden="true"><path pathLength="1" d="M3 8.5l3.2 3.2L13 4.8" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>Mark as taken</span></button>` : ''}<button class="askp" data-ask="${esc(x.pair)}" aria-label="Ask Claude about ${esc(x.pair)}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 1 3.4 6.5L4 19.5l1-3.3A8 8 0 0 1 4 12z"/><path d="M9 11h6M9 14h4"/></svg>Ask Claude</button></div>
@@ -344,6 +368,8 @@ async function setTF(el, tf, animate){
   if (!TFS.includes(tf)) tf = '4H';
   tfSel[el.dataset.pair] = tf; el.dataset.tf = tf;
   const bar = el.querySelector('.tfs'); if (bar){ bar.querySelectorAll('button').forEach(b => { const on = b.dataset.tf === tf; b.setAttribute('aria-selected', on ? 'true' : 'false'); if (on){ bar.style.setProperty('--x', b.offsetLeft + 'px'); bar.style.setProperty('--w', b.offsetWidth + 'px'); } }); }
+  let n = 0; if (animate) el.classList.add('quick');
+  el.querySelectorAll('.chips li, .why li').forEach(li => { li.hidden = li.dataset.tf !== tf; if (!li.hidden && li.closest('.chips')) li.style.setProperty('--i', n++); });
   const x = itemOf(el), img = el.querySelector('.shot'); if (!x || !img) return;
   let url; try { url = await chartURL(x.pair, tf, x.aois); } catch (e) { url = ''; }
   if (el.dataset.tf !== tf) return;
@@ -603,12 +629,14 @@ function chatContext(){
     return { pair:x.pair, side:x.side, areas_of_interest:x.aois.map(z => `${aoiTxt(x.pair, z)}${z.tf ? ' (' + (AOITF[z.tf] || z.tf) + ')' : ''}`), note:x.note || undefined,
       watch_status:st ? WSTATUS[st.status] : undefined, pips_from_aoi:st ? st.dist_pips : undefined, last_price:st ? st.price : undefined, last_price_time:st ? st.price_at : undefined,
       reached_aoi_at:st ? st.arrived_at || undefined : undefined, shift_1h:st && st.shift ? st.shift : undefined, entry_candle:st && st.entry ? st.entry : undefined,
-      marked_as_taken:k === 'final' ? !!takenAll()[takenKey(x.pair)] : undefined }; }); });
+      marked_as_taken:k === 'final' ? !!takenAll()[takenKey(x.pair)] : undefined,
+      confluence:(c => c ? { percent:c.score, grade:CGRADE(c.score), scored_at:(feed.conf || {}).at, price_vs_aoi:c.where === 'in' ? 'in the AOI' : c.where === 'reached' ? 'a W or D candle reached the AOI' : `${c.dist_pips} pips away`,
+        ticked:c.boxes.filter(b => b.ok).map(b => `${b.tf} ${b.name} +${b.pts}${b.why ? ' (' + b.why + ')' : ''}`), not_ticked:c.boxes.filter(b => !b.ok).map(b => `${b.tf} ${b.name} ${b.pts}`) } : undefined)(confOf(x)) }; }); });
   return JSON.stringify({ now_india_time:new Date().toLocaleString('en-IN', { timeZone:'Asia/Kolkata', dateStyle:'full', timeStyle:'short' }), week:weekLabel(), data_updated:f.updated,
     pick_of_the_week:(pickGet() || {}).pair || null,
     all_watchlist_pairs:(f.zones || []).map(z => z.pair), pairs_with_saved_areas:(f.zones || []).filter(z => (z.zones || []).length).map(z => z.pair),
     this_chat_is_about:chatPair() ? `${chatPair()} only (the other pairs are background)` : 'the whole watchlist',
-    week_lists:lists, how_the_lists_work:'On Sunday the trader and Claude each pick pairs and AOIs; the agreed final list is watched every hour from Monday to Friday (price reaching an AOI, a 1H shift of structure at it, then a closed engulfing or star).',
+    week_lists:lists, how_the_lists_work:'On Sunday the trader and Claude each pick pairs and AOIs; the agreed final list is watched every hour from Monday to Friday (price reaching an AOI, a 1H shift of structure at it, then a closed engulfing or star). Each pair also has a confluence score: the Set & Forget checklist (20 boxes, the points add up to the percentage, 70 is the lowest grade D+) worked out by machine from the candles each hour; only what is happening now counts, and pattern boxes (head and shoulders, double tops and bottoms) are never ticked by machine.',
     recent_alerts:(f.alerts || []).slice(0, 8) });
 }
 async function chartBlocks(pair){
