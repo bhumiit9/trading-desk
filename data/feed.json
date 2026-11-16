@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-16T16:05:22Z",
+ "updated": "2026-11-16T16:58:20Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1548,6 +1548,31 @@
  ],
  "alerts": [
   {
+   "at": "2026-11-16T16:58:20Z",
+   "pair": "GBPUSD",
+   "text": "GBPUSD buy: price reached your AOI 1.31916-1.32373 (now 1.31850). Next on the checklist: a 1H shift of structure at the AOI, then a closed entry candle. The entry window is closed now (it runs about 11 PM to 11 AM New York, Sunday night to Thursday night)."
+  },
+  {
+   "at": "2026-11-16T16:58:20Z",
+   "pair": "CADCHF",
+   "text": "CADCHF sell: a 1H bearish engulfing closed at Mon 10:30 IST at your AOI 0.58760-0.58969, after the 1H shift (a body closed below 0.58779 at Mon 04:30 IST). The checklist's entry conditions are there; the rest of the checklist and the decision are yours."
+  },
+  {
+   "at": "2026-11-16T16:58:20Z",
+   "pair": "CADCHF",
+   "text": "CADCHF sell: a 1H bearish engulfing closed at Mon 07:30 IST at your AOI 0.58760-0.58969, after the 1H shift, but outside the entry window (about 11 PM to 11 AM New York), so it doesn't count as an entry. Still waiting for one inside the window."
+  },
+  {
+   "at": "2026-11-16T16:58:20Z",
+   "pair": "USDJPY",
+   "text": "USDJPY sell: a 1H evening star closed at Mon 14:30 IST at your AOI 159.730-160.320, after the 1H shift (a body closed below 159.809 at Sat 00:30 IST). The checklist's entry conditions are there; the rest of the checklist and the decision are yours."
+  },
+  {
+   "at": "2026-11-16T16:58:20Z",
+   "pair": "GBPCAD",
+   "text": "GBPCAD buy: price reached your AOI 1.88178-1.88680 (now 1.88669). Next on the checklist: a 1H shift of structure at the AOI, then a closed entry candle. The entry window is closed now (it runs about 11 PM to 11 AM New York, Sunday night to Thursday night)."
+  },
+  {
    "at": "2026-11-13T19:37:06Z",
    "pair": "EURCAD",
    "text": "Price came down into your AOI 1.56715-1.57146 and has moved out again (now 1.57336). Not on this week's plan: Weekly held its higher low and bounced. That buy has gone and price is between zones. Information only. Entry window is closed now."
@@ -1636,7 +1661,123 @@
  "morning_sent": "2026-11-11",
  "watch": {
   "week_of": "2026-11-16",
-  "pairs": {},
-  "checked_at": "2026-11-16T16:05:22Z"
+  "pairs": {
+   "GBPCAD": {
+    "key": "[\"buy\", [{\"hi\": 1.878, \"lo\": 1.8766, \"tf\": \"W+D\"}, {\"hi\": 1.8868, \"lo\": 1.88178, \"tf\": \"W\"}]]",
+    "sent": [
+     "arrive:2026-11-16"
+    ],
+    "inside": true,
+    "side": "buy",
+    "status": "at_aoi",
+    "price": 1.88669,
+    "price_at": "2026-11-16T16:58:20Z",
+    "checked_at": "2026-11-16T16:58:20Z",
+    "trend_1h": "bear",
+    "dist_pips": 0,
+    "arrived_at": "2026-11-15T22:00:00Z",
+    "shift": null,
+    "entry": null
+   },
+   "USDJPY": {
+    "key": "[\"sell\", [{\"hi\": 160.32, \"lo\": 159.73, \"tf\": \"W\"}]]",
+    "sent": [
+     "entry:1794816000",
+     "shift:1794592800",
+     "arrive:2026-11-16"
+    ],
+    "inside": false,
+    "side": "sell",
+    "status": "entry",
+    "price": 159.60251,
+    "price_at": "2026-11-16T16:58:20Z",
+    "checked_at": "2026-11-16T16:58:20Z",
+    "trend_1h": "bear",
+    "dist_pips": 13,
+    "arrived_at": "2026-11-15T22:00:00Z",
+    "shift": {
+     "at": "2026-11-13T19:00:00Z",
+     "level": 159.80877
+    },
+    "entry": {
+     "at": "2026-11-16T09:00:00Z",
+     "kind": "evening star"
+    }
+   },
+   "CADCHF": {
+    "key": "[\"sell\", [{\"hi\": 0.58969, \"lo\": 0.5876, \"tf\": \"W+D\"}]]",
+    "sent": [
+     "early:1794790800",
+     "entry:1794801600",
+     "shift:1794780000",
+     "arrive:2026-11-16"
+    ],
+    "inside": false,
+    "side": "sell",
+    "status": "entry",
+    "price": 0.58656,
+    "price_at": "2026-11-16T16:58:20Z",
+    "checked_at": "2026-11-16T16:58:20Z",
+    "trend_1h": "bear",
+    "dist_pips": 10,
+    "arrived_at": "2026-11-15T22:00:00Z",
+    "shift": {
+     "at": "2026-11-15T23:00:00Z",
+     "level": 0.58779
+    },
+    "entry": {
+     "at": "2026-11-16T05:00:00Z",
+     "kind": "bearish engulfing"
+    }
+   },
+   "CADJPY": {
+    "key": "[\"sell\", [{\"hi\": 112.578, \"lo\": 112.372, \"tf\": \"D\"}, {\"hi\": 113.34, \"lo\": 113.094, \"tf\": \"D\"}]]",
+    "sent": [],
+    "inside": false,
+    "side": "sell",
+    "status": "watching",
+    "price": 111.54118,
+    "price_at": "2026-11-16T16:58:20Z",
+    "checked_at": "2026-11-16T16:58:20Z",
+    "trend_1h": "bear",
+    "dist_pips": 83,
+    "arrived_at": null,
+    "shift": null,
+    "entry": null
+   },
+   "NZDJPY": {
+    "key": "[\"sell\", [{\"hi\": 88.914, \"lo\": 88.605, \"tf\": \"W+D\"}]]",
+    "sent": [],
+    "inside": false,
+    "side": "sell",
+    "status": "watching",
+    "price": 87.92852,
+    "price_at": "2026-11-16T16:58:20Z",
+    "checked_at": "2026-11-16T16:58:20Z",
+    "trend_1h": "bear",
+    "dist_pips": 68,
+    "arrived_at": null,
+    "shift": null,
+    "entry": null
+   },
+   "GBPUSD": {
+    "key": "[\"buy\", [{\"hi\": 1.32373, \"lo\": 1.31916, \"tf\": \"W+D\"}]]",
+    "sent": [
+     "arrive:2026-11-16"
+    ],
+    "inside": true,
+    "side": "buy",
+    "status": "at_aoi",
+    "price": 1.3185,
+    "price_at": "2026-11-16T16:58:20Z",
+    "checked_at": "2026-11-16T16:58:20Z",
+    "trend_1h": "bear",
+    "dist_pips": 7,
+    "arrived_at": "2026-11-15T22:00:00Z",
+    "shift": null,
+    "entry": null
+   }
+  },
+  "checked_at": "2026-11-16T16:58:20Z"
  }
 }
