@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-18T09:05:19Z",
+ "updated": "2026-11-18T10:05:21Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1720,9 +1720,9 @@
     "inside": true,
     "side": "buy",
     "status": "at_aoi",
-    "price": 1.88425,
-    "price_at": "2026-11-18T09:05:19Z",
-    "checked_at": "2026-11-18T09:05:19Z",
+    "price": 1.88552,
+    "price_at": "2026-11-18T10:05:21Z",
+    "checked_at": "2026-11-18T10:05:21Z",
     "trend_1h": "bear",
     "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
@@ -1739,11 +1739,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 159.20525,
-    "price_at": "2026-11-18T09:05:19Z",
-    "checked_at": "2026-11-18T09:05:19Z",
+    "price": 159.26231,
+    "price_at": "2026-11-18T10:05:21Z",
+    "checked_at": "2026-11-18T10:05:21Z",
     "trend_1h": "bear",
-    "dist_pips": 52,
+    "dist_pips": 47,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": null,
     "entry": null
@@ -1760,11 +1760,11 @@
     "inside": true,
     "side": "sell",
     "status": "at_aoi",
-    "price": 0.58751,
-    "price_at": "2026-11-18T09:05:19Z",
-    "checked_at": "2026-11-18T09:05:19Z",
+    "price": 0.58812,
+    "price_at": "2026-11-18T10:05:21Z",
+    "checked_at": "2026-11-18T10:05:21Z",
     "trend_1h": "bull",
-    "dist_pips": 1,
+    "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": null,
     "entry": null
@@ -1775,11 +1775,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 111.16008,
-    "price_at": "2026-11-18T09:05:19Z",
-    "checked_at": "2026-11-18T09:05:19Z",
+    "price": 111.24163,
+    "price_at": "2026-11-18T10:05:21Z",
+    "checked_at": "2026-11-18T10:05:21Z",
     "trend_1h": "bear",
-    "dist_pips": 121,
+    "dist_pips": 113,
     "arrived_at": null,
     "shift": null,
     "entry": null
@@ -1790,11 +1790,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 87.33051,
-    "price_at": "2026-11-18T09:05:19Z",
-    "checked_at": "2026-11-18T09:05:19Z",
+    "price": 87.50791,
+    "price_at": "2026-11-18T10:05:21Z",
+    "checked_at": "2026-11-18T10:05:21Z",
     "trend_1h": "bear",
-    "dist_pips": 127,
+    "dist_pips": 110,
     "arrived_at": null,
     "shift": null,
     "entry": null
@@ -1810,21 +1810,21 @@
     "inside": false,
     "side": "buy",
     "status": "watching",
-    "price": 1.31548,
-    "price_at": "2026-11-18T09:05:19Z",
-    "checked_at": "2026-11-18T09:05:19Z",
+    "price": 1.31722,
+    "price_at": "2026-11-18T10:05:21Z",
+    "checked_at": "2026-11-18T10:05:21Z",
     "trend_1h": "bear",
-    "dist_pips": 37,
+    "dist_pips": 19,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": null,
     "entry": null
    }
   },
-  "checked_at": "2026-11-18T09:05:19Z"
+  "checked_at": "2026-11-18T10:05:21Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-18T09:05:19Z",
+  "at": "2026-11-18T10:05:21Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
@@ -1833,7 +1833,7 @@
     "grade": "D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 1.88425,
+    "price": 1.88552,
     "trend": {
      "W": "bull",
      "D": "bull",
@@ -1977,7 +1977,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 159.20525,
+    "price": 159.26231,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2119,7 +2119,7 @@
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 0.58751,
+    "price": 0.58812,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2258,8 +2258,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 121,
-    "price": 111.16008,
+    "dist_pips": 113,
+    "price": 111.24163,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2398,7 +2398,7 @@
     "grade": "B+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 87.33051,
+    "price": 87.50791,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2539,15 +2539,15 @@
    "GBPUSD buy": {
     "pair": "GBPUSD",
     "side": "buy",
-    "score": 35,
+    "score": 25,
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.31548,
+    "price": 1.31722,
     "trend": {
      "W": "bull",
      "D": "bear",
-     "4H": "bull"
+     "4H": "bear"
     },
     "boxes": [
      {
@@ -2628,8 +2628,7 @@
       "tf": "4H",
       "name": "In favor",
       "pts": 10,
-      "ok": true,
-      "why": "Bullish structure"
+      "ok": false
      },
      {
       "tf": "4H",
