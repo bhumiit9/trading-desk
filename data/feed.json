@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-18T13:05:18Z",
+ "updated": "2026-11-18T14:05:20Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1720,9 +1720,9 @@
     "inside": true,
     "side": "buy",
     "status": "at_aoi",
-    "price": 1.88298,
-    "price_at": "2026-11-18T13:05:18Z",
-    "checked_at": "2026-11-18T13:05:18Z",
+    "price": 1.88385,
+    "price_at": "2026-11-18T14:05:20Z",
+    "checked_at": "2026-11-18T14:05:20Z",
     "trend_1h": "bear",
     "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
@@ -1739,11 +1739,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 159.45695,
-    "price_at": "2026-11-18T13:05:18Z",
-    "checked_at": "2026-11-18T13:05:18Z",
+    "price": 159.38304,
+    "price_at": "2026-11-18T14:05:20Z",
+    "checked_at": "2026-11-18T14:05:20Z",
     "trend_1h": "bear",
-    "dist_pips": 27,
+    "dist_pips": 35,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": null,
     "entry": null
@@ -1760,9 +1760,9 @@
     "inside": true,
     "side": "sell",
     "status": "at_aoi",
-    "price": 0.58932,
-    "price_at": "2026-11-18T13:05:18Z",
-    "checked_at": "2026-11-18T13:05:18Z",
+    "price": 0.58868,
+    "price_at": "2026-11-18T14:05:20Z",
+    "checked_at": "2026-11-18T14:05:20Z",
     "trend_1h": "bull",
     "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
@@ -1775,11 +1775,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 111.46571,
-    "price_at": "2026-11-18T13:05:18Z",
-    "checked_at": "2026-11-18T13:05:18Z",
+    "price": 111.37918,
+    "price_at": "2026-11-18T14:05:20Z",
+    "checked_at": "2026-11-18T14:05:20Z",
     "trend_1h": "bear",
-    "dist_pips": 91,
+    "dist_pips": 99,
     "arrived_at": null,
     "shift": null,
     "entry": null
@@ -1790,11 +1790,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 87.61688,
-    "price_at": "2026-11-18T13:05:18Z",
-    "checked_at": "2026-11-18T13:05:18Z",
+    "price": 87.60866,
+    "price_at": "2026-11-18T14:05:20Z",
+    "checked_at": "2026-11-18T14:05:20Z",
     "trend_1h": "bear",
-    "dist_pips": 99,
+    "dist_pips": 100,
     "arrived_at": null,
     "shift": null,
     "entry": null
@@ -1810,34 +1810,34 @@
     "inside": false,
     "side": "buy",
     "status": "watching",
-    "price": 1.31619,
-    "price_at": "2026-11-18T13:05:18Z",
-    "checked_at": "2026-11-18T13:05:18Z",
+    "price": 1.31646,
+    "price_at": "2026-11-18T14:05:20Z",
+    "checked_at": "2026-11-18T14:05:20Z",
     "trend_1h": "bear",
-    "dist_pips": 30,
+    "dist_pips": 27,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": null,
     "entry": null
    }
   },
-  "checked_at": "2026-11-18T13:05:18Z"
+  "checked_at": "2026-11-18T14:05:20Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-18T13:05:18Z",
+  "at": "2026-11-18T14:05:20Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
     "side": "buy",
-    "score": 75,
-    "grade": "D+",
+    "score": 45,
+    "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 1.88298,
+    "price": 1.88385,
     "trend": {
      "W": "bull",
      "D": "bull",
-     "4H": "bull"
+     "4H": "bear"
     },
     "boxes": [
      {
@@ -1920,8 +1920,7 @@
       "tf": "4H",
       "name": "In favor",
       "pts": 10,
-      "ok": true,
-      "why": "Bullish structure"
+      "ok": false
      },
      {
       "tf": "4H",
@@ -1933,15 +1932,13 @@
       "tf": "4H",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": true,
-      "why": "multiple rejections"
+      "ok": false
      },
      {
       "tf": "4H",
       "name": "PSP rejection",
       "pts": 10,
-      "ok": true,
-      "why": "PSP 1.8872 was rejected"
+      "ok": false
      },
      {
       "tf": "4H",
@@ -1977,7 +1974,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 159.45695,
+    "price": 159.38304,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2119,7 +2116,7 @@
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 0.58932,
+    "price": 0.58868,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2258,8 +2255,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 91,
-    "price": 111.46571,
+    "dist_pips": 99,
+    "price": 111.37918,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2398,7 +2395,7 @@
     "grade": "B+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 87.61688,
+    "price": 87.60866,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2543,7 +2540,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.31619,
+    "price": 1.31646,
     "trend": {
      "W": "bull",
      "D": "bear",
