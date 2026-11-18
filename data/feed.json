@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-18T06:05:23Z",
+ "updated": "2026-11-18T07:05:20Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1548,6 +1548,11 @@
  ],
  "alerts": [
   {
+   "at": "2026-11-18T07:05:20Z",
+   "pair": "GBPCAD",
+   "text": "GBPCAD buy: a 1H morning star closed at Wed 12:30 IST at your AOI 1.88178-1.88680, after the 1H shift (a body closed above 1.88770 at Tue 22:30 IST). The checklist's entry conditions are there; the rest of the checklist and the decision are yours."
+  },
+  {
    "at": "2026-11-18T04:05:18Z",
    "pair": "",
    "text": "Final list: GBPCAD buy 1H shift seen at the AOI; USDJPY sell 39 pips from its AOI; CADCHF sell at its AOI; CADJPY sell 101 pips from its AOI; NZDJPY sell 106 pips from its AOI; GBPUSD buy entry candle closed."
@@ -1708,22 +1713,27 @@
      "arrive:2026-11-16",
      "shift:1794931200",
      "early:1794960000",
-     "arrive:2026-11-18"
+     "arrive:2026-11-18",
+     "entry:1794981600",
+     "shift:1794931200"
     ],
     "inside": false,
     "side": "buy",
-    "status": "shift",
-    "price": 1.88852,
-    "price_at": "2026-11-18T06:05:23Z",
-    "checked_at": "2026-11-18T06:05:23Z",
+    "status": "entry",
+    "price": 1.88815,
+    "price_at": "2026-11-18T07:05:20Z",
+    "checked_at": "2026-11-18T07:05:20Z",
     "trend_1h": "bull",
-    "dist_pips": 17,
+    "dist_pips": 13,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": {
      "at": "2026-11-17T17:00:00Z",
      "level": 1.8877
     },
-    "entry": null
+    "entry": {
+     "at": "2026-11-18T07:00:00Z",
+     "kind": "morning star"
+    }
    },
    "USDJPY": {
     "key": "[\"sell\", [{\"hi\": 160.32, \"lo\": 159.73, \"tf\": \"W\"}]]",
@@ -1735,11 +1745,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 159.26077,
-    "price_at": "2026-11-18T06:05:23Z",
-    "checked_at": "2026-11-18T06:05:23Z",
+    "price": 159.28203,
+    "price_at": "2026-11-18T07:05:20Z",
+    "checked_at": "2026-11-18T07:05:20Z",
     "trend_1h": "bear",
-    "dist_pips": 47,
+    "dist_pips": 45,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": null,
     "entry": null
@@ -1756,9 +1766,9 @@
     "inside": true,
     "side": "sell",
     "status": "at_aoi",
-    "price": 0.58746,
-    "price_at": "2026-11-18T06:05:23Z",
-    "checked_at": "2026-11-18T06:05:23Z",
+    "price": 0.58745,
+    "price_at": "2026-11-18T07:05:20Z",
+    "checked_at": "2026-11-18T07:05:20Z",
     "trend_1h": "bull",
     "dist_pips": 1,
     "arrived_at": "2026-11-15T22:00:00Z",
@@ -1771,11 +1781,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 111.28416,
-    "price_at": "2026-11-18T06:05:23Z",
-    "checked_at": "2026-11-18T06:05:23Z",
+    "price": 111.24133,
+    "price_at": "2026-11-18T07:05:20Z",
+    "checked_at": "2026-11-18T07:05:20Z",
     "trend_1h": "bear",
-    "dist_pips": 109,
+    "dist_pips": 113,
     "arrived_at": null,
     "shift": null,
     "entry": null
@@ -1786,11 +1796,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 87.42518,
-    "price_at": "2026-11-18T06:05:23Z",
-    "checked_at": "2026-11-18T06:05:23Z",
+    "price": 87.45816,
+    "price_at": "2026-11-18T07:05:20Z",
+    "checked_at": "2026-11-18T07:05:20Z",
     "trend_1h": "bear",
-    "dist_pips": 118,
+    "dist_pips": 115,
     "arrived_at": null,
     "shift": null,
     "entry": null
@@ -1806,9 +1816,9 @@
     "inside": true,
     "side": "buy",
     "status": "entry",
-    "price": 1.3193,
-    "price_at": "2026-11-18T06:05:23Z",
-    "checked_at": "2026-11-18T06:05:23Z",
+    "price": 1.31926,
+    "price_at": "2026-11-18T07:05:20Z",
+    "checked_at": "2026-11-18T07:05:20Z",
     "trend_1h": "bull",
     "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
@@ -1822,11 +1832,11 @@
     }
    }
   },
-  "checked_at": "2026-11-18T06:05:23Z"
+  "checked_at": "2026-11-18T07:05:20Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-18T06:05:23Z",
+  "at": "2026-11-18T07:05:20Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
@@ -1835,7 +1845,7 @@
     "grade": "B+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.88852,
+    "price": 1.88815,
     "trend": {
      "W": "bull",
      "D": "bull",
@@ -1981,7 +1991,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 159.26077,
+    "price": 159.28203,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2123,7 +2133,7 @@
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 0.58746,
+    "price": 0.58745,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2262,8 +2272,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 109,
-    "price": 111.28416,
+    "dist_pips": 113,
+    "price": 111.24133,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2402,7 +2412,7 @@
     "grade": "B+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 87.42518,
+    "price": 87.45816,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2547,7 +2557,7 @@
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 1.3193,
+    "price": 1.31926,
     "trend": {
      "W": "bull",
      "D": "bear",
