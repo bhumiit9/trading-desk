@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-19T07:05:21Z",
+ "updated": "2026-11-19T08:05:17Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1548,6 +1548,11 @@
  ],
  "alerts": [
   {
+   "at": "2026-11-19T08:05:17Z",
+   "pair": "USDJPY",
+   "text": "USDJPY sell: price reached your AOI 159.730-160.320 (now 159.744). Next on the checklist: a 1H shift of structure at the AOI, then a closed entry candle."
+  },
+  {
    "at": "2026-11-19T04:05:17Z",
    "pair": "",
    "text": "Final list: GBPCAD buy at its AOI; USDJPY sell 13 pips from its AOI; CADCHF sell at its AOI; CADJPY sell 118 pips from its AOI; NZDJPY sell 93 pips from its AOI; GBPUSD buy 64 pips from its AOI."
@@ -1725,9 +1730,9 @@
     "inside": true,
     "side": "buy",
     "status": "at_aoi",
-    "price": 1.88351,
-    "price_at": "2026-11-19T07:05:21Z",
-    "checked_at": "2026-11-19T07:05:21Z",
+    "price": 1.88446,
+    "price_at": "2026-11-19T08:05:17Z",
+    "checked_at": "2026-11-19T08:05:17Z",
     "trend_1h": "bear",
     "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
@@ -1739,16 +1744,17 @@
     "sent": [
      "entry:1794816000",
      "shift:1794592800",
-     "arrive:2026-11-16"
+     "arrive:2026-11-16",
+     "arrive:2026-11-19"
     ],
-    "inside": false,
+    "inside": true,
     "side": "sell",
-    "status": "watching",
-    "price": 159.5874,
-    "price_at": "2026-11-19T07:05:21Z",
-    "checked_at": "2026-11-19T07:05:21Z",
+    "status": "at_aoi",
+    "price": 159.74369,
+    "price_at": "2026-11-19T08:05:17Z",
+    "checked_at": "2026-11-19T08:05:17Z",
     "trend_1h": "bull",
-    "dist_pips": 14,
+    "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": null,
     "entry": null
@@ -1765,9 +1771,9 @@
     "inside": true,
     "side": "sell",
     "status": "at_aoi",
-    "price": 0.58874,
-    "price_at": "2026-11-19T07:05:21Z",
-    "checked_at": "2026-11-19T07:05:21Z",
+    "price": 0.58855,
+    "price_at": "2026-11-19T08:05:17Z",
+    "checked_at": "2026-11-19T08:05:17Z",
     "trend_1h": "bull",
     "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
@@ -1780,11 +1786,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 111.34073,
-    "price_at": "2026-11-19T07:05:21Z",
-    "checked_at": "2026-11-19T07:05:21Z",
-    "trend_1h": "bear",
-    "dist_pips": 103,
+    "price": 111.47584,
+    "price_at": "2026-11-19T08:05:17Z",
+    "checked_at": "2026-11-19T08:05:17Z",
+    "trend_1h": "bull",
+    "dist_pips": 90,
     "arrived_at": null,
     "shift": null,
     "entry": null
@@ -1795,11 +1801,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 87.81502,
-    "price_at": "2026-11-19T07:05:21Z",
-    "checked_at": "2026-11-19T07:05:21Z",
-    "trend_1h": "bear",
-    "dist_pips": 79,
+    "price": 87.91821,
+    "price_at": "2026-11-19T08:05:17Z",
+    "checked_at": "2026-11-19T08:05:17Z",
+    "trend_1h": "bull",
+    "dist_pips": 69,
     "arrived_at": null,
     "shift": null,
     "entry": null
@@ -1815,21 +1821,21 @@
     "inside": false,
     "side": "buy",
     "status": "watching",
-    "price": 1.31414,
-    "price_at": "2026-11-19T07:05:21Z",
-    "checked_at": "2026-11-19T07:05:21Z",
-    "trend_1h": "bear",
-    "dist_pips": 50,
+    "price": 1.31557,
+    "price_at": "2026-11-19T08:05:17Z",
+    "checked_at": "2026-11-19T08:05:17Z",
+    "trend_1h": "bull",
+    "dist_pips": 36,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": null,
     "entry": null
    }
   },
-  "checked_at": "2026-11-19T07:05:21Z"
+  "checked_at": "2026-11-19T08:05:17Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-19T07:05:21Z",
+  "at": "2026-11-19T08:05:17Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
@@ -1838,7 +1844,7 @@
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 1.88351,
+    "price": 1.88446,
     "trend": {
      "W": "bull",
      "D": "bull",
@@ -1975,11 +1981,11 @@
    "USDJPY sell": {
     "pair": "USDJPY",
     "side": "sell",
-    "score": 60,
+    "score": 40,
     "grade": "below D+",
-    "where": "reached",
+    "where": "in",
     "dist_pips": 0,
-    "price": 159.5874,
+    "price": 159.74369,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -1998,7 +2004,7 @@
       "name": "At or rejected the AOI",
       "pts": 10,
       "ok": true,
-      "why": "This or last week's candle reached the AOI 159.730-160.320"
+      "why": "Price is in the AOI 159.730-160.320"
      },
      {
       "tf": "W",
@@ -2102,15 +2108,13 @@
       "tf": "Entry",
       "name": "Shift of structure",
       "pts": 10,
-      "ok": true,
-      "why": "2H body closed below 159.79"
+      "ok": false
      },
      {
       "tf": "Entry",
       "name": "Engulfing or morning/evening star",
       "pts": 10,
-      "ok": true,
-      "why": "1H evening star"
+      "ok": false
      }
     ]
    },
@@ -2121,7 +2125,7 @@
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 0.58874,
+    "price": 0.58855,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2260,8 +2264,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 103,
-    "price": 111.34073,
+    "dist_pips": 90,
+    "price": 111.47584,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2396,11 +2400,11 @@
    "NZDJPY sell": {
     "pair": "NZDJPY",
     "side": "sell",
-    "score": 80,
-    "grade": "C+",
+    "score": 70,
+    "grade": "D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 87.81502,
+    "price": 87.91821,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2526,8 +2530,7 @@
       "tf": "Entry",
       "name": "Shift of structure",
       "pts": 10,
-      "ok": true,
-      "why": "2H body closed below 87.713"
+      "ok": false
      },
      {
       "tf": "Entry",
@@ -2544,7 +2547,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.31414,
+    "price": 1.31557,
     "trend": {
      "W": "bull",
      "D": "bear",
