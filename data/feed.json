@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-20T04:05:21Z",
+ "updated": "2026-11-20T05:05:16Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1548,6 +1548,16 @@
  ],
  "alerts": [
   {
+   "at": "2026-11-20T05:05:16Z",
+   "pair": "CADCHF",
+   "text": "CADCHF sell: 1H shift of structure at your AOI 0.58760-0.58969: a body closed below 0.58800 at Fri 10:30 IST. Waiting for a closed entry candle."
+  },
+  {
+   "at": "2026-11-20T05:05:16Z",
+   "pair": "USDJPY",
+   "text": "USDJPY sell: 1H shift of structure at your AOI 159.730-160.320: a body closed below 159.216 at Fri 10:30 IST. Waiting for a closed entry candle."
+  },
+  {
    "at": "2026-11-20T04:05:21Z",
    "pair": "",
    "text": "Final list: GBPCAD buy at its AOI; USDJPY sell 51 pips from its AOI; CADCHF sell at its AOI; CADJPY sell 125 pips from its AOI; NZDJPY sell 118 pips from its AOI; GBPUSD buy 89 pips from its AOI."
@@ -1741,9 +1751,9 @@
     "inside": true,
     "side": "buy",
     "status": "at_aoi",
-    "price": 1.87769,
-    "price_at": "2026-11-20T04:05:21Z",
-    "checked_at": "2026-11-20T04:05:21Z",
+    "price": 1.87763,
+    "price_at": "2026-11-20T05:05:16Z",
+    "checked_at": "2026-11-20T05:05:16Z",
     "trend_1h": "bear",
     "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
@@ -1756,18 +1766,22 @@
      "entry:1794816000",
      "shift:1794592800",
      "arrive:2026-11-16",
-     "arrive:2026-11-19"
+     "arrive:2026-11-19",
+     "shift:1795147200"
     ],
     "inside": false,
     "side": "sell",
-    "status": "watching",
-    "price": 159.21963,
-    "price_at": "2026-11-20T04:05:21Z",
-    "checked_at": "2026-11-20T04:05:21Z",
-    "trend_1h": "bull",
-    "dist_pips": 51,
+    "status": "shift",
+    "price": 159.15276,
+    "price_at": "2026-11-20T05:05:16Z",
+    "checked_at": "2026-11-20T05:05:16Z",
+    "trend_1h": "bear",
+    "dist_pips": 58,
     "arrived_at": "2026-11-15T22:00:00Z",
-    "shift": null,
+    "shift": {
+     "at": "2026-11-20T05:00:00Z",
+     "level": 159.21557
+    },
     "entry": null
    },
    "CADCHF": {
@@ -1777,18 +1791,22 @@
      "entry:1794801600",
      "shift:1794780000",
      "arrive:2026-11-16",
-     "arrive:2026-11-17"
+     "arrive:2026-11-17",
+     "shift:1795147200"
     ],
     "inside": true,
     "side": "sell",
-    "status": "at_aoi",
-    "price": 0.5882,
-    "price_at": "2026-11-20T04:05:21Z",
-    "checked_at": "2026-11-20T04:05:21Z",
-    "trend_1h": "bull",
+    "status": "shift",
+    "price": 0.58791,
+    "price_at": "2026-11-20T05:05:16Z",
+    "checked_at": "2026-11-20T05:05:16Z",
+    "trend_1h": "bear",
     "dist_pips": 0,
     "arrived_at": "2026-11-15T22:00:00Z",
-    "shift": null,
+    "shift": {
+     "at": "2026-11-20T05:00:00Z",
+     "level": 0.588
+    },
     "entry": null
    },
    "CADJPY": {
@@ -1797,9 +1815,9 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 111.11963,
-    "price_at": "2026-11-20T04:05:21Z",
-    "checked_at": "2026-11-20T04:05:21Z",
+    "price": 111.11709,
+    "price_at": "2026-11-20T05:05:16Z",
+    "checked_at": "2026-11-20T05:05:16Z",
     "trend_1h": "bear",
     "dist_pips": 125,
     "arrived_at": null,
@@ -1812,11 +1830,11 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 87.42855,
-    "price_at": "2026-11-20T04:05:21Z",
-    "checked_at": "2026-11-20T04:05:21Z",
+    "price": 87.48646,
+    "price_at": "2026-11-20T05:05:16Z",
+    "checked_at": "2026-11-20T05:05:16Z",
     "trend_1h": "bear",
-    "dist_pips": 118,
+    "dist_pips": 112,
     "arrived_at": null,
     "shift": null,
     "entry": null
@@ -1832,21 +1850,21 @@
     "inside": false,
     "side": "buy",
     "status": "watching",
-    "price": 1.31027,
-    "price_at": "2026-11-20T04:05:21Z",
-    "checked_at": "2026-11-20T04:05:21Z",
+    "price": 1.31071,
+    "price_at": "2026-11-20T05:05:16Z",
+    "checked_at": "2026-11-20T05:05:16Z",
     "trend_1h": "bear",
-    "dist_pips": 89,
+    "dist_pips": 85,
     "arrived_at": "2026-11-15T22:00:00Z",
     "shift": null,
     "entry": null
    }
   },
-  "checked_at": "2026-11-20T04:05:21Z"
+  "checked_at": "2026-11-20T05:05:16Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-20T04:05:21Z",
+  "at": "2026-11-20T05:05:16Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
@@ -1855,7 +1873,7 @@
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 1.87769,
+    "price": 1.87763,
     "trend": {
      "W": "bull",
      "D": "bull",
@@ -1995,7 +2013,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 159.21963,
+    "price": 159.15276,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2134,11 +2152,11 @@
    "CADCHF sell": {
     "pair": "CADCHF",
     "side": "sell",
-    "score": 65,
-    "grade": "below D+",
+    "score": 85,
+    "grade": "C+",
     "where": "in",
     "dist_pips": 0,
-    "price": 0.5882,
+    "price": 0.58791,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2264,13 +2282,15 @@
       "tf": "Entry",
       "name": "Shift of structure",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "1H body closed below 0.588"
      },
      {
       "tf": "Entry",
       "name": "Engulfing or morning/evening star",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "4H evening star"
      }
     ]
    },
@@ -2281,7 +2301,7 @@
     "grade": "below D+",
     "where": "away",
     "dist_pips": 125,
-    "price": 111.11963,
+    "price": 111.11709,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2420,7 +2440,7 @@
     "grade": "D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 87.42855,
+    "price": 87.48646,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2563,7 +2583,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.31027,
+    "price": 1.31071,
     "trend": {
      "W": "bull",
      "D": "bear",
