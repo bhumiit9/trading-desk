@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-23T06:05:17Z",
+ "updated": "2026-11-23T07:05:19Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1762,11 +1762,11 @@
  "watch": {
   "week_of": "2026-11-16",
   "pairs": {},
-  "checked_at": "2026-11-23T06:05:17Z"
+  "checked_at": "2026-11-23T07:05:19Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-23T06:05:17Z",
+  "at": "2026-11-23T07:05:19Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
@@ -1775,7 +1775,7 @@
     "grade": "D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.87966,
+    "price": 1.87982,
     "trend": {
      "W": "bull",
      "D": "bull",
@@ -1918,7 +1918,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 158.96588,
+    "price": 158.95195,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2061,7 +2061,7 @@
     "grade": "B+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58609,
+    "price": 0.58575,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2206,8 +2206,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 139,
-    "price": 110.98523,
+    "dist_pips": 132,
+    "price": 111.04819,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2346,7 +2346,7 @@
     "grade": "below D+",
     "where": "away",
     "dist_pips": 153,
-    "price": 87.07056,
+    "price": 87.07252,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2485,7 +2485,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.31235,
+    "price": 1.31291,
     "trend": {
      "W": "bear",
      "D": "bear",
