@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-23T13:05:17Z",
+ "updated": "2026-11-23T14:05:20Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1762,11 +1762,11 @@
  "watch": {
   "week_of": "2026-11-16",
   "pairs": {},
-  "checked_at": "2026-11-23T13:05:17Z"
+  "checked_at": "2026-11-23T14:05:20Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-23T13:05:17Z",
+  "at": "2026-11-23T14:05:20Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
@@ -1775,7 +1775,7 @@
     "grade": "D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 1.87801,
+    "price": 1.87649,
     "trend": {
      "W": "bull",
      "D": "bull",
@@ -1914,11 +1914,11 @@
    "USDJPY sell": {
     "pair": "USDJPY",
     "side": "sell",
-    "score": 70,
-    "grade": "D+",
+    "score": 65,
+    "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 159.06417,
+    "price": 159.34128,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2013,8 +2013,7 @@
       "tf": "4H",
       "name": "Touching the 50 EMA",
       "pts": 5,
-      "ok": true,
-      "why": "Last closed candle touched the 50 EMA (159.16) and closed on the trade side"
+      "ok": false
      },
      {
       "tf": "4H",
@@ -2058,11 +2057,11 @@
    "CADCHF sell": {
     "pair": "CADCHF",
     "side": "sell",
-    "score": 90,
+    "score": 95,
     "grade": "B+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.5844,
+    "price": 0.58666,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2158,7 +2157,8 @@
       "tf": "4H",
       "name": "Touching the 50 EMA",
       "pts": 5,
-      "ok": false
+      "ok": true,
+      "why": "Last closed candle touched the 50 EMA (0.58665) and closed on the trade side"
      },
      {
       "tf": "4H",
@@ -2207,8 +2207,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 155,
-    "price": 110.82199,
+    "dist_pips": 141,
+    "price": 110.96279,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2346,8 +2346,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 185,
-    "price": 86.7526,
+    "dist_pips": 176,
+    "price": 86.84189,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2482,15 +2482,15 @@
    "GBPUSD buy": {
     "pair": "GBPUSD",
     "side": "buy",
-    "score": 10,
+    "score": 0,
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.30835,
+    "price": 1.30681,
     "trend": {
      "W": "bear",
      "D": "bear",
-     "4H": "bull"
+     "4H": "bear"
     },
     "boxes": [
      {
@@ -2569,8 +2569,7 @@
       "tf": "4H",
       "name": "In favor",
       "pts": 10,
-      "ok": true,
-      "why": "Bullish structure"
+      "ok": false
      },
      {
       "tf": "4H",
