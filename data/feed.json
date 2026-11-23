@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-23T09:05:16Z",
+ "updated": "2026-11-23T10:05:17Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1762,11 +1762,11 @@
  "watch": {
   "week_of": "2026-11-16",
   "pairs": {},
-  "checked_at": "2026-11-23T09:05:16Z"
+  "checked_at": "2026-11-23T10:05:17Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-23T09:05:16Z",
+  "at": "2026-11-23T10:05:17Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
@@ -1775,7 +1775,7 @@
     "grade": "D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.88087,
+    "price": 1.8788,
     "trend": {
      "W": "bull",
      "D": "bull",
@@ -1914,11 +1914,11 @@
    "USDJPY sell": {
     "pair": "USDJPY",
     "side": "sell",
-    "score": 65,
-    "grade": "below D+",
+    "score": 70,
+    "grade": "D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 159.16368,
+    "price": 159.0957,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2013,7 +2013,8 @@
       "tf": "4H",
       "name": "Touching the 50 EMA",
       "pts": 5,
-      "ok": false
+      "ok": true,
+      "why": "Last closed candle touched the 50 EMA (159.16) and closed on the trade side"
      },
      {
       "tf": "4H",
@@ -2061,7 +2062,7 @@
     "grade": "B+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58575,
+    "price": 0.58567,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2196,7 +2197,7 @@
       "name": "Engulfing or morning/evening star",
       "pts": 10,
       "ok": true,
-      "why": "2H bearish engulfing"
+      "why": "4H bearish engulfing"
      }
     ]
    },
@@ -2206,8 +2207,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 123,
-    "price": 111.13804,
+    "dist_pips": 131,
+    "price": 111.06381,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2345,8 +2346,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 143,
-    "price": 87.17954,
+    "dist_pips": 156,
+    "price": 87.0466,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2485,7 +2486,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.3134,
+    "price": 1.31149,
     "trend": {
      "W": "bear",
      "D": "bear",
