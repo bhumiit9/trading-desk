@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-20T21:02:58Z",
+ "updated": "2026-11-23T04:06:20Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1761,149 +1761,21 @@
  "morning_sent": "2026-11-20",
  "watch": {
   "week_of": "2026-11-16",
-  "pairs": {
-   "GBPCAD": {
-    "key": "[\"buy\", [{\"hi\": 1.878, \"lo\": 1.8766, \"tf\": \"W+D\"}, {\"hi\": 1.8868, \"lo\": 1.88178, \"tf\": \"W\"}]]",
-    "sent": [
-     "arrive:2026-11-16",
-     "shift:1794931200",
-     "early:1794960000",
-     "arrive:2026-11-18",
-     "entry:1794981600",
-     "shift:1794931200",
-     "arrive:2026-11-19"
-    ],
-    "inside": true,
-    "side": "buy",
-    "status": "at_aoi",
-    "price": 1.87736,
-    "price_at": "2026-11-20T21:02:58Z",
-    "checked_at": "2026-11-20T21:02:58Z",
-    "trend_1h": "bear",
-    "dist_pips": 0,
-    "arrived_at": "2026-11-15T22:00:00Z",
-    "shift": null,
-    "entry": null
-   },
-   "USDJPY": {
-    "key": "[\"sell\", [{\"hi\": 160.32, \"lo\": 159.73, \"tf\": \"W\"}]]",
-    "sent": [
-     "entry:1794816000",
-     "shift:1794592800",
-     "arrive:2026-11-16",
-     "arrive:2026-11-19",
-     "shift:1795147200",
-     "early:1795161600"
-    ],
-    "inside": false,
-    "side": "sell",
-    "status": "shift",
-    "price": 158.48192,
-    "price_at": "2026-11-20T21:02:58Z",
-    "checked_at": "2026-11-20T21:02:58Z",
-    "trend_1h": "bear",
-    "dist_pips": 125,
-    "arrived_at": "2026-11-15T22:00:00Z",
-    "shift": {
-     "at": "2026-11-20T05:00:00Z",
-     "level": 159.21557
-    },
-    "entry": null
-   },
-   "CADCHF": {
-    "key": "[\"sell\", [{\"hi\": 0.58969, \"lo\": 0.5876, \"tf\": \"W+D\"}]]",
-    "sent": [
-     "early:1794790800",
-     "entry:1794801600",
-     "shift:1794780000",
-     "arrive:2026-11-16",
-     "arrive:2026-11-17",
-     "shift:1795147200",
-     "early:1795165200",
-     "early:1795176000",
-     "early:1795186800",
-     "early:1795201200"
-    ],
-    "inside": false,
-    "side": "sell",
-    "status": "shift",
-    "price": 0.58518,
-    "price_at": "2026-11-20T21:02:58Z",
-    "checked_at": "2026-11-20T21:02:58Z",
-    "trend_1h": "bear",
-    "dist_pips": 24,
-    "arrived_at": "2026-11-15T22:00:00Z",
-    "shift": {
-     "at": "2026-11-20T05:00:00Z",
-     "level": 0.588
-    },
-    "entry": null
-   },
-   "CADJPY": {
-    "key": "[\"sell\", [{\"hi\": 112.578, \"lo\": 112.372, \"tf\": \"D\"}, {\"hi\": 113.34, \"lo\": 113.094, \"tf\": \"D\"}]]",
-    "sent": [],
-    "inside": false,
-    "side": "sell",
-    "status": "watching",
-    "price": 110.45201,
-    "price_at": "2026-11-20T21:02:58Z",
-    "checked_at": "2026-11-20T21:02:58Z",
-    "trend_1h": "bear",
-    "dist_pips": 192,
-    "arrived_at": null,
-    "shift": null,
-    "entry": null
-   },
-   "NZDJPY": {
-    "key": "[\"sell\", [{\"hi\": 88.914, \"lo\": 88.605, \"tf\": \"W+D\"}]]",
-    "sent": [],
-    "inside": false,
-    "side": "sell",
-    "status": "watching",
-    "price": 86.61053,
-    "price_at": "2026-11-20T21:02:58Z",
-    "checked_at": "2026-11-20T21:02:58Z",
-    "trend_1h": "bear",
-    "dist_pips": 199,
-    "arrived_at": null,
-    "shift": null,
-    "entry": null
-   },
-   "GBPUSD": {
-    "key": "[\"buy\", [{\"hi\": 1.32373, \"lo\": 1.31916, \"tf\": \"W+D\"}]]",
-    "sent": [
-     "arrive:2026-11-16",
-     "shift:1794884400",
-     "entry:1794891600",
-     "shift:1794884400"
-    ],
-    "inside": false,
-    "side": "buy",
-    "status": "watching",
-    "price": 1.3082,
-    "price_at": "2026-11-20T21:02:58Z",
-    "checked_at": "2026-11-20T21:02:58Z",
-    "trend_1h": "bear",
-    "dist_pips": 110,
-    "arrived_at": "2026-11-15T22:00:00Z",
-    "shift": null,
-    "entry": null
-   }
-  },
-  "checked_at": "2026-11-20T21:02:58Z"
+  "pairs": {},
+  "checked_at": "2026-11-23T04:06:20Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-20T21:02:58Z",
+  "at": "2026-11-23T04:06:21Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
     "side": "buy",
-    "score": 50,
-    "grade": "below D+",
-    "where": "in",
+    "score": 70,
+    "grade": "D+",
+    "where": "reached",
     "dist_pips": 0,
-    "price": 1.87736,
+    "price": 1.87915,
     "trend": {
      "W": "bull",
      "D": "bull",
@@ -1922,7 +1794,7 @@
       "name": "At or rejected the AOI",
       "pts": 10,
       "ok": true,
-      "why": "Price is in the AOI 1.87660-1.88680"
+      "why": "This or last week's candle reached the AOI 1.87660-1.88680"
      },
      {
       "tf": "W",
@@ -1960,7 +1832,7 @@
       "name": "At or rejected the AOI",
       "pts": 10,
       "ok": true,
-      "why": "Price is in the AOI 1.87660-1.88680"
+      "why": "Today or yesterday's candle reached the AOI 1.87660-1.88680"
      },
      {
       "tf": "D",
@@ -2027,13 +1899,15 @@
       "tf": "Entry",
       "name": "Shift of structure",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "2H body closed above 1.8779"
      },
      {
       "tf": "Entry",
       "name": "Engulfing or morning/evening star",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "4H bullish engulfing"
      }
     ]
    },
@@ -2044,7 +1918,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 158.48192,
+    "price": 159.0015,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2075,7 +1949,8 @@
       "tf": "W",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "bearish engulfing (1 bodies)"
      },
      {
       "tf": "W",
@@ -2112,7 +1987,8 @@
       "tf": "D",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "bearish engulfing (3 bodies)"
      },
      {
       "tf": "D",
@@ -2168,26 +2044,24 @@
       "tf": "Entry",
       "name": "Shift of structure",
       "pts": 10,
-      "ok": true,
-      "why": "2H body closed below 159.03"
+      "ok": false
      },
      {
       "tf": "Entry",
       "name": "Engulfing or morning/evening star",
       "pts": 10,
-      "ok": true,
-      "why": "2H bearish engulfing"
+      "ok": false
      }
     ]
    },
    "CADCHF sell": {
     "pair": "CADCHF",
     "side": "sell",
-    "score": 100,
-    "grade": "A+",
+    "score": 95,
+    "grade": "B+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58518,
+    "price": 0.58602,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2250,14 +2124,15 @@
       "tf": "D",
       "name": "Touching the 50 EMA",
       "pts": 5,
-      "ok": false
+      "ok": true,
+      "why": "Last closed candle touched the 50 EMA (0.58531) and closed on the trade side"
      },
      {
       "tf": "D",
       "name": "Candle rejection",
       "pts": 10,
       "ok": true,
-      "why": "shooting star/pin bar"
+      "why": "evening star"
      },
      {
       "tf": "D",
@@ -2283,7 +2158,7 @@
       "name": "Touching the 50 EMA",
       "pts": 5,
       "ok": true,
-      "why": "Last closed candle touched the 50 EMA (0.58683) and closed on the trade side"
+      "why": "Last closed candle touched the 50 EMA (0.58673) and closed on the trade side"
      },
      {
       "tf": "4H",
@@ -2295,8 +2170,7 @@
       "tf": "4H",
       "name": "PSP rejection",
       "pts": 10,
-      "ok": true,
-      "why": "PSP 0.58806 was rejected"
+      "ok": false
      },
      {
       "tf": "4H",
@@ -2323,7 +2197,7 @@
       "name": "Engulfing or morning/evening star",
       "pts": 10,
       "ok": true,
-      "why": "4H evening star"
+      "why": "1H evening star"
      }
     ]
    },
@@ -2333,8 +2207,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 192,
-    "price": 110.45201,
+    "dist_pips": 145,
+    "price": 110.91735,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2469,11 +2343,11 @@
    "NZDJPY sell": {
     "pair": "NZDJPY",
     "side": "sell",
-    "score": 70,
-    "grade": "D+",
-    "where": "reached",
-    "dist_pips": 0,
-    "price": 86.61053,
+    "score": 30,
+    "grade": "below D+",
+    "where": "away",
+    "dist_pips": 164,
+    "price": 86.96271,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2491,8 +2365,7 @@
       "tf": "W",
       "name": "At or rejected the AOI",
       "pts": 10,
-      "ok": true,
-      "why": "This or last week's candle reached the AOI 88.605-88.914"
+      "ok": false
      },
      {
       "tf": "W",
@@ -2504,15 +2377,13 @@
       "tf": "W",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": true,
-      "why": "shooting star/pin bar"
+      "ok": false
      },
      {
       "tf": "W",
       "name": "PSP rejection",
       "pts": 10,
-      "ok": true,
-      "why": "PSP 88.63 inside the AOI was rejected"
+      "ok": false
      },
      {
       "tf": "W",
@@ -2531,8 +2402,7 @@
       "tf": "D",
       "name": "At or rejected the AOI",
       "pts": 10,
-      "ok": true,
-      "why": "Today or yesterday's candle reached the AOI 88.605-88.914"
+      "ok": false
      },
      {
       "tf": "D",
@@ -2612,13 +2482,13 @@
    "GBPUSD buy": {
     "pair": "GBPUSD",
     "side": "buy",
-    "score": 20,
+    "score": 0,
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.3082,
+    "price": 1.31091,
     "trend": {
-     "W": "bull",
+     "W": "bear",
      "D": "bear",
      "4H": "bear"
     },
@@ -2627,15 +2497,13 @@
       "tf": "W",
       "name": "In favor",
       "pts": 10,
-      "ok": true,
-      "why": "Bullish structure (recent 60 candles; the older structure is stale)"
+      "ok": false
      },
      {
       "tf": "W",
       "name": "At or rejected the AOI",
       "pts": 10,
-      "ok": true,
-      "why": "This or last week's candle reached the AOI 1.31916-1.32373"
+      "ok": false
      },
      {
       "tf": "W",
