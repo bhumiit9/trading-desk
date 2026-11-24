@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24T08:41:04Z",
+ "updated": "2026-11-24T09:06:19Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1548,6 +1548,16 @@
  ],
  "alerts": [
   {
+   "at": "2026-11-24T09:06:19Z",
+   "pair": "CADCHF",
+   "text": "CADCHF sell: price reached your AOI 0.58684-0.58867 (now 0.58666). Next on the checklist: a 1H shift of structure at the AOI, then a closed entry candle."
+  },
+  {
+   "at": "2026-11-24T09:06:19Z",
+   "pair": "AUDCHF",
+   "text": "AUDCHF buy: price reached your AOI 0.55753-0.56202 (now 0.55766). Next on the checklist: a 1H shift of structure at the AOI, then a closed entry candle."
+  },
+  {
    "at": "2026-11-20T21:02:58Z",
    "pair": "CADCHF",
    "text": "CADCHF sell: a 1H bearish engulfing closed at Sat 01:30 IST at your AOI 0.58760-0.58969, after the 1H shift, but on Friday, when the rules take no new entries, so it doesn't count as an entry. Still waiting for one inside the window."
@@ -1760,13 +1770,48 @@
  ],
  "morning_sent": "2026-11-20",
  "watch": {
-  "week_of": "2026-11-16",
-  "pairs": {},
-  "checked_at": "2026-11-24T08:05:17Z"
+  "week_of": "2026-11-23",
+  "pairs": {
+   "AUDCHF": {
+    "key": "[\"buy\", [{\"hi\": 0.56202, \"lo\": 0.55753, \"tf\": \"W\"}]]",
+    "sent": [
+     "arrive:2026-11-24"
+    ],
+    "inside": true,
+    "side": "buy",
+    "status": "at_aoi",
+    "price": 0.55766,
+    "price_at": "2026-11-24T09:06:19Z",
+    "checked_at": "2026-11-24T09:06:19Z",
+    "trend_1h": "bear",
+    "dist_pips": 0,
+    "arrived_at": "2026-11-22T23:00:00Z",
+    "shift": null,
+    "entry": null
+   },
+   "CADCHF": {
+    "key": "[\"sell\", [{\"hi\": 0.58867, \"lo\": 0.58684, \"tf\": \"W+D\"}]]",
+    "sent": [
+     "arrive:2026-11-24"
+    ],
+    "inside": true,
+    "side": "sell",
+    "status": "at_aoi",
+    "price": 0.58666,
+    "price_at": "2026-11-24T09:06:19Z",
+    "checked_at": "2026-11-24T09:06:19Z",
+    "trend_1h": "bull",
+    "dist_pips": 2,
+    "arrived_at": "2026-11-23T15:00:00Z",
+    "shift": null,
+    "entry": null
+   }
+  },
+  "checked_at": "2026-11-24T09:06:19Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-24T08:41:04Z",
+  "at": "2026-11-24T09:06:19Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1775,7 +1820,7 @@
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 0.55792,
+    "price": 0.55766,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -1910,9 +1955,9 @@
     "side": "sell",
     "score": 65,
     "grade": "below D+",
-    "where": "reached",
+    "where": "in",
     "dist_pips": 0,
-    "price": 0.58646,
+    "price": 0.58666,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -1931,7 +1976,7 @@
       "name": "At or rejected the AOI",
       "pts": 10,
       "ok": true,
-      "why": "This or last week's candle reached the AOI 0.58684-0.58867"
+      "why": "Price is in the AOI 0.58684-0.58867"
      },
      {
       "tf": "W",
@@ -1969,7 +2014,7 @@
       "name": "At or rejected the AOI",
       "pts": 10,
       "ok": true,
-      "why": "Today or yesterday's candle reached the AOI 0.58684-0.58867"
+      "why": "Price is in the AOI 0.58684-0.58867"
      },
      {
       "tf": "D",
