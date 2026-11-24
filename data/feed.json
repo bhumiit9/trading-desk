@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24T13:05:28Z",
+ "updated": "2026-11-24T14:05:17Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1777,14 +1777,14 @@
     "sent": [
      "arrive:2026-11-24"
     ],
-    "inside": true,
+    "inside": false,
     "side": "buy",
-    "status": "at_aoi",
-    "price": 0.5571,
-    "price_at": "2026-11-24T13:05:28Z",
-    "checked_at": "2026-11-24T13:05:28Z",
+    "status": "watching",
+    "price": 0.55594,
+    "price_at": "2026-11-24T14:05:17Z",
+    "checked_at": "2026-11-24T14:05:17Z",
     "trend_1h": "bear",
-    "dist_pips": 4,
+    "dist_pips": 16,
     "arrived_at": "2026-11-22T23:00:00Z",
     "shift": null,
     "entry": null
@@ -1797,21 +1797,21 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 0.58493,
-    "price_at": "2026-11-24T13:05:28Z",
-    "checked_at": "2026-11-24T13:05:28Z",
+    "price": 0.58463,
+    "price_at": "2026-11-24T14:05:17Z",
+    "checked_at": "2026-11-24T14:05:17Z",
     "trend_1h": "bull",
-    "dist_pips": 19,
+    "dist_pips": 22,
     "arrived_at": "2026-11-23T15:00:00Z",
     "shift": null,
     "entry": null
    }
   },
-  "checked_at": "2026-11-24T13:05:28Z"
+  "checked_at": "2026-11-24T14:05:17Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-24T13:05:28Z",
+  "at": "2026-11-24T14:05:17Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1820,7 +1820,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.5571,
+    "price": 0.55594,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -1953,11 +1953,11 @@
    "CADCHF sell": {
     "pair": "CADCHF",
     "side": "sell",
-    "score": 75,
-    "grade": "D+",
+    "score": 95,
+    "grade": "B+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58493,
+    "price": 0.58463,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2053,14 +2053,14 @@
       "name": "Touching the 50 EMA",
       "pts": 5,
       "ok": true,
-      "why": "Last closed candle touched the 50 EMA (0.58655) and closed on the trade side"
+      "why": "Last closed candle touched the 50 EMA (0.58647) and closed on the trade side"
      },
      {
       "tf": "4H",
       "name": "Candle rejection",
       "pts": 10,
       "ok": true,
-      "why": "shooting star/pin bar"
+      "why": "evening star"
      },
      {
       "tf": "4H",
@@ -2084,13 +2084,15 @@
       "tf": "Entry",
       "name": "Shift of structure",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "2H body closed below 0.58487"
      },
      {
       "tf": "Entry",
       "name": "Engulfing or morning/evening star",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "4H bearish engulfing"
      }
     ]
    }
