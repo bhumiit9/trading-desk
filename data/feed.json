@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-23T16:05:20Z",
+ "updated": "2026-11-24T01:55:01Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1762,20 +1762,20 @@
  "watch": {
   "week_of": "2026-11-16",
   "pairs": {},
-  "checked_at": "2026-11-23T16:05:20Z"
+  "checked_at": "2026-11-24T01:55:01Z"
  },
  "conf": {
   "week_of": "2026-11-16",
-  "at": "2026-11-23T16:05:20Z",
+  "at": "2026-11-24T01:55:01Z",
   "items": {
    "GBPCAD buy": {
     "pair": "GBPCAD",
     "side": "buy",
-    "score": 50,
+    "score": 40,
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.87084,
+    "price": 1.87293,
     "trend": {
      "W": "bull",
      "D": "bull",
@@ -1874,8 +1874,7 @@
       "tf": "4H",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": true,
-      "why": "hammer/pin bar"
+      "ok": false
      },
      {
       "tf": "4H",
@@ -1916,7 +1915,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 159.37657,
+    "price": 158.87028,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2011,7 +2010,8 @@
       "tf": "4H",
       "name": "Touching the 50 EMA",
       "pts": 5,
-      "ok": false
+      "ok": true,
+      "why": "Last closed candle touched the 50 EMA (159.16) and closed on the trade side"
      },
      {
       "tf": "4H",
@@ -2035,8 +2035,7 @@
       "tf": "Entry",
       "name": "Round number level",
       "pts": 5,
-      "ok": true,
-      "why": "Round number 160 inside the AOI was rejected"
+      "ok": false
      },
      {
       "tf": "Entry",
@@ -2059,7 +2058,7 @@
     "grade": "D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58694,
+    "price": 0.58585,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2122,8 +2121,7 @@
       "tf": "D",
       "name": "Touching the 50 EMA",
       "pts": 5,
-      "ok": true,
-      "why": "Last closed candle touched the 50 EMA (0.58531) and closed on the trade side"
+      "ok": false
      },
      {
       "tf": "D",
@@ -2156,13 +2154,14 @@
       "name": "Touching the 50 EMA",
       "pts": 5,
       "ok": true,
-      "why": "Last closed candle touched the 50 EMA (0.58665) and closed on the trade side"
+      "why": "Last closed candle touched the 50 EMA (0.58661) and closed on the trade side"
      },
      {
       "tf": "4H",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "shooting star/pin bar"
      },
      {
       "tf": "4H",
@@ -2180,8 +2179,7 @@
       "tf": "Entry",
       "name": "Round number level",
       "pts": 5,
-      "ok": true,
-      "why": "Round number 0.59 inside the AOI was rejected"
+      "ok": false
      },
      {
       "tf": "Entry",
@@ -2203,8 +2201,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 144,
-    "price": 110.93108,
+    "dist_pips": 171,
+    "price": 110.65756,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2342,8 +2340,8 @@
     "score": 30,
     "grade": "below D+",
     "where": "away",
-    "dist_pips": 194,
-    "price": 86.66753,
+    "dist_pips": 195,
+    "price": 86.65559,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2482,7 +2480,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 1.3018,
+    "price": 1.30455,
     "trend": {
      "W": "bear",
      "D": "bear",
