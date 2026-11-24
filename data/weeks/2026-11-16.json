@@ -1,0 +1,185 @@
+{
+ "week_of": "2026-11-16",
+ "label": "Week of 16 Nov",
+ "updated": "2026-11-16T20:07:48Z",
+ "yours": [
+  {
+   "pair": "GBPCAD",
+   "side": "buy",
+   "aois": [
+    {
+     "lo": 1.8766,
+     "hi": 1.878,
+     "tf": "W+D"
+    },
+    {
+     "lo": 1.88178,
+     "hi": 1.8868,
+     "tf": "W"
+    }
+   ],
+   "note": "AOIs from Claude's check of your pair on 16 Nov"
+  },
+  {
+   "pair": "USDJPY",
+   "side": "sell",
+   "aois": [
+    {
+     "lo": 159.73,
+     "hi": 160.32,
+     "tf": "W"
+    }
+   ],
+   "note": "AOI from Claude's check of your pair on 16 Nov"
+  }
+ ],
+ "claude": [
+  {
+   "pair": "CADCHF",
+   "side": "sell",
+   "aois": [
+    {
+     "lo": 0.5876,
+     "hi": 0.58969,
+     "tf": "W+D"
+    }
+   ]
+  },
+  {
+   "pair": "CADJPY",
+   "side": "sell",
+   "aois": [
+    {
+     "lo": 112.372,
+     "hi": 112.578,
+     "tf": "D"
+    },
+    {
+     "lo": 113.094,
+     "hi": 113.34,
+     "tf": "D"
+    }
+   ]
+  },
+  {
+   "pair": "NZDJPY",
+   "side": "sell",
+   "aois": [
+    {
+     "lo": 88.605,
+     "hi": 88.914,
+     "tf": "W+D"
+    }
+   ]
+  },
+  {
+   "pair": "GBPUSD",
+   "side": "buy",
+   "aois": [
+    {
+     "lo": 1.31916,
+     "hi": 1.32373,
+     "tf": "W+D"
+    }
+   ]
+  }
+ ],
+ "final": [
+  {
+   "pair": "GBPCAD",
+   "side": "buy",
+   "aois": [
+    {
+     "lo": 1.8766,
+     "hi": 1.878,
+     "tf": "W+D"
+    },
+    {
+     "lo": 1.88178,
+     "hi": 1.8868,
+     "tf": "W"
+    }
+   ],
+   "from": [
+    "yours"
+   ],
+   "note": "AOIs from Claude's check of your pair on 16 Nov"
+  },
+  {
+   "pair": "USDJPY",
+   "side": "sell",
+   "aois": [
+    {
+     "lo": 159.73,
+     "hi": 160.32,
+     "tf": "W"
+    }
+   ],
+   "from": [
+    "yours"
+   ],
+   "note": "AOI from Claude's check of your pair on 16 Nov"
+  },
+  {
+   "pair": "CADCHF",
+   "side": "sell",
+   "aois": [
+    {
+     "lo": 0.5876,
+     "hi": 0.58969,
+     "tf": "W+D"
+    }
+   ],
+   "from": [
+    "claude"
+   ]
+  },
+  {
+   "pair": "CADJPY",
+   "side": "sell",
+   "aois": [
+    {
+     "lo": 112.372,
+     "hi": 112.578,
+     "tf": "D"
+    },
+    {
+     "lo": 113.094,
+     "hi": 113.34,
+     "tf": "D"
+    }
+   ],
+   "from": [
+    "claude"
+   ]
+  },
+  {
+   "pair": "NZDJPY",
+   "side": "sell",
+   "aois": [
+    {
+     "lo": 88.605,
+     "hi": 88.914,
+     "tf": "W+D"
+    }
+   ],
+   "from": [
+    "claude"
+   ]
+  },
+  {
+   "pair": "GBPUSD",
+   "side": "buy",
+   "aois": [
+    {
+     "lo": 1.31916,
+     "hi": 1.32373,
+     "tf": "W+D"
+    }
+   ],
+   "from": [
+    "claude"
+   ]
+  }
+ ]
+}

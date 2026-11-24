@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24T08:05:17Z",
+ "updated": "2026-11-24T08:41:04Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1765,157 +1765,17 @@
   "checked_at": "2026-11-24T08:05:17Z"
  },
  "conf": {
-  "week_of": "2026-11-16",
-  "at": "2026-11-24T08:05:17Z",
+  "week_of": "2026-11-23",
+  "at": "2026-11-24T08:41:04Z",
   "items": {
-   "GBPCAD buy": {
-    "pair": "GBPCAD",
+   "AUDCHF buy": {
+    "pair": "AUDCHF",
     "side": "buy",
-    "score": 40,
+    "score": 10,
     "grade": "below D+",
-    "where": "reached",
+    "where": "in",
     "dist_pips": 0,
-    "price": 1.87182,
-    "trend": {
-     "W": "bull",
-     "D": "bull",
-     "4H": "bear"
-    },
-    "boxes": [
-     {
-      "tf": "W",
-      "name": "In favor",
-      "pts": 10,
-      "ok": true,
-      "why": "Bullish structure"
-     },
-     {
-      "tf": "W",
-      "name": "At or rejected the AOI",
-      "pts": 10,
-      "ok": true,
-      "why": "This or last week's candle reached the AOI 1.87660-1.88680"
-     },
-     {
-      "tf": "W",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "In favor",
-      "pts": 10,
-      "ok": true,
-      "why": "Bullish structure"
-     },
-     {
-      "tf": "D",
-      "name": "At or rejected the AOI",
-      "pts": 10,
-      "ok": true,
-      "why": "Today or yesterday's candle reached the AOI 1.87660-1.88680"
-     },
-     {
-      "tf": "D",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "In favor",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Round number level",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Shift of structure",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Engulfing or morning/evening star",
-      "pts": 10,
-      "ok": false
-     }
-    ]
-   },
-   "USDJPY sell": {
-    "pair": "USDJPY",
-    "side": "sell",
-    "score": 60,
-    "grade": "below D+",
-    "where": "reached",
-    "dist_pips": 0,
-    "price": 159.31857,
+    "price": 0.55792,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -1926,15 +1786,13 @@
       "tf": "W",
       "name": "In favor",
       "pts": 10,
-      "ok": true,
-      "why": "Bearish structure (recent 120 candles; the older structure is stale)"
+      "ok": false
      },
      {
       "tf": "W",
       "name": "At or rejected the AOI",
       "pts": 10,
-      "ok": true,
-      "why": "This or last week's candle reached the AOI 159.730-160.320"
+      "ok": false
      },
      {
       "tf": "W",
@@ -1946,8 +1804,7 @@
       "tf": "W",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": true,
-      "why": "bearish engulfing (1 bodies)"
+      "ok": false
      },
      {
       "tf": "W",
@@ -1965,8 +1822,7 @@
       "tf": "D",
       "name": "In favor",
       "pts": 10,
-      "ok": true,
-      "why": "Bearish structure"
+      "ok": false
      },
      {
       "tf": "D",
@@ -1984,8 +1840,7 @@
       "tf": "D",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": true,
-      "why": "bearish engulfing (3 bodies)"
+      "ok": false
      },
      {
       "tf": "D",
@@ -2003,8 +1858,7 @@
       "tf": "4H",
       "name": "In favor",
       "pts": 10,
-      "ok": true,
-      "why": "Bearish structure"
+      "ok": false
      },
      {
       "tf": "4H",
@@ -2016,7 +1870,8 @@
       "tf": "4H",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": false
+      "ok": true,
+      "why": "bullish engulfing (1 bodies)"
      },
      {
       "tf": "4H",
@@ -2076,7 +1931,7 @@
       "name": "At or rejected the AOI",
       "pts": 10,
       "ok": true,
-      "why": "This or last week's candle reached the AOI 0.58760-0.58969"
+      "why": "This or last week's candle reached the AOI 0.58684-0.58867"
      },
      {
       "tf": "W",
@@ -2114,7 +1969,7 @@
       "name": "At or rejected the AOI",
       "pts": 10,
       "ok": true,
-      "why": "Today or yesterday's candle reached the AOI 0.58760-0.58969"
+      "why": "Today or yesterday's candle reached the AOI 0.58684-0.58867"
      },
      {
       "tf": "D",
@@ -2154,420 +2009,6 @@
       "pts": 5,
       "ok": true,
       "why": "Last closed candle touched the 50 EMA (0.58656) and closed on the trade side"
-     },
-     {
-      "tf": "4H",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Round number level",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Shift of structure",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Engulfing or morning/evening star",
-      "pts": 10,
-      "ok": false
-     }
-    ]
-   },
-   "CADJPY sell": {
-    "pair": "CADJPY",
-    "side": "sell",
-    "score": 30,
-    "grade": "below D+",
-    "where": "away",
-    "dist_pips": 139,
-    "price": 110.9778,
-    "trend": {
-     "W": "bear",
-     "D": "bear",
-     "4H": "bear"
-    },
-    "boxes": [
-     {
-      "tf": "W",
-      "name": "In favor",
-      "pts": 10,
-      "ok": true,
-      "why": "Bearish structure"
-     },
-     {
-      "tf": "W",
-      "name": "At or rejected the AOI",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "In favor",
-      "pts": 10,
-      "ok": true,
-      "why": "Bearish structure"
-     },
-     {
-      "tf": "D",
-      "name": "At or rejected the AOI",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "In favor",
-      "pts": 10,
-      "ok": true,
-      "why": "Bearish structure"
-     },
-     {
-      "tf": "4H",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Round number level",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Shift of structure",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Engulfing or morning/evening star",
-      "pts": 10,
-      "ok": false
-     }
-    ]
-   },
-   "NZDJPY sell": {
-    "pair": "NZDJPY",
-    "side": "sell",
-    "score": 30,
-    "grade": "below D+",
-    "where": "away",
-    "dist_pips": 184,
-    "price": 86.76841,
-    "trend": {
-     "W": "bear",
-     "D": "bear",
-     "4H": "bear"
-    },
-    "boxes": [
-     {
-      "tf": "W",
-      "name": "In favor",
-      "pts": 10,
-      "ok": true,
-      "why": "Bearish structure"
-     },
-     {
-      "tf": "W",
-      "name": "At or rejected the AOI",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "In favor",
-      "pts": 10,
-      "ok": true,
-      "why": "Bearish structure"
-     },
-     {
-      "tf": "D",
-      "name": "At or rejected the AOI",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "In favor",
-      "pts": 10,
-      "ok": true,
-      "why": "Bearish structure"
-     },
-     {
-      "tf": "4H",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Round number level",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Shift of structure",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "Entry",
-      "name": "Engulfing or morning/evening star",
-      "pts": 10,
-      "ok": false
-     }
-    ]
-   },
-   "GBPUSD buy": {
-    "pair": "GBPUSD",
-    "side": "buy",
-    "score": 0,
-    "grade": "below D+",
-    "where": "reached",
-    "dist_pips": 0,
-    "price": 1.30375,
-    "trend": {
-     "W": "bear",
-     "D": "bear",
-     "4H": "bear"
-    },
-    "boxes": [
-     {
-      "tf": "W",
-      "name": "In favor",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "At or rejected the AOI",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "W",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "In favor",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "At or rejected the AOI",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Candle rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "PSP rejection",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "D",
-      "name": "Pattern",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "In favor",
-      "pts": 10,
-      "ok": false
-     },
-     {
-      "tf": "4H",
-      "name": "Touching the 50 EMA",
-      "pts": 5,
-      "ok": false
      },
      {
       "tf": "4H",
