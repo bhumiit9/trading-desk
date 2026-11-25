@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-25T09:05:16Z",
+ "updated": "2026-11-25T10:05:30Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1800,11 +1800,11 @@
     "inside": false,
     "side": "buy",
     "status": "watching",
-    "price": 0.54826,
-    "price_at": "2026-11-25T09:05:16Z",
-    "checked_at": "2026-11-25T09:05:16Z",
+    "price": 0.54801,
+    "price_at": "2026-11-25T10:05:30Z",
+    "checked_at": "2026-11-25T10:05:30Z",
     "trend_1h": "bear",
-    "dist_pips": 93,
+    "dist_pips": 95,
     "arrived_at": "2026-11-22T23:00:00Z",
     "shift": null,
     "entry": null
@@ -1820,11 +1820,11 @@
     "inside": false,
     "side": "sell",
     "status": "shift",
-    "price": 0.584,
-    "price_at": "2026-11-25T09:05:16Z",
-    "checked_at": "2026-11-25T09:05:16Z",
+    "price": 0.58398,
+    "price_at": "2026-11-25T10:05:30Z",
+    "checked_at": "2026-11-25T10:05:30Z",
     "trend_1h": "bear",
-    "dist_pips": 28,
+    "dist_pips": 29,
     "arrived_at": "2026-11-23T15:00:00Z",
     "shift": {
      "at": "2026-11-24T16:00:00Z",
@@ -1833,11 +1833,11 @@
     "entry": null
    }
   },
-  "checked_at": "2026-11-25T09:05:16Z"
+  "checked_at": "2026-11-25T10:05:30Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-25T09:05:16Z",
+  "at": "2026-11-25T10:05:30Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1846,7 +1846,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.54826,
+    "price": 0.54801,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -1982,7 +1982,7 @@
     "grade": "D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.584,
+    "price": 0.58398,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2077,7 +2077,7 @@
       "name": "Touching the 50 EMA",
       "pts": 5,
       "ok": true,
-      "why": "Last closed candle touched the 50 EMA (0.58635) and closed on the trade side"
+      "why": "Last closed candle touched the 50 EMA (0.58626) and closed on the trade side"
      },
      {
       "tf": "4H",
@@ -2115,7 +2115,7 @@
       "name": "Engulfing or morning/evening star",
       "pts": 10,
       "ok": true,
-      "why": "4H bearish engulfing"
+      "why": "4H evening star"
      }
     ]
    }
