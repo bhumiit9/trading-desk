@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-24T23:53:28Z",
+ "updated": "2026-11-25T04:05:19Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1548,6 +1548,16 @@
  ],
  "alerts": [
   {
+   "at": "2026-11-25T04:05:19Z",
+   "pair": "",
+   "text": "Final list: AUDCHF buy 49 pips from its AOI; CADCHF sell 1H shift seen at the AOI."
+  },
+  {
+   "at": "2026-11-25T04:05:19Z",
+   "pair": "CADCHF",
+   "text": "CADCHF sell: a 1H bearish engulfing closed at Wed 08:30 IST at your AOI 0.58684-0.58867, after the 1H shift, but outside the entry window (about 11 PM to 11 AM New York), so it doesn't count as an entry. Still waiting for one inside the window."
+  },
+  {
    "at": "2026-11-24T16:05:20Z",
    "pair": "CADCHF",
    "text": "CADCHF sell: 1H shift of structure at your AOI 0.58684-0.58867: a body closed below 0.58454 at Tue 21:30 IST. Waiting for a closed entry candle."
@@ -1778,7 +1788,7 @@
    "text": "Price 1.33436 is inside your AOI 1.33179-1.33563. Not on the plan: structure is unclear."
   }
  ],
- "morning_sent": "2026-11-20",
+ "morning_sent": "2026-11-25",
  "watch": {
   "week_of": "2026-11-23",
   "pairs": {
@@ -1790,11 +1800,11 @@
     "inside": false,
     "side": "buy",
     "status": "watching",
-    "price": 0.5545,
-    "price_at": "2026-11-24T23:53:28Z",
-    "checked_at": "2026-11-24T23:53:28Z",
+    "price": 0.55261,
+    "price_at": "2026-11-25T04:05:19Z",
+    "checked_at": "2026-11-25T04:05:19Z",
     "trend_1h": "bear",
-    "dist_pips": 30,
+    "dist_pips": 49,
     "arrived_at": "2026-11-22T23:00:00Z",
     "shift": null,
     "entry": null
@@ -1804,16 +1814,17 @@
     "sent": [
      "arrive:2026-11-24",
      "early:1795532400",
-     "shift:1795532400"
+     "shift:1795532400",
+     "early:1795572000"
     ],
-    "inside": false,
+    "inside": true,
     "side": "sell",
     "status": "shift",
-    "price": 0.58559,
-    "price_at": "2026-11-24T23:53:28Z",
-    "checked_at": "2026-11-24T23:53:28Z",
+    "price": 0.58596,
+    "price_at": "2026-11-25T04:05:19Z",
+    "checked_at": "2026-11-25T04:05:19Z",
     "trend_1h": "bear",
-    "dist_pips": 12,
+    "dist_pips": 9,
     "arrived_at": "2026-11-23T15:00:00Z",
     "shift": {
      "at": "2026-11-24T16:00:00Z",
@@ -1822,11 +1833,11 @@
     "entry": null
    }
   },
-  "checked_at": "2026-11-24T23:53:28Z"
+  "checked_at": "2026-11-25T04:05:19Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-24T23:53:29Z",
+  "at": "2026-11-25T04:05:19Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1835,7 +1846,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.5545,
+    "price": 0.55261,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -1967,11 +1978,11 @@
    "CADCHF sell": {
     "pair": "CADCHF",
     "side": "sell",
-    "score": 80,
-    "grade": "C+",
+    "score": 75,
+    "grade": "D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58559,
+    "price": 0.58596,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2065,14 +2076,14 @@
       "tf": "4H",
       "name": "Touching the 50 EMA",
       "pts": 5,
-      "ok": false
+      "ok": true,
+      "why": "Last closed candle touched the 50 EMA (0.58637) and closed on the trade side"
      },
      {
       "tf": "4H",
       "name": "Candle rejection",
       "pts": 10,
-      "ok": true,
-      "why": "evening star"
+      "ok": false
      },
      {
       "tf": "4H",
