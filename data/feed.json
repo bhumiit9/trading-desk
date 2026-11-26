@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-26T16:05:17Z",
+ "updated": "2026-11-26T22:58:05Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1820,11 +1820,11 @@
     "inside": false,
     "side": "buy",
     "status": "watching",
-    "price": 0.55312,
-    "price_at": "2026-11-26T16:05:17Z",
-    "checked_at": "2026-11-26T16:05:17Z",
+    "price": 0.55318,
+    "price_at": "2026-11-26T22:58:05Z",
+    "checked_at": "2026-11-26T22:58:05Z",
     "trend_1h": "bear",
-    "dist_pips": 44,
+    "dist_pips": 43,
     "arrived_at": "2026-11-22T23:00:00Z",
     "shift": null,
     "entry": null
@@ -1844,21 +1844,21 @@
     "inside": false,
     "side": "sell",
     "status": "watching",
-    "price": 0.58548,
-    "price_at": "2026-11-26T16:05:17Z",
-    "checked_at": "2026-11-26T16:05:17Z",
+    "price": 0.58551,
+    "price_at": "2026-11-26T22:58:05Z",
+    "checked_at": "2026-11-26T22:58:05Z",
     "trend_1h": "bull",
-    "dist_pips": 14,
+    "dist_pips": 13,
     "arrived_at": "2026-11-23T15:00:00Z",
     "shift": null,
     "entry": null
    }
   },
-  "checked_at": "2026-11-26T16:05:17Z"
+  "checked_at": "2026-11-26T22:58:05Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-26T16:05:17Z",
+  "at": "2026-11-26T22:58:05Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1867,7 +1867,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.55312,
+    "price": 0.55318,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -1999,11 +1999,11 @@
    "CADCHF sell": {
     "pair": "CADCHF",
     "side": "sell",
-    "score": 70,
-    "grade": "D+",
+    "score": 65,
+    "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58548,
+    "price": 0.58551,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2066,8 +2066,7 @@
       "tf": "D",
       "name": "Touching the 50 EMA",
       "pts": 5,
-      "ok": true,
-      "why": "Last closed candle touched the 50 EMA (0.58531) and closed on the trade side"
+      "ok": false
      },
      {
       "tf": "D",
@@ -2099,7 +2098,7 @@
       "name": "Touching the 50 EMA",
       "pts": 5,
       "ok": true,
-      "why": "Last closed candle touched the 50 EMA (0.58591) and closed on the trade side"
+      "why": "Last closed candle touched the 50 EMA (0.58589) and closed on the trade side"
      },
      {
       "tf": "4H",
