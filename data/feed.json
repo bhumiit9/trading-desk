@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-26T11:05:18Z",
+ "updated": "2026-11-26T12:05:20Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1820,11 +1820,11 @@
     "inside": false,
     "side": "buy",
     "status": "watching",
-    "price": 0.5524,
-    "price_at": "2026-11-26T11:05:18Z",
-    "checked_at": "2026-11-26T11:05:18Z",
+    "price": 0.55315,
+    "price_at": "2026-11-26T12:05:20Z",
+    "checked_at": "2026-11-26T12:05:20Z",
     "trend_1h": "bear",
-    "dist_pips": 51,
+    "dist_pips": 44,
     "arrived_at": "2026-11-22T23:00:00Z",
     "shift": null,
     "entry": null
@@ -1843,28 +1843,22 @@
     ],
     "inside": true,
     "side": "sell",
-    "status": "entry",
-    "price": 0.58586,
-    "price_at": "2026-11-26T11:05:18Z",
-    "checked_at": "2026-11-26T11:05:18Z",
-    "trend_1h": "bear",
-    "dist_pips": 10,
+    "status": "at_aoi",
+    "price": 0.58652,
+    "price_at": "2026-11-26T12:05:20Z",
+    "checked_at": "2026-11-26T12:05:20Z",
+    "trend_1h": "bull",
+    "dist_pips": 3,
     "arrived_at": "2026-11-23T15:00:00Z",
-    "shift": {
-     "at": "2026-11-24T16:00:00Z",
-     "level": 0.58454
-    },
-    "entry": {
-     "at": "2026-11-26T07:00:00Z",
-     "kind": "evening star"
-    }
+    "shift": null,
+    "entry": null
    }
   },
-  "checked_at": "2026-11-26T11:05:18Z"
+  "checked_at": "2026-11-26T12:05:20Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-26T11:05:18Z",
+  "at": "2026-11-26T12:05:20Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1873,7 +1867,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.5524,
+    "price": 0.55315,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2005,11 +1999,11 @@
    "CADCHF sell": {
     "pair": "CADCHF",
     "side": "sell",
-    "score": 75,
-    "grade": "D+",
+    "score": 55,
+    "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58586,
+    "price": 0.58652,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2134,15 +2128,13 @@
       "tf": "Entry",
       "name": "Shift of structure",
       "pts": 10,
-      "ok": true,
-      "why": "2H body closed below 0.58487"
+      "ok": false
      },
      {
       "tf": "Entry",
       "name": "Engulfing or morning/evening star",
       "pts": 10,
-      "ok": true,
-      "why": "1H evening star"
+      "ok": false
      }
     ]
    }
