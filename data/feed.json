@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-26T06:05:19Z",
+ "updated": "2026-11-26T07:05:23Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1548,6 +1548,11 @@
  ],
  "alerts": [
   {
+   "at": "2026-11-26T07:05:23Z",
+   "pair": "CADCHF",
+   "text": "CADCHF sell: a 1H evening star closed at Thu 12:30 IST at your AOI 0.58684-0.58867, after the 1H shift (a body closed below 0.58454 at Tue 21:30 IST). The checklist's entry conditions are there; the rest of the checklist and the decision are yours."
+  },
+  {
    "at": "2026-11-26T04:05:16Z",
    "pair": "",
    "text": "Final list: AUDCHF buy 51 pips from its AOI; CADCHF sell 1H shift seen at the AOI."
@@ -1815,11 +1820,11 @@
     "inside": false,
     "side": "buy",
     "status": "watching",
-    "price": 0.55253,
-    "price_at": "2026-11-26T06:05:19Z",
-    "checked_at": "2026-11-26T06:05:19Z",
+    "price": 0.55222,
+    "price_at": "2026-11-26T07:05:23Z",
+    "checked_at": "2026-11-26T07:05:23Z",
     "trend_1h": "bear",
-    "dist_pips": 50,
+    "dist_pips": 53,
     "arrived_at": "2026-11-22T23:00:00Z",
     "shift": null,
     "entry": null
@@ -1832,29 +1837,34 @@
      "shift:1795532400",
      "early:1795572000",
      "early:1795636800",
-     "early:1795654800"
+     "early:1795654800",
+     "entry:1795672800",
+     "shift:1795532400"
     ],
     "inside": false,
     "side": "sell",
-    "status": "shift",
-    "price": 0.58493,
-    "price_at": "2026-11-26T06:05:19Z",
-    "checked_at": "2026-11-26T06:05:19Z",
+    "status": "entry",
+    "price": 0.58502,
+    "price_at": "2026-11-26T07:05:23Z",
+    "checked_at": "2026-11-26T07:05:23Z",
     "trend_1h": "bear",
-    "dist_pips": 19,
+    "dist_pips": 18,
     "arrived_at": "2026-11-23T15:00:00Z",
     "shift": {
      "at": "2026-11-24T16:00:00Z",
      "level": 0.58454
     },
-    "entry": null
+    "entry": {
+     "at": "2026-11-26T07:00:00Z",
+     "kind": "evening star"
+    }
    }
   },
-  "checked_at": "2026-11-26T06:05:19Z"
+  "checked_at": "2026-11-26T07:05:23Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-26T06:05:19Z",
+  "at": "2026-11-26T07:05:23Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1863,7 +1873,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.55253,
+    "price": 0.55222,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -1999,7 +2009,7 @@
     "grade": "D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58493,
+    "price": 0.58502,
     "trend": {
      "W": "bear",
      "D": "bear",
