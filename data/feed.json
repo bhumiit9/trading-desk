@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-27T13:05:18Z",
+ "updated": "2026-11-27T13:45:52Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1825,11 +1825,11 @@
     "inside": true,
     "side": "buy",
     "status": "at_aoi",
-    "price": 0.55681,
-    "price_at": "2026-11-27T13:05:18Z",
-    "checked_at": "2026-11-27T13:05:18Z",
+    "price": 0.55662,
+    "price_at": "2026-11-27T13:45:52Z",
+    "checked_at": "2026-11-27T13:45:52Z",
     "trend_1h": "bull",
-    "dist_pips": 7,
+    "dist_pips": 9,
     "arrived_at": "2026-11-22T23:00:00Z",
     "shift": null,
     "entry": null
@@ -1849,21 +1849,21 @@
     "inside": true,
     "side": "sell",
     "status": "at_aoi",
-    "price": 0.58649,
-    "price_at": "2026-11-27T13:05:18Z",
-    "checked_at": "2026-11-27T13:05:18Z",
+    "price": 0.58654,
+    "price_at": "2026-11-27T13:45:52Z",
+    "checked_at": "2026-11-27T13:45:52Z",
     "trend_1h": "bull",
-    "dist_pips": 4,
+    "dist_pips": 3,
     "arrived_at": "2026-11-23T15:00:00Z",
     "shift": null,
     "entry": null
    }
   },
-  "checked_at": "2026-11-27T13:05:18Z"
+  "checked_at": "2026-11-27T13:45:52Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-27T13:05:18Z",
+  "at": "2026-11-27T13:45:52Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1872,7 +1872,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.55681,
+    "price": 0.55662,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2008,7 +2008,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.58649,
+    "price": 0.58654,
     "trend": {
      "W": "bear",
      "D": "bear",
