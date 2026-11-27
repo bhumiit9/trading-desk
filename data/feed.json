@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-27T09:05:17Z",
+ "updated": "2026-11-27T10:05:18Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1825,9 +1825,9 @@
     "inside": true,
     "side": "buy",
     "status": "at_aoi",
-    "price": 0.55851,
-    "price_at": "2026-11-27T09:05:17Z",
-    "checked_at": "2026-11-27T09:05:17Z",
+    "price": 0.55774,
+    "price_at": "2026-11-27T10:05:18Z",
+    "checked_at": "2026-11-27T10:05:18Z",
     "trend_1h": "bull",
     "dist_pips": 0,
     "arrived_at": "2026-11-22T23:00:00Z",
@@ -1849,9 +1849,9 @@
     "inside": true,
     "side": "sell",
     "status": "at_aoi",
-    "price": 0.58718,
-    "price_at": "2026-11-27T09:05:17Z",
-    "checked_at": "2026-11-27T09:05:17Z",
+    "price": 0.58691,
+    "price_at": "2026-11-27T10:05:18Z",
+    "checked_at": "2026-11-27T10:05:18Z",
     "trend_1h": "bull",
     "dist_pips": 0,
     "arrived_at": "2026-11-23T15:00:00Z",
@@ -1859,11 +1859,11 @@
     "entry": null
    }
   },
-  "checked_at": "2026-11-27T09:05:17Z"
+  "checked_at": "2026-11-27T10:05:18Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-27T09:05:17Z",
+  "at": "2026-11-27T10:05:18Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1872,7 +1872,7 @@
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 0.55851,
+    "price": 0.55774,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2004,15 +2004,15 @@
    "CADCHF sell": {
     "pair": "CADCHF",
     "side": "sell",
-    "score": 50,
+    "score": 40,
     "grade": "below D+",
     "where": "in",
     "dist_pips": 0,
-    "price": 0.58718,
+    "price": 0.58691,
     "trend": {
      "W": "bear",
      "D": "bear",
-     "4H": "bear"
+     "4H": "bull"
     },
     "boxes": [
      {
@@ -2095,8 +2095,7 @@
       "tf": "4H",
       "name": "In favor",
       "pts": 10,
-      "ok": true,
-      "why": "Bearish structure"
+      "ok": false
      },
      {
       "tf": "4H",
