@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-27T11:05:18Z",
+ "updated": "2026-11-27T12:05:20Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1825,11 +1825,11 @@
     "inside": true,
     "side": "buy",
     "status": "at_aoi",
-    "price": 0.55773,
-    "price_at": "2026-11-27T11:05:18Z",
-    "checked_at": "2026-11-27T11:05:18Z",
+    "price": 0.55656,
+    "price_at": "2026-11-27T12:05:20Z",
+    "checked_at": "2026-11-27T12:05:20Z",
     "trend_1h": "bull",
-    "dist_pips": 0,
+    "dist_pips": 10,
     "arrived_at": "2026-11-22T23:00:00Z",
     "shift": null,
     "entry": null
@@ -1849,30 +1849,30 @@
     "inside": true,
     "side": "sell",
     "status": "at_aoi",
-    "price": 0.58691,
-    "price_at": "2026-11-27T11:05:18Z",
-    "checked_at": "2026-11-27T11:05:18Z",
+    "price": 0.58607,
+    "price_at": "2026-11-27T12:05:20Z",
+    "checked_at": "2026-11-27T12:05:20Z",
     "trend_1h": "bull",
-    "dist_pips": 0,
+    "dist_pips": 8,
     "arrived_at": "2026-11-23T15:00:00Z",
     "shift": null,
     "entry": null
    }
   },
-  "checked_at": "2026-11-27T11:05:18Z"
+  "checked_at": "2026-11-27T12:05:20Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-27T11:05:18Z",
+  "at": "2026-11-27T12:05:20Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
     "side": "buy",
     "score": 0,
     "grade": "below D+",
-    "where": "in",
+    "where": "reached",
     "dist_pips": 0,
-    "price": 0.55773,
+    "price": 0.55656,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2006,9 +2006,9 @@
     "side": "sell",
     "score": 40,
     "grade": "below D+",
-    "where": "in",
+    "where": "reached",
     "dist_pips": 0,
-    "price": 0.58691,
+    "price": 0.58607,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2027,7 +2027,7 @@
       "name": "At or rejected the AOI",
       "pts": 10,
       "ok": true,
-      "why": "Price is in the AOI 0.58684-0.58867"
+      "why": "This or last week's candle reached the AOI 0.58684-0.58867"
      },
      {
       "tf": "W",
@@ -2065,7 +2065,7 @@
       "name": "At or rejected the AOI",
       "pts": 10,
       "ok": true,
-      "why": "Price is in the AOI 0.58684-0.58867"
+      "why": "Today or yesterday's candle reached the AOI 0.58684-0.58867"
      },
      {
       "tf": "D",
