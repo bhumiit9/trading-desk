@@ -83,9 +83,11 @@ def structure(S, min_pb_bars=3, depth_mult=1.5):
                 st = dict(trend="bear", ext=S.bl[i], ext_i=i, prot=S.bh[j], prot_i=j)
                 continue
             if S.bh[i] > st["ext"]:
-                k = min(range(st["ext_i"], i + 1), key=lambda x: S.bl[x])
+                # the pullback starts after the extreme bar (its own open would hide a base)
+                k = min(range(st["ext_i"] + 1, i + 1), key=lambda x: S.bl[x])
                 pb = i - st["ext_i"] - 1
-                if pb >= 1 and (pb >= min_pb_bars or st["ext"] - S.bl[k] >= thr) and k > st["ext_i"]:
+                # a 1-candle pullback is a "log", not structure; a deep one needs 2+ candles
+                if pb >= 1 and (pb >= min_pb_bars or (pb >= 2 and st["ext"] - S.bl[k] >= thr)) and k < i:
                     events.append(dict(i=i, type="HH", level=st["ext"], swing_i=k))
                     st.update(prot=S.bl[k], prot_i=k)
                 st.update(ext=S.bh[i], ext_i=i)
@@ -96,9 +98,9 @@ def structure(S, min_pb_bars=3, depth_mult=1.5):
                 st = dict(trend="bull", ext=S.bh[i], ext_i=i, prot=S.bl[j], prot_i=j)
                 continue
             if S.bl[i] < st["ext"]:
-                k = max(range(st["ext_i"], i + 1), key=lambda x: S.bh[x])
+                k = max(range(st["ext_i"] + 1, i + 1), key=lambda x: S.bh[x])
                 pb = i - st["ext_i"] - 1
-                if pb >= 1 and (pb >= min_pb_bars or S.bh[k] - st["ext"] >= thr) and k > st["ext_i"]:
+                if pb >= 1 and (pb >= min_pb_bars or (pb >= 2 and S.bh[k] - st["ext"] >= thr)) and k < i:
                     events.append(dict(i=i, type="LL", level=st["ext"], swing_i=k))
                     st.update(prot=S.bh[k], prot_i=k)
                 st.update(ext=S.bl[i], ext_i=i)
