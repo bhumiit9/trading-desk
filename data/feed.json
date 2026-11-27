@@ -1,5 +1,5 @@
 {
- "updated": "2026-11-27T05:05:17Z",
+ "updated": "2026-11-27T06:05:18Z",
  "week": {
   "label": "Week of 9 Nov"
  },
@@ -1822,14 +1822,14 @@
     "sent": [
      "arrive:2026-11-24"
     ],
-    "inside": false,
+    "inside": true,
     "side": "buy",
-    "status": "watching",
-    "price": 0.55586,
-    "price_at": "2026-11-27T05:05:17Z",
-    "checked_at": "2026-11-27T05:05:17Z",
-    "trend_1h": "bear",
-    "dist_pips": 17,
+    "status": "at_aoi",
+    "price": 0.55655,
+    "price_at": "2026-11-27T06:05:18Z",
+    "checked_at": "2026-11-27T06:05:18Z",
+    "trend_1h": "bull",
+    "dist_pips": 10,
     "arrived_at": "2026-11-22T23:00:00Z",
     "shift": null,
     "entry": null
@@ -1850,8 +1850,8 @@
     "side": "sell",
     "status": "at_aoi",
     "price": 0.58584,
-    "price_at": "2026-11-27T05:05:17Z",
-    "checked_at": "2026-11-27T05:05:17Z",
+    "price_at": "2026-11-27T06:05:18Z",
+    "checked_at": "2026-11-27T06:05:18Z",
     "trend_1h": "bull",
     "dist_pips": 10,
     "arrived_at": "2026-11-23T15:00:00Z",
@@ -1859,11 +1859,11 @@
     "entry": null
    }
   },
-  "checked_at": "2026-11-27T05:05:17Z"
+  "checked_at": "2026-11-27T06:05:18Z"
  },
  "conf": {
   "week_of": "2026-11-23",
-  "at": "2026-11-27T05:05:17Z",
+  "at": "2026-11-27T06:05:18Z",
   "items": {
    "AUDCHF buy": {
     "pair": "AUDCHF",
@@ -1872,7 +1872,7 @@
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
-    "price": 0.55586,
+    "price": 0.55655,
     "trend": {
      "W": "bear",
      "D": "bear",
@@ -2004,7 +2004,7 @@
    "CADCHF sell": {
     "pair": "CADCHF",
     "side": "sell",
-    "score": 55,
+    "score": 50,
     "grade": "below D+",
     "where": "reached",
     "dist_pips": 0,
@@ -2102,8 +2102,7 @@
       "tf": "4H",
       "name": "Touching the 50 EMA",
       "pts": 5,
-      "ok": true,
-      "why": "Last closed candle touched the 50 EMA (0.58589) and closed on the trade side"
+      "ok": false
      },
      {
       "tf": "4H",
